@@ -4,28 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Translatable\HasTranslations;
 
 class Category extends Model
 {
-    use HasFactory , HasTranslations;
+    use HasFactory ;
 
     protected $table = 'categories';
 
     protected $fillable = [
         'id',
-        'name',
+        'key',
         'icon',
     ];
 
-    protected $appends = ['locale_name'];
-    public function  getLocaleNameAttribute()
+    public function getIconAttribute($key)
     {
-        $t = $this->getTranslations('name');
-        $lang = app()->getLocale();
-        return  $t[$lang] ?? $t[0];
+        if ($key != null)
+            return asset($key);
+        else
+            return $key;
     }
 
-    public $translatable = ['name'];
-
+    public $timestamps = false;
 }
