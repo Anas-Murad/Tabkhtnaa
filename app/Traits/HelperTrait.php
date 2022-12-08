@@ -138,6 +138,18 @@ trait HelperTrait
     }
 
 
+    function saveImageUrl($photo, $folder)
+    {
+
+        $rand = Str::random(5);
+        $contents = file_get_contents($photo);
+        $file_name = $rand . time() . '.png';
+        $path = $folder.$file_name;
+        file_put_contents($path, $contents);
+        return $path ;
+    }
+
+
     function saveImage($photo, $folder)
     {
         $rand = Str::random(5);
