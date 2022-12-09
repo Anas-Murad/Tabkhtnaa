@@ -11,51 +11,40 @@ use Illuminate\Http\Request;
 
 class AddressesController extends Controller
 {
-use  HelperTrait  ;
-
+    use HelperTrait;
 
     public function delete(Request $request)
     {
-         UserAddress::whereUserId(auth()->id())->whereId($request->id)->delete() ;
-        return  $this->returnSuccess( __('messages.deleted_successfully') )  ;
-
+        UserAddress::whereUserId(auth()->id())->whereId($request->id)->delete();
+        return $this->returnSuccess(__('messages.deleted_successfully'));
     }
-
-
 
     public function update(UpdateAddressRequest $request)
     {
-        $d = UserAddress::whereUserId(auth()->id())->find($request->id) ;
-        if(!$d)
-            return  $this->returnError( __('messages.not_found_data') )  ;
-        $d->update($request->validated());
-        return  $this->returnSuccess( $d)  ;
+        $user_address = UserAddress::whereUserId(auth()->id())->find($request->id);
+        if (!$user_address)
+            return $this->returnError(__('messages.not_found_data'));
+        $user_address->update($request->validated());
+        return $this->returnSuccess($user_address);
     }
-
 
     public function get(Request $request)
     {
-
-        $d= UserAddress::whereUserId(auth()->id())->AllData()->find($request->id) ;
-        if(!$d)
-            return  $this->returnError( __('messages.not_found_data') )  ;
-
-        return  $this->returnDataArray( $d)  ;
-
+        $user_address = UserAddress::whereUserId(auth()->id())->AllData()->find($request->id);
+        if (!$user_address)
+            return $this->returnError(__('messages.not_found_data'));
+        return $this->returnDataArray($user_address);
     }
+
     public function list(Request $request)
     {
-        $d= UserAddress::whereUserId(auth()->id())->AllData()->latest()->get() ;
-        return  $this->returnDataArray( $d)  ;
-
+        $user_address = UserAddress::whereUserId(auth()->id())->AllData()->latest()->get();
+        return $this->returnDataArray($user_address);
     }
 
     public function store(CreateAddressRequest $request)
     {
-
-
-       $d= UserAddress::create($request->validated()) ;
-       return  $this->returnSuccess( $d)  ;
-
+        $user_address = UserAddress::create($request->validated());
+        return $this->returnSuccess($user_address);
     }
 }

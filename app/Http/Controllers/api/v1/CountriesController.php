@@ -15,5 +15,4 @@ class CountriesController extends Controller
         $data = Country::ApiData()->get();
         return $this->returnDataArray($data);
     }
-
 }
