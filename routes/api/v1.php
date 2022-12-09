@@ -41,5 +41,4 @@ Route::group(['middleware' => 'auth:sanctum'] , function (){
     Route::group(['prefix' => 'category'] , function (){
         Route::get('list', [CategoryController::class, 'getCategory']);
     });
-
 });
