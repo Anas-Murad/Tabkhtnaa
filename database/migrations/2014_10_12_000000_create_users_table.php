@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('def_lang')->default('ar');
 
             $table->string('profile_image')->nullable();
-            $table->string('mobile_verified')->nullable();
+            $table->boolean('mobile_verified')->default(false);
             $table->enum('online_status'  ,['online','busy','unavailable','available']) ->default('online');
             $table->enum('type'  ,['client','delivery','chef']);
 
