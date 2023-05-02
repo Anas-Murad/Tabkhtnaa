@@ -11,7 +11,6 @@ class CategoryController extends Controller
 {
     use HelperTrait;
 
-
     public function getCategory()
     {
         $categorys = Category::get();

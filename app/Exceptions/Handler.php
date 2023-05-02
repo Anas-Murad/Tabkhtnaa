@@ -2,11 +2,18 @@
 
 namespace App\Exceptions;
 
+use App\Traits\HelperTrait;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Routing\Router;
+use Illuminate\Contracts\Support\Responsable;
 
 class Handler extends ExceptionHandler
 {
+    use  HelperTrait ;
     /**
      * A list of exception types with their corresponding custom log levels.
      *
@@ -46,5 +53,45 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+
     }
+
+
+    public function render($request, Throwable $e)
+    {
+        if (method_exists($e, 'render') && $response = $e->render($request)) {
+            return Router::toResponse($request, $response);
+        } elseif ($e instanceof Responsable) {
+            return $e->toResponse($request);
+        }
+
+        $e = $this->prepareException($this->mapException($e));
+
+        foreach ($this->renderCallbacks as $renderCallback) {
+            foreach ($this->firstClosureParameterTypes($renderCallback) as $type) {
+                if (is_a($e, $type)) {
+                    $response = $renderCallback($e, $request);
+                    if (! is_null($response)) {
+                        return $response;
+                    }
+                }
+            }
+        }
+
+        if ($request->expectsJson() && $e instanceof AuthenticationException)
+            return $this->UN_AUTHENTICATED();
+
+        if ($e instanceof HttpResponseException) {
+            return $e->getResponse();
+        } elseif ($e instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $e);
+        } elseif ($e instanceof ValidationException) {
+            return $this->convertValidationExceptionToResponse($e, $request);
+        }
+        return $request->expectsJson()
+            ? $this->prepareJsonResponse($request, $e)
+            : $this->prepareResponse($request, $e);
+    }
+
 }
