@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use App\Traits\HelperTrait;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Validation\ValidationException;
@@ -60,6 +62,12 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
+
+
+        if ($request->wantsJson() &&  $e instanceof ModelNotFoundException) {
+            return $this->returnError('Resource not found');
+        }
+
         if (method_exists($e, 'render') && $response = $e->render($request)) {
             return Router::toResponse($request, $response);
         } elseif ($e instanceof Responsable) {
@@ -67,6 +75,7 @@ class Handler extends ExceptionHandler
         }
 
         $e = $this->prepareException($this->mapException($e));
+
 
         foreach ($this->renderCallbacks as $renderCallback) {
             foreach ($this->firstClosureParameterTypes($renderCallback) as $type) {
@@ -79,15 +88,22 @@ class Handler extends ExceptionHandler
             }
         }
 
+
         if ($request->expectsJson() && $e instanceof AuthenticationException)
             return $this->UN_AUTHENTICATED();
+
+
+
+
+
 
         if ($e instanceof HttpResponseException) {
             return $e->getResponse();
         } elseif ($e instanceof AuthenticationException) {
             return $this->unauthenticated($request, $e);
         } elseif ($e instanceof ValidationException) {
-            return $this->convertValidationExceptionToResponse($e, $request);
+            return $this->return_Invalidate($e);
+//            return $this->convertValidationExceptionToResponse($e, $request);
         }
         return $request->expectsJson()
             ? $this->prepareJsonResponse($request, $e)

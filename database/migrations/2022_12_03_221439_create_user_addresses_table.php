@@ -16,8 +16,9 @@ return new class extends Migration {
             $table->string('name' ,100);
             $table->string('place' ,100);
 
-            $table->unsignedInteger('country_id' )->nullable();
-            $table->unsignedInteger('city_id' )->nullable();
+            $table->unsignedBigInteger('country_id' )->nullable();
+            $table->unsignedBigInteger('city_id' )->nullable();
+
             $table->string('neighborhood' ,100);
 
 
