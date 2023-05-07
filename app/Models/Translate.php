@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Translate extends Model
 {
     use HasFactory;
-
     protected $table = 'translates';
 
     protected $fillable = [
@@ -20,6 +19,6 @@ class Translate extends Model
         'fr',
         'tr',
     ];
-
     public $timestamps = false;
+
 }

@@ -33,14 +33,14 @@ trait HelperTrait
     }
 
 
-    public function return_Invalidate($validator)
+    public function return_Invalidate($exception)
     {
         return response()->json(array(
             'status' => false,
-            "error_code" => 400,
-            "error_msg" => $validator->errors()->first(),
-            "data" => $validator->errors()
-        ));
+            "error_code" => $exception->status,
+            "error_msg" => $exception->getMessage(),
+            "data" => $exception->errors()
+        )  , $exception->status);
     }
 
     public function returnError($error_msg, $error_code = -1)
@@ -99,11 +99,11 @@ trait HelperTrait
     }
 
 
-    public function returnDataArrayWithOther($data, $other)
+    public function returnDataArrayWithOther($data, $other , $otherName = 'other')
     {
         return response()->json(
             array(
-                'status' => true, 'error_code' => 0, 'error_msg' => __('messages.successfully'), "other" => $other, "data" => $data
+                'status' => true, 'error_code' => 0, 'error_msg' => __('messages.successfully'), $otherName=> $other, "data" => $data
             )
         );
     }
