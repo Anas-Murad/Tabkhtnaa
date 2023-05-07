@@ -11,6 +11,8 @@ class setLangMiddleware
     {
 
 
+
+        //  todo 45
         if ($request->filled('lang')   &&  in_array($request->filled('lang') , ['ar' , 'en']) ){
             app()->setLocale($request->lang);
         }else{
