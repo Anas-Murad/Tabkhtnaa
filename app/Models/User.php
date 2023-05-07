@@ -21,7 +21,7 @@ class User extends Authenticatable
         "id","name","email","residence_country_id","country_code","mobile","username",
         "dob","gender","source","udid","def_lang","profile_image","mobile_verified",
         "online_status","type","account_status","account_comment","email_verified_at",
-        "password","remember_token","created_at","updated_at",
+        "sms_verify", "password","remember_token","created_at","updated_at",
      ];
 
 
@@ -67,4 +67,18 @@ class User extends Authenticatable
         $this->access_token= $tokenResult ;
     }
 
+    public function galleryKitchen()
+    {
+        return $this->hasMany(Gallery::class)->where('type' , '!=' ,'galleryKitchen');
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+
+    public function complaints()
+    {
+        return $this->hasMany(Complaint::class);
+    }
 }

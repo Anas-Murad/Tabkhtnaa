@@ -8,6 +8,9 @@ use App\Http\Controllers\api\v1\CategoryController;
 use App\Http\Controllers\api\v1\CountriesController;
 use App\Http\Controllers\api\v1\MealController;
 use App\Http\Controllers\api\v1\TranslateController;
+use App\Http\Controllers\api\v1\SendSMSController;
+use App\Http\Controllers\api\v1\ContentController;
+use App\Http\Controllers\api\v1\ComplaintController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,11 +39,13 @@ Route::group(['middleware' => ['auth:sanctum' , 'set_lang']], function () {
 
 
     Route::group(['prefix' => 'auth'], function () {
+        Route::post('send-sms' , [SendSMSController::class , 'sendSms']);
         Route::post('update-profile', [AuthController::class, 'update_profile']);
         Route::post('change-password', [AuthController::class, 'change_password']);
         Route::post('mobile-verified', [AuthController::class, 'mobile_verified']);
         Route::post('online-status', [AuthController::class, 'online_status']);
-
+        Route::get('term-and-condition', [ContentController::class, 'term_and_condition']);
+        Route::post('complete-register', [AuthController::class, 'completeRegister']);
     });
 
     Route::group(['prefix' => 'addresses'], function () {
@@ -59,7 +64,12 @@ Route::group(['middleware' => ['auth:sanctum' , 'set_lang']], function () {
         Route::get('list', [CategoryController::class, 'getCategory']);
     });
 
+    Route::group(['prefix' => 'complaint'], function () {
+        Route::get('', [ComplaintController::class, 'getComplaint']);
+        Route::post('create', [ComplaintController::class, 'createComplaint']);
+    });
 
+    Route::post('galleries-maker', [AuthController::class, 'galleriesMaker']);
     Route::group(['prefix' => 'maker'], function () {
         Route::group(['prefix' => 'additions-categories'], function () {
             Route::post('create', [AdditionCategoryController::class, 'store']);
@@ -77,7 +87,6 @@ Route::group(['middleware' => ['auth:sanctum' , 'set_lang']], function () {
         });
 
 
-
         Route::group(['prefix' => 'meal'], function () {
             Route::get('gen-code', [MealController::class, 'gen_code']);
             Route::post('create', [MealController::class, 'store']);
@@ -88,17 +97,5 @@ Route::group(['middleware' => ['auth:sanctum' , 'set_lang']], function () {
             Route::post('update', [MealController::class, 'update']);
         });
 
-
-
-
-
-
-
-
-
-
-
     });
-
-
 });
