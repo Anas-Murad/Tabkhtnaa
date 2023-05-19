@@ -31,6 +31,19 @@ class CreateMealRequest extends FormRequest
                 'exists:accessories,id',
             ],
 
+            'additions' => [ 'array' ],
+            "additions.*"  => [
+                'exists:additions,id',
+            ],
+
+
+
+
+            'images' => [ 'array' ],
+            "images.*"  => [
+                'image',
+            ],
+
 
 
             'preparation_time' => ['nullable' ],

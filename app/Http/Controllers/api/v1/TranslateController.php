@@ -16,4 +16,6 @@ class TranslateController extends Controller
         $translates = Translate::all();
         return $this->returnDataArray($translates,'Success Get All Translate');
     }
+
+
 }

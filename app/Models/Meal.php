@@ -24,6 +24,10 @@ class Meal extends Model
         'preparation_time',
     ];
 
+    protected $hidden =[
+        'deleted_at',
+        'pivot',
+    ];
 
     public  function category(){
         return  $this->belongsTo(Category::class, 'category_id') ;
@@ -41,6 +45,40 @@ class Meal extends Model
             'accessory_id' ,
         );
     }
+    public function images()
+    {
+        return $this->hasMany(Gallery::class, 'meal_id' )->where('type', 'meal');
+    }
+
+    public function additions()
+    {
+        return $this->belongsToMany(Addition::class, 'meal_additions' ,
+            'meal_id' ,
+            'addition_id' ,
+        );
+    }
 
 
+    public function setCategoriesAdditions()
+    {
+        $additionCategory = AdditionCategory::
+            with([
+                'additions'=>function($q) {
+                    $q->whereHas('meals' ,  function ($q) {
+                        $q->where('id' , $this->id) ;
+                    });
+                }
+            ])
+            ->  whereHas(
+                'additions' , function($q) {
+                $q->whereHas('meals' ,  function ($q) {
+                    $q->where('id' , $this->id) ;
+                });
+            }
+            )
+            ->whereUserId(auth()->id())
+            ->get();
+        $this->setRelation('CategoriesAndAdditions' ,$additionCategory ) ;
+
+    }
 }

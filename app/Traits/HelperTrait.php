@@ -14,25 +14,6 @@ trait HelperTrait
         return app()->getLocale();
     }
 
-
-    public function getSerialNumber($first_char = 'T'): string
-    {
-        $last_s_number = UserMembership::select('membership_number')
-            ->where('membership_number', 'like', "$first_char%")
-            ->orderBy('id', 'DESC')
-            ->first();
-
-        if ($last_s_number) {
-            $s_num = (int)filter_var($last_s_number->membership_number, FILTER_SANITIZE_NUMBER_INT);
-            $s_num = abs($s_num) + 1;
-            $s_num = $first_char . Str::padLeft($s_num, 5, '0');
-        } else {
-            $s_num = $first_char . "00001";
-        }
-        return $s_num;
-    }
-
-
     public function return_Invalidate($exception)
     {
         return response()->json(array(
@@ -43,12 +24,12 @@ trait HelperTrait
         )  , $exception->status);
     }
 
-    public function returnError($error_msg, $error_code = -1)
+    public function returnError($error_msg, $error_code = -1  , $status=200)
     {
         return response()->json(
             array(
                 'status' => false, 'error_code' => $error_code, 'error_msg' => $error_msg
-            )
+            ) ,$status
         );
     }
 
