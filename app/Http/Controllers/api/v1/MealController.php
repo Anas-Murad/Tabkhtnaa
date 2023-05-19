@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\api\v1\meal\CreateMealRequest;
 use App\Http\Requests\api\v1\meal\UpdateCreateMealRequest;
 use App\Models\Accessories;
+use App\Models\AdditionCategory;
 use App\Models\Category;
+use App\Models\Gallery;
 use App\Models\Meal;
 use App\Models\Translate;
 use App\Traits\HelperTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MealController extends Controller
 {
@@ -45,7 +48,7 @@ class MealController extends Controller
 
     public function list()
     {
-        $meals = Meal::whereUserId(auth()->id())->paginate();
+        $meals = Meal::whereUserId(auth()->id())->simplePaginate();
         return $this->returnPaginateData($meals);
     }
 
@@ -64,18 +67,36 @@ class MealController extends Controller
         }
         $data = $request->safe()->except('image');
         if ($request->hasFile('image')) {
-            $data['image'] = $this->saveImage($request->image, 'uploads/');
+            $data['image'] = $this->saveImage($request->image, 'uploads/meal');
         }
         $data['code'] = $code;
         $Meal = Meal::create($data);
-        $Meal->accessories()->sync( $request->accessories ) ;
+        $Meal->accessories()->sync($request->accessories);
+        $Meal->additions()->sync($request->additions);
+
+
+
+        if ($request->hasFile('images')) {
+            $imagesArray = [];
+            foreach ($request->images as $image) {
+                $item = [];
+                $item['image'] = $this->saveImage($image, 'uploads/meal');
+                $item['user_id'] = Auth::id();
+                $item['type'] = 'meal';
+                $item['meal_id'] = $Meal->id;
+                $imagesArray[] = $item;
+            }
+            Gallery::insert($imagesArray);
+        }
+
 
         $Meal->load([
-            'accessories'=>function($q){
+            'accessories' => function ($q) {
                 $q->Trans();
             }
-        ]) ;
-
+            ,'additions'
+            ,'images'
+        ]);
 
 
         if ($flag_code) {
@@ -88,13 +109,23 @@ class MealController extends Controller
 
     public function accessories()
     {
-        $lang = app()->getLocale() ;
-        $accessories= Accessories::Trans()->get();
+        $lang = app()->getLocale();
+        $accessories = Accessories::Trans()->get();
         return $this->returnDataArray($accessories);
     }
+
     public function get(Request $request)
     {
         $meal = Meal::whereUserId(auth()->id())->findOrFail($request->id);
+        $meal->load([
+            'accessories' => function ($q) {
+                $q->Trans();
+            }
+            ,'additions'
+            ,'images'
+        ]);
+
+        $meal->setCategoriesAdditions();
         return $this->returnDataArray($meal);
     }
 
@@ -110,12 +141,38 @@ class MealController extends Controller
         }
         $meal->update($data);
 
-        $meal->accessories()->sync( $request->accessories ) ;
+        $meal->accessories()->sync($request->accessories??[]);
+        $meal->additions()->sync($request->additions??[]);
+
+
+        if ($request->hasFile('images')) {
+            $imagesArray = [];
+            foreach ($request->images as $image) {
+                $item = [];
+                $item['image'] = $this->saveImage($image, 'uploads/meal');
+                $item['user_id'] = Auth::id();
+                $item['type'] = 'meal';
+                $item['meal_id'] = $meal->id;
+                $imagesArray[] = $item;
+            }
+            Gallery::insert($imagesArray);
+        }
+
+
+
+
         $meal->load([
-            'accessories'=>function($q){
+            'accessories' => function ($q) {
                 $q->Trans();
             }
-        ]) ;
+            ,'additions'
+            ,'images'
+        ]);
+
+        $meal->setCategoriesAdditions();
+
+
+
         return $this->returnDataArray($meal);
     }
 

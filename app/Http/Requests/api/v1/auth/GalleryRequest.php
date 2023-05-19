@@ -4,8 +4,10 @@ namespace App\Http\Requests\api\v1\auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GalleriesMakerRequest extends FormRequest
+class GalleryRequest extends FormRequest
 {
+
+    // reviewed
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,8 +16,7 @@ class GalleriesMakerRequest extends FormRequest
     public function rules()
     {
         return [
-            'photo.*' => 'required|image',
-            'type' => 'required',
+            'images.*' => 'required|image',
         ];
     }
 

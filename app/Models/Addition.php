@@ -14,7 +14,19 @@ class Addition extends Model
         'user_id',
     ];
     protected $hidden = [
-        'user_id'
+        'user_id',
+        'pivot',
     ];
+
+
+    public function meals()
+    {
+        return $this->belongsToMany(Meal::class, 'meal_additions' ,
+            'addition_id' ,
+            'meal_id' ,
+        );
+    }
+
+
 
 }
