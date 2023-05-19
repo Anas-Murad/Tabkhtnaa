@@ -6,6 +6,7 @@ use App\Traits\HelperTrait;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
@@ -65,8 +66,15 @@ class Handler extends ExceptionHandler
 
 
         if ($request->wantsJson() &&  $e instanceof ModelNotFoundException) {
-            return $this->returnError('Resource not found');
+            return $this->returnError('Resource not found' , -1,403);
         }
+
+        if ($request->wantsJson() &&  $e instanceof NotFoundHttpException) {
+            return $this->returnError('Uri not found', 404,404);
+        }
+
+
+
 
         if (method_exists($e, 'render') && $response = $e->render($request)) {
             return Router::toResponse($request, $response);

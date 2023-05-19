@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AdditionCategory extends Model
 {
@@ -26,7 +27,8 @@ class AdditionCategory extends Model
     ];
 
 
-    public  function additions(){
+    public  function additions():HasMany
+    {
         return  $this->hasMany(Addition::class , 'addition_category_id') ;
     }
 

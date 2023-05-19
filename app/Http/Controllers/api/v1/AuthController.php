@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\api\v1\auth\ChangePasswordRequest;
 use App\Http\Requests\api\v1\auth\ForgetPasswordRequest;
-use App\Http\Requests\api\v1\auth\GalleriesMakerRequest;
+use App\Http\Requests\api\v1\auth\GalleryRequest;
 use App\Http\Requests\api\v1\auth\LoginRequest;
 use App\Http\Requests\api\v1\auth\MobileVerifiedRequest;
 use App\Http\Requests\api\v1\auth\OnlineStatusRequest;
@@ -13,7 +13,7 @@ use App\Http\Requests\api\v1\auth\RegisterRequest;
 use App\Http\Requests\api\v1\auth\ResetPasswordRequest;
 use App\Http\Requests\api\v1\auth\SocialLoginRequest;
 use App\Http\Requests\api\v1\auth\UpdateProfileRequest;
-use App\Http\Requests\api\v1\auth\CompleteRegisterRequest;
+use App\Http\Requests\api\v1\auth\UploadDocumentsRequest;
 use App\Models\Document;
 use App\Models\Gallery;
 use App\Models\User;
@@ -208,8 +208,9 @@ class AuthController extends Controller
         }
     }
 
-    public function completeRegister(CompleteRegisterRequest $request)
+    public function upload_documents(UploadDocumentsRequest $request)
     {
+        // reviewed by abdelrahman
         $data = [];
         if ($request->hasFile('front_id_image')) {
             $data[] = [
@@ -291,21 +292,28 @@ class AuthController extends Controller
                 'created_at' => Carbon::now(),
             ];
         }
-        $document = Document::insert($data);
-        return $this->returnDataArray($document);
+        Document::insert($data);
+        $documents=Document::whereUserId(\auth()->id())->get() ;
+        return $this->returnDataArray($documents);
+
     }
 
-    public function galleriesMaker(GalleriesMakerRequest $request)
+    public function kitchenImages(GalleryRequest $request)
     {
-        if ($request->hasFile('photo')) {
-            foreach ($request->photo as  $pho) {
-                $data = [];
-                $data['photo'] = $this->saveImage($pho, 'uploads/galleries');
-                $data['user_id'] = Auth::id();
-                $data['type'] = 'kitchen';
-                $document = Gallery::create($data);
+
+        // reviewed by abdelrahman
+        $imagesArray = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->images as  $image) {
+                $item = [];
+                $item['image'] = $this->saveImage($image, 'uploads/gallery');
+                $item['user_id'] = Auth::id();
+                $item['type'] = 'kitchen';
+                $imagesArray[] = $item;
             }
+            Gallery::insert($imagesArray);
         }
-        return $this->returnDataArray($document);
+        $documents=Gallery::whereUserId(\auth()->id())->whereType('kitchen')->get() ;
+        return $this->returnDataArray($documents);
     }
 }

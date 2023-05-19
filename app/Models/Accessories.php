@@ -13,6 +13,10 @@ class Accessories extends Model
         'default_name',
     ];
 
+    protected $hidden =[
+        'pivot',
+    ];
+
     public  function scopeTrans($q){
         $lang = app()->getLocale() ;
         $q->select(
