@@ -19,8 +19,15 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+
+
+            $table->unsignedBigInteger('meal_id')->nullable();
+            $table->foreign('meal_id')->references('id')->on('meals')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->enum('type' , ['kitchen','meal']);
-            $table->string('photo');
+            $table->string('image');
             $table->timestamps();
         });
     }
@@ -32,6 +39,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('galleries');
+        Schema::dropIfExists('gallery');
     }
 };

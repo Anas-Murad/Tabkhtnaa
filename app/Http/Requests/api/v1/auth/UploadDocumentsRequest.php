@@ -5,7 +5,7 @@ namespace App\Http\Requests\api\v1\auth;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CompleteRegisterRequest extends FormRequest
+class UploadDocumentsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

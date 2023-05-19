@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Gallery extends Model
 {
@@ -15,10 +16,21 @@ class Gallery extends Model
         'id',
         'user_id',
         'type',
-        'photo',
+        'image',
+        'meal_id',
     ];
 
-    public function user()
+
+
+    protected $hidden =[
+        'created_at',
+        'updated_at',
+        'pivot',
+    ];
+
+
+
+    public function user():BelongsTo
     {
        return $this->belongsTo(User::class);
     }
