@@ -58,7 +58,32 @@ class Meal extends Model
         );
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
+
+    const DISTANCE_UNIT = 6371; // Earth radius in miles
+    public function scopeNearby($query, $latitude, $longitude, $distance)
+    {
+        $query->selectRaw("
+            ('6371' * ACOS(
+                COS(RADIANS($latitude)) * COS(RADIANS(user_addresses.latitude)) *
+                COS(RADIANS(user_addresses.longitude) - RADIANS($longitude)) +
+                SIN(RADIANS($latitude)) * SIN(RADIANS(user_addresses.latitude))
+            )) AS distance")
+            ->having('distance', '<', $distance)->orderBy('distance', 'ASC');
+    }
+
+    public function scopeActive($query)
+    {
+        $query->join('users', 'meals.user_id', '=', 'users.id')
+                  ->where('users.type', 'chef')
+                  ->where('users.account_status', 'active')
+                  ->where('meals.is_active', true)
+                  ->where('meals.admin_status', 'confirmed');
+    }
     public function setCategoriesAdditions()
     {
         $additionCategory = AdditionCategory::
@@ -79,6 +104,5 @@ class Meal extends Model
             ->whereUserId(auth()->id())
             ->get();
         $this->setRelation('CategoriesAndAdditions' ,$additionCategory ) ;
-
     }
 }

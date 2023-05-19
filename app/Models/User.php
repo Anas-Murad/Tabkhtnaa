@@ -81,4 +81,25 @@ class User extends Authenticatable
     {
         return $this->hasMany(Complaint::class);
     }
+
+    public function meals()
+    {
+        return $this->hasMany(Meal::class);
+    }
+
+    public function userAddress()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+
+    public function scopeNearby($query, $latitude, $longitude, $distance)
+    {
+        $query->selectRaw("
+            ('6371' * ACOS(
+                COS(RADIANS($latitude)) * COS(RADIANS(user_addresses.latitude)) *
+                COS(RADIANS(user_addresses.longitude) - RADIANS($longitude)) +
+                SIN(RADIANS($latitude)) * SIN(RADIANS(user_addresses.latitude))
+            )) AS distance")
+            ->having('distance', '<', $distance)->orderBy('distance', 'ASC');
+    }
 }
