@@ -5,12 +5,16 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\api\v1\meal\CreateMealRequest;
 use App\Http\Requests\api\v1\meal\UpdateCreateMealRequest;
+use App\Http\Requests\api\v1\meal\UserMealsRequest;
 use App\Models\Accessories;
 use App\Models\Category;
 use App\Models\Meal;
 use App\Models\Translate;
+use App\Models\User;
+use App\Models\UserAddress;
 use App\Traits\HelperTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MealController extends Controller
 {
@@ -126,5 +130,37 @@ class MealController extends Controller
             return $this->returnError('It was not deleted, it may already be deleted or you do not have enough permission');
         }
         return $this->returnSuccess(__('messages.deleted_successfully'));
+    }
+
+    public function user_meals(UserMealsRequest $request)
+    {
+        $latitude = $request->lat;
+        $longitude = $request->long;
+        $distance = $request->radius ?? 30;
+
+        $meals = Meal::select('meals.*' ,
+            'users.name as user_name' ,
+            'user_addresses.latitude',
+            'user_addresses.longitude'
+        )->active()->nearby($latitude, $longitude, $distance)->where(function ($q) use ($request){
+            if ($request->filled('category_id'))
+                $q->where('category_id' , $request->category_id);
+            if ($request->filled('min_price'))
+                $q->where('price' , '>=' , $request->min_price);
+            if ($request->filled('max_price'))
+                $q->where('price' , '<=' , $request->max_price);
+            if ($request->filled('days'))
+                $q->where('days' , 'LIKE', '%' . $request->days . '%');
+            if ($request->filled('type'))
+                $q->where('type' , $request->type);
+            if ($request->filled('chafe_name'))
+                $q->whereHas('user' , function ($q1) use($request){
+                    $q1->where('type' , 'chef');
+                    $q1->where('account_status' , 'active');
+                    $q1->where('name' , 'LIKE', '%' . $request->chafe_name . '%');
+                });
+        })->join('user_addresses', 'meals.user_id', '=', 'user_addresses.user_id')
+            ->simplePaginate(10);
+       return $this->returnDataArray($meals ,'Success Get All Meals');
     }
 }

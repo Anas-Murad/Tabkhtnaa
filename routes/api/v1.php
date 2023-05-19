@@ -11,6 +11,9 @@ use App\Http\Controllers\api\v1\TranslateController;
 use App\Http\Controllers\api\v1\SendSMSController;
 use App\Http\Controllers\api\v1\ContentController;
 use App\Http\Controllers\api\v1\ComplaintController;
+use App\Http\Controllers\api\v1\UserController;
+use App\Http\Controllers\api\v1\SanctionController;
+use App\Http\Controllers\api\v1\RatingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -97,5 +100,21 @@ Route::group(['middleware' => ['auth:sanctum' , 'set_lang']], function () {
             Route::post('update', [MealController::class, 'update']);
         });
 
+    });
+
+    Route::group(['prefix' => 'user'] ,function (){
+        Route::get('meals' , [MealController::class , 'user_meals']);
+        Route::get('chefs' , [UserController::class , 'all_chefs']);
+        Route::get('chef' , [UserController::class , 'get_chef']);
+
+        Route::group(['prefix' => 'sanction'] ,function (){
+            Route::get('list' , [SanctionController::class , 'list']);
+            Route::get('seen' , [SanctionController::class , 'seen_sanction']);
+        });
+        Route::group(['prefix' => 'rating'] ,function (){
+            Route::get('list' , [RatingController::class , 'list']);
+            Route::post('create' , [RatingController::class , 'store']);
+            Route::get('seen' , [RatingController::class , 'get_rating']);
+        });
     });
 });
