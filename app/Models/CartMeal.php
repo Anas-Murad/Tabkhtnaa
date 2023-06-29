@@ -30,7 +30,7 @@ class CartMeal extends Model
     }
 
     public   function mealAdditions(){
-        return  $this->hasMany(CartMealMealAddition::class , 'cart_meal_id') ;
+        return  $this->hasMany(CartMealAddition::class , 'cart_meal_id') ;
     }
 
 
@@ -48,7 +48,7 @@ class CartMeal extends Model
 
     public function additions()
     {
-        return $this->belongsToMany(Addition::class, 'cart_meal_meal_additions' ,
+        return $this->belongsToMany(Addition::class, 'cart_meal_additions' ,
             'cart_meal_id' ,
             'addition_id' ,
         );

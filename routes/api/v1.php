@@ -6,13 +6,12 @@ use App\Http\Controllers\api\v1\AddressesController;
 use App\Http\Controllers\api\v1\AuthController;
 use App\Http\Controllers\api\v1\CartController;
 use App\Http\Controllers\api\v1\CategoryController;
+use App\Http\Controllers\api\v1\ChefController;
 use App\Http\Controllers\api\v1\ComplaintController;
 use App\Http\Controllers\api\v1\ContentController;
 use App\Http\Controllers\api\v1\CountriesController;
 use App\Http\Controllers\api\v1\MealController;
 use App\Http\Controllers\api\v1\SendSMSController;
-use App\Http\Controllers\api\v1\ContentController;
-use App\Http\Controllers\api\v1\ComplaintController;
 use App\Http\Controllers\api\v1\UserController;
 use App\Http\Controllers\api\v1\SanctionController;
 use App\Http\Controllers\api\v1\RatingController;
@@ -102,7 +101,6 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
             Route::post('update', [AdditionController::class, 'update']);
         });
 
-
         Route::group(['prefix' => 'meal'], function () {
             Route::get('gen-code', [MealController::class, 'gen_code']);
             Route::post('create', [MealController::class, 'store']);
@@ -111,6 +109,12 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
             Route::get('list', [MealController::class, 'list']);
             Route::post('delete', [MealController::class, 'delete']);
             Route::post('update', [MealController::class, 'update']);
+        });
+        Route::group(['prefix' => 'orders'], function () {
+            Route::get('list', [ChefController::class, 'list']);
+            Route::post('update_status', [ChefController::class, 'update_status']);
+
+            Route::get('gat_delivery', [ChefController::class, 'gat_delivery']);
         });
 
     });
@@ -128,7 +132,9 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
             Route::post('create' , [RatingController::class , 'store']);
             Route::get('seen' , [RatingController::class , 'get_rating']);
         });
-      
+
+
+
        Route::group(['prefix' => 'cart'], function () {
             Route::post('create', [CartController::class, 'store']);
             Route::get('list', [CartController::class, 'list']);
@@ -139,6 +145,28 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
 
         Route::group(['prefix' => 'orders'], function () {
             Route::post('create', [UserOrderController::class, 'store']);
+            Route::get('list', [UserOrderController::class, 'list']);
+            Route::post('cancel', [UserOrderController::class, 'cancel']);
         });
+
+
+
+
+
+
+
+
+
+
     });
+
+    Route::group(['prefix' => 'delivery'], function () {
+        Route::post('create', [UserOrderController::class, 'store']);
+        Route::get('list', [UserOrderController::class, 'list']);
+        Route::post('cancel', [UserOrderController::class, 'cancel']);
+    });
+
+
+
+
 });
