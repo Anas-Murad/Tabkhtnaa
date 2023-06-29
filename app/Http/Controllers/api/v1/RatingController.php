@@ -14,10 +14,9 @@ class RatingController extends Controller
 {
     use HelperTrait;
 
-    public function list()
+    public function list(Request $request)
     {
-        $user_id = Auth::id();
-        $ratings =  Rating::where('user_id' , $user_id)->with('user' , 'chef')->simplePaginate(10);
+        $ratings =  Rating::where('chef_id' , $request->chef_id)->with('user:id,name' )->simplePaginate(10);
         return $this->returnPaginateData($ratings);
     }
 

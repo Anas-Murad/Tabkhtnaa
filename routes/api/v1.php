@@ -119,8 +119,7 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
         Route::group(['prefix' => 'orders'], function () {
             Route::get('list', [ChefController::class, 'list']);
             Route::post('update_status', [ChefController::class, 'update_status']);
-
-            Route::get('gat_delivery', [ChefController::class, 'gat_delivery']);
+            Route::get('gat_delivery', [ChefController::class, 'gat_delivery']); //todo abd 2023
         });
 
     });
