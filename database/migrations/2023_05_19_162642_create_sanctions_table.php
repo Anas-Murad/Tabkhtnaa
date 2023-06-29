@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            //Todo cheke
             $table->enum('type' , ['test' , 'test1']);
             $table->enum('seen' , ['seen' , 'not_seen'])->default('not_seen');
             $table->string('note')->nullable();
