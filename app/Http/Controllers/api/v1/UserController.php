@@ -38,7 +38,12 @@ class UserController extends Controller
 
     public function get_chef(ChefIDRequest $request)
     {
-        $chef = User::where('id',$request->id)->with('meals' , 'userAddress')->get();
-        dd($chef);
+        $chef = User::with([
+            'meals' =>function($q){
+                $q->active() ;
+            }, 'userAddress'
+        ])->find( $request->id);
+        $chef->loadRates();
+        return $this->returnDataArray($chef);
     }
 }

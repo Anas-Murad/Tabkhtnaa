@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use  Str ;
+use  Str;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -18,12 +19,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        "id","name","email","residence_country_id","country_code","mobile","username",
-        "dob","gender","source","udid","def_lang","profile_image","mobile_verified",
-        "online_status","type","account_status","account_comment","email_verified_at",
-        "sms_verify", "password","remember_token","created_at","updated_at",
-     ];
-
+        "id", "name", "email", "residence_country_id", "country_code", "mobile", "username",
+        "dob", "gender", "source", "udid", "def_lang", "profile_image", "mobile_verified",
+        "online_status", "type", "account_status", "account_comment", "email_verified_at",
+        "sms_verify", "password", "remember_token", "created_at", "updated_at",
+    ];
 
 
     /**
@@ -48,28 +48,27 @@ class User extends Authenticatable
 
     public function setUsernameAttribute($value)
     {
-        $temp =  Str::slug($this->attributes['name']).'@tabketna.com';
+        $temp = Str::slug($this->attributes['name']) . '@tabketna.com';
         $username = $temp;
         $i = 0;
-        while(User::whereUsername($username)->exists())
-        {
+        while (User::whereUsername($username)->exists()) {
             $i++;
-            $username = Str::random(2) .$i.$temp ;
+            $username = Str::random(2) . $i . $temp;
         }
         $this->attributes['username'] = $username;
     }
 
 
-    public function  ApiCreateToken()
+    public function ApiCreateToken()
     {
         $this->tokens()->delete();
         $tokenResult = $this->createToken('authToken')->plainTextToken;
-        $this->access_token= $tokenResult ;
+        $this->access_token = $tokenResult;
     }
 
     public function galleryKitchen()
     {
-        return $this->hasMany(Gallery::class)->where('type' , '!=' ,'galleryKitchen');
+        return $this->hasMany(Gallery::class)->where('type', '!=', 'galleryKitchen');
     }
 
     public function documents()
@@ -85,6 +84,20 @@ class User extends Authenticatable
     public function meals()
     {
         return $this->hasMany(Meal::class);
+    }
+
+    public function loadRates()
+    {
+
+//    $Rating_count = Rating::where('chef_id' , $this->id)->count();
+        $delivery = Rating::where('chef_id', $this->id)->avg('rating_delivery');
+        $speed_chef = Rating::where('chef_id', $this->id)->avg('rating_speed_chef');
+        $speed_delivery = Rating::where('chef_id', $this->id)->avg('rating_speed_delivery');
+        $this->raties = [
+            "rating_delivery" => $delivery,
+            "rating_speed_chef" => $speed_chef,
+            "rating_speed_delivery" => $speed_delivery,
+        ];
     }
 
     public function userAddress()
