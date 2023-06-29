@@ -14,25 +14,6 @@ trait HelperTrait
         return app()->getLocale();
     }
 
-
-    public function getSerialNumber($first_char = 'T'): string
-    {
-        $last_s_number = UserMembership::select('membership_number')
-            ->where('membership_number', 'like', "$first_char%")
-            ->orderBy('id', 'DESC')
-            ->first();
-
-        if ($last_s_number) {
-            $s_num = (int)filter_var($last_s_number->membership_number, FILTER_SANITIZE_NUMBER_INT);
-            $s_num = abs($s_num) + 1;
-            $s_num = $first_char . Str::padLeft($s_num, 5, '0');
-        } else {
-            $s_num = $first_char . "00001";
-        }
-        return $s_num;
-    }
-
-
     public function return_Invalidate($exception)
     {
         return response()->json(array(
@@ -43,12 +24,12 @@ trait HelperTrait
         )  , $exception->status);
     }
 
-    public function returnError($error_msg, $error_code = -1)
+    public function returnError($error_msg, $error_code = -1  , $status=200)
     {
         return response()->json(
             array(
                 'status' => false, 'error_code' => $error_code, 'error_msg' => $error_msg
-            )
+            ) ,$status
         );
     }
 
@@ -140,7 +121,6 @@ trait HelperTrait
 
     function saveImageUrl($photo, $folder)
     {
-
         $rand = Str::random(5);
         $contents = file_get_contents($photo);
         $file_name = $rand . time() . '.png';
@@ -163,16 +143,12 @@ trait HelperTrait
 
     function CalcAccount($course_id , $isUpdate=false ,CourseAccount $courseAccount = null )
     {
-
-
-
         $dataCourse = Course::select(
             'id',
             'price',
             'membership_price',
             'attendance_limit',
         )->find($course_id);
-
         $dataAttendance = DB::table('courses_users')
             ->selectRaw(" count(*) as reg_total ")
             ->selectRaw("(select count(*) as toss from courses_users as su where   su.courses_id = $course_id and su.is_member =1 ) as reg_memberships_count")
@@ -189,14 +165,11 @@ trait HelperTrait
             ->selectRaw("(select sum(contract_ratio) as toss from course_trainers as su where   su.courses_id = $course_id  and contract_status='admin_confirmed')  as contract_ratio_total")
               ->where('courses_users.courses_id', $course_id)
             ->first();
-
-
         $Trainers = CourseTrainers::where('courses_id', $course_id)->select('id',
             'trainer_id',
             'courses_id',
             'contract_ratio',
         )->where('contract_status', 'admin_confirmed')->get();
-
        $total = $dataAttendance->attendance_visitors_price + $dataAttendance->attendance_memberships_price;
         $TrainersPrice =0;
         foreach ($Trainers as $Trainer) {
@@ -205,11 +178,7 @@ trait HelperTrait
 
             $TrainersPrice +=  $Trainer->price_ratio;
         }
-//        return $dataAttendance;
-
         $Course= Course::find($course_id);
-
-
         $data =[
             "courses_id" =>$course_id,
             "price"=>$Course->price ??0,
@@ -219,16 +188,12 @@ trait HelperTrait
             "reg_free_count" =>$dataAttendance->reg_free_count ?? 0 ,
             "attendance_limit" =>$Course->attendance_limit ?? 0 ,
             "attendance_memberships_count" =>$dataAttendance->attendance_memberships_count ?? 0,
-
             "attendance_visitors_count" =>$dataAttendance->attendance_visitors_count ?? 0,
             "attendance_free_count" =>$dataAttendance->attendance_free_count ?? 0,
             "reg_memberships_price" =>$dataAttendance->reg_memberships_price ?? 0,
             "reg_visitors_price" =>$dataAttendance->reg_visitors_price ?? 0,
             "attendance_memberships_price" =>$dataAttendance->attendance_memberships_price ?? 0,
             "attendance_visitors_price" =>$dataAttendance->attendance_visitors_price ?? 0,
-
-
-
             "reg_total" =>$dataAttendance->reg_total ?? 0,
             "attendance_total" =>$dataAttendance->attendance_total ?? 0,
             "contract_ratio_total" =>$dataAttendance->contract_ratio_total ?? 0,
@@ -237,8 +202,6 @@ trait HelperTrait
             //    "trainer_receipt_id",
             "notes" =>'توليد تلقائي',
         ] ;
-
-
         if ($isUpdate && $courseAccount){
             $courseAccount->update($data) ;
             $courseAccount->trainers()->delete();
@@ -253,9 +216,5 @@ trait HelperTrait
                 "status"=>'pending',
             ]);
         }
-
-
-
-
     }
 }

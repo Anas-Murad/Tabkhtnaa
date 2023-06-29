@@ -32,6 +32,16 @@ class UpdateCreateMealRequest extends FormRequest
 
 
 
+            'additions' => [ 'array' ],
+            "additions.*"  => [
+                'exists:additions,id',
+            ],
+
+            'images' => [ 'array' ],
+            "images.*"  => [
+                'image',
+            ],
+
             'preparation_time' => ['nullable' ],
             'user_id' => ['required'],
             'price' => [ 'numeric' , 'between:0,999', 'regex:/^\d+(\.\d{1,2})?$/'],
