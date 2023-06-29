@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('cart_meal_meal_additions', function (Blueprint $table) {
+        Schema::create('cart_meal_additions', function (Blueprint $table) {
             $table->unsignedBigInteger('cart_meal_id');
 
             $table->unsignedBigInteger('addition_id');
@@ -23,6 +23,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('cart_meal_meal_additions');
+        Schema::dropIfExists('cart_meal_additions');
     }
 };

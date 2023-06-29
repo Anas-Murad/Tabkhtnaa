@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OrderAddresse extends Model
+class OrderAddress extends Model
 {
     public $timestamps = false;
 
@@ -24,4 +24,17 @@ class OrderAddresse extends Model
         'longitude',
         'user_id',
     ];
+
+
+    public function  cities()
+    {
+        return  $this->belongsTo(City::class , 'city_id');
+    }
+
+
+    public function  country()
+    {
+        return  $this->belongsTo(Country::class);
+    }
+
 }

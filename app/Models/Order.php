@@ -33,4 +33,18 @@ class Order extends Model
         'refund_id',
     ];
 
+
+    public  function orderMeal(){
+        return $this->hasMany(OrderMeal::class , 'order_id') ;
+    }
+
+    public  function address(){
+        return $this->hasOne(OrderAddress::class , 'order_id') ;
+    }
+
+
+    public  function user(){
+        return $this->belongsTo(User::class , 'user_id' ) ;
+    }
+
 }

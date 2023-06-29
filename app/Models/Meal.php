@@ -63,6 +63,15 @@ class Meal extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function calcDiscount()
+    {
+        return  0 ;
+    }
+
+    public function calcPrice()
+    {
+        return $this->price;
+    }
 
     const DISTANCE_UNIT = 6371; // Earth radius in miles
     public function scopeNearby($query, $latitude, $longitude, $distance)
