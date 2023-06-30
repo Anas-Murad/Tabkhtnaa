@@ -8,9 +8,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table
-                ->enum('can_delivery' , ['no' , 'request','yes' ,'rejected'])
-                ->default('no')
+            $table->boolean('can_delivery')
+                ->default(false)
                 ->after('type');
         });
     }
