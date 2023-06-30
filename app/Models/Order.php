@@ -47,4 +47,10 @@ class Order extends Model
         return $this->belongsTo(User::class , 'user_id' ) ;
     }
 
+
+    public  function chef(){
+        return $this->belongsTo(User::class , 'chef_id' ) ;
+    }
+
+
 }

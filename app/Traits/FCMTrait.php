@@ -4,6 +4,7 @@
 namespace App\Traits;
 
 use App\Models\Device;
+use App\Models\Notification;
 
 trait FCMTrait
 {
@@ -25,6 +26,29 @@ trait FCMTrait
 
     public function PushNotification($user_id, array $data)
     {
+
+     $Notification=      Notification::create([
+         'body' => $data['body'] ??  null ,
+         'title' => $data['title'] ??  null ,
+         'order_id' => $data['order_id'] ??  null ,
+         'data' => $data ??  null ,
+     ]) ;
+        $data['notification_id']=$Notification->id ;
+        if (is_array($user_id)){
+            foreach ($user_id as $user_idItem)
+            $Notification->users()->create([
+                'user_id'=>$user_idItem,
+            ]);
+        }else{
+            $Notification->users()->create([
+                'user_id'=>$user_id,
+            ]);
+        }
+
+
+
+
+        return ;
 //        $d_user_id =  json_encode($user_id, JSON_UNESCAPED_UNICODE);
 //        $txt = "\n ----------------------" . date('H:i') . " ---------------------- \n \n";
 //        $fp = fopen('fcm-log.log', 'a');

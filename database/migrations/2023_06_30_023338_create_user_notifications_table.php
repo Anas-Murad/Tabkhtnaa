@@ -7,20 +7,24 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('user_live_locations', function (Blueprint $table) {
+        Schema::create('user_notifications', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')
                 ->nullOnDelete() ;
-            $table->string('latitude');
-            $table->string('longitude');
+            $table->unsignedBigInteger('notification_id')->nullable();
+            $table->foreign('notification_id')->references('id')->on('notifications')
+                ->onUpdate('cascade')
+                ->nullOnDelete() ;
+
+            $table->boolean('seen')->default(false);
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('user_live_locations');
+        Schema::dropIfExists('user_notifications');
     }
 };
