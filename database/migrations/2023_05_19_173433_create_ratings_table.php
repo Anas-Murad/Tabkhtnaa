@@ -25,9 +25,9 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->unsignedBigInteger('order_id');
-//            $table->foreign('user_id')->references('id')->on('users')
-//                ->onUpdate('cascade')
-//                ->onDelete('cascade');
+            $table->foreign('order_id')->references('id')->on('orders')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->enum('rating_chef' , ['1' , '2' , '3' , '4' , '5'])->nullable();
             $table->enum('rating_delivery' , ['1' , '2' , '3' , '4' , '5'])->nullable();
             $table->enum('rating_speed_chef' , ['1' , '2' , '3' , '4' , '5'])->nullable();
