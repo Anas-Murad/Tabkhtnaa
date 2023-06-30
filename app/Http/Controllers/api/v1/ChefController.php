@@ -5,7 +5,6 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\api\v1\orders\ChefMyOrdersRequest;
 use App\Http\Requests\api\v1\orders\ChefUpdateOrdersStatusRequest;
-use App\Http\Requests\api\v1\orders\UserCancelOrdersRequest;
 use App\Models\Order;
 use App\Models\OrderHistoryDelivery;
 use App\Models\User;
@@ -20,7 +19,7 @@ class ChefController extends Controller
 {
     use HelperTrait;
 
-    public function gat_delivery(Request $request)
+     public function gat_delivery(Request $request)
     {
 
 
@@ -310,4 +309,17 @@ class ChefController extends Controller
         ];
     }
 
+ 
+    public function get(Request $request)
+    {
+        $order = Order::where('chef_id' , auth()->id())->find($request->order_id);
+        if (empty($order))
+            return $this->returnError('Not Found Order');
+        $order->load(['orderMeal' => function($q){
+            $q->with('accessories' , 'additions');
+        }], 'address');
+        return $this->returnSuccess($order);
+    }
+
+ 
 }

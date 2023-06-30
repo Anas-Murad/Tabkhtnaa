@@ -20,26 +20,12 @@ class OrderMeal extends Model
         'total',
     ];
 
-
-
-public  function orderMealAccessories(){
-    return $this->hasMany(OrderMealAccessory::class , 'order_meal_id');
-}
-
-public  function orderMealAdditions(){
-    return $this->hasMany(OrderMealAddition::class , 'order_meal_id');
-}
-
-
-
-
-
-
-
-
-
-
-
+    public  function orderMealAccessories(){
+        return $this->hasMany(OrderMealAccessory::class , 'order_meal_id');
+    }
+    public  function orderMealAdditions(){
+        return $this->hasMany(OrderMealAddition::class , 'order_meal_id');
+    }
     public function accessories()
     {
         return $this->belongsToMany(Accessories::class,
@@ -48,9 +34,6 @@ public  function orderMealAdditions(){
             'accessory_id' ,
         );
     }
-
-
-
     public function additions()
     {
         return $this->belongsToMany(Addition::class, 'order_meal_additions' ,
@@ -58,7 +41,4 @@ public  function orderMealAdditions(){
             'addition_id' ,
         );
     }
-
-
-
 }

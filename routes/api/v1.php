@@ -73,6 +73,9 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
         Route::get('chefs' , [UserController::class , 'all_chefs']);
         Route::get('chef' , [UserController::class , 'get_chef']);
 
+        Route::group(['prefix' => 'location'] ,function (){
+            Route::post('create_or_update' , [UserController::class , 'create_or_update']);
+        });
         Route::group(['prefix' => 'sanction'] ,function (){
             Route::get('list' , [SanctionController::class , 'list']);
             Route::get('seen' , [SanctionController::class , 'seen_sanction']);
@@ -91,6 +94,7 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
         });
         Route::group(['prefix' => 'orders'], function () {
             Route::post('create', [UserOrderController::class, 'store']);
+            Route::get('get', [UserOrderController::class, 'get']);
             Route::get('list', [UserOrderController::class, 'list']);
             Route::post('cancel', [UserOrderController::class, 'cancel']);
         });
@@ -122,6 +126,7 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
         });
         Route::group(['prefix' => 'orders'], function () {
             Route::get('list', [ChefController::class, 'list']);
+            Route::get('get', [ChefController::class, 'get']);
             Route::post('update_status', [ChefController::class, 'update_status']);
             Route::get('gat_delivery', [ChefController::class, 'gat_delivery']);
             Route::post('assign_delivery', [ChefController::class, 'assign_delivery']);
