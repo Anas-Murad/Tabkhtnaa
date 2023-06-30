@@ -10,6 +10,7 @@ use App\Models\OrderHistoryDelivery;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\UserLiveLocation;
+use App\Traits\FCMTrait;
 use App\Traits\HelperTrait;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ use Illuminate\Validation\Rule;
 
 class ChefController extends Controller
 {
-    use HelperTrait;
+    use HelperTrait,  FCMTrait ;
 
      public function gat_delivery(Request $request)
     {
@@ -195,6 +196,16 @@ class ChefController extends Controller
                     'delivery_id'=>$request->delivery_id,
                     'status'=>'pending',
                 ]);
+                $delevary = User::findOrFail($request->delivery_id);
+                //Notification
+                $this->PushNotification($user->id,[
+                    'title' =>" تم تعيين سائق للطلب ",
+                    'body' =>"تم تعيين السائق {$delevary->name}  للطلب ",
+                    'order_id' =>$request->order_id,
+                    'delivery_id' =>$request->delivery_id,
+                    'chef_id' =>$chef_id,
+                    'delivery_status' =>'pending',
+                ]);
                 return  $this->returnDataArray($user);
             }else{
                 return   $this->returnError('السائق لم يعد متاحا الان') ;
@@ -258,7 +269,6 @@ class ChefController extends Controller
 //            "estimated_delivery_time": null,
 //            "estimated_time": null,
 
-
         $data = $request->safe()->only('status', 'rejected_reason', 'expected_order_time',);
         if ($request->status == 'confirmed') {
             $calcDeliveryTime = $this->calcDeliveryTime($request->expected_order_time);
@@ -267,6 +277,16 @@ class ChefController extends Controller
 
         }
         $order->update($data);
+        $chef = User::findOrFail($order->chef_id);
+        //Notification
+        $this->PushNotification($order->user_id,[
+            'title' =>" تم تغير حالة الطلب ",
+            'body' =>"قام {$chef->name} تم تغير حالة الطلب لتصبح {$order->status}",
+            'order_id' =>$order->id,
+            'delivery_id' =>$order->delivery_id,
+            'chef_id' =>$order->chef_id,
+            'delivery_status' =>'pending',
+        ]);
 
         $order->orderStatus()->create([
             'status'=>$request->status,
@@ -294,7 +314,6 @@ class ChefController extends Controller
 
     private function calcDeliveryTime(mixed $expected_order_time)
     {
-
         $DeliveryTime = 15;
         $TotalTime = $DeliveryTime + $expected_order_time;
         return [
@@ -306,9 +325,7 @@ class ChefController extends Controller
 
     public function get(Request $request)
     {
-        $order = Order::where('chef_id' , auth()->id())->find($request->order_id);
-        if (empty($order))
-            return $this->returnError('Not Found Order');
+        $order = Order::where('chef_id' , auth()->id())->findOrFail($request->order_id);
         $order->load(['orderMeal' => function($q){
             $q->with('accessories' , 'additions');
         }], 'address');

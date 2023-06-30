@@ -28,10 +28,6 @@ use Illuminate\Support\Facades\Storage;
 class AuthController extends Controller
 {
     use HelperTrait;
-
-
-
-
     public function reset_password(ResetPasswordRequest $request)
     {
         $user =  User::find($request->user_id) ;
@@ -86,9 +82,6 @@ class AuthController extends Controller
         );
     }
 
-
-
-
     public function online_status(OnlineStatusRequest $request)
     {
          $user = $request->user();
@@ -100,8 +93,6 @@ class AuthController extends Controller
         //        $user->ApiCreateToken();
         return $this->returnDataArray($user);
     }
-
-
 
     public function mobile_verified(MobileVerifiedRequest $request)
     {
@@ -115,10 +106,6 @@ class AuthController extends Controller
         return $this->returnDataArray($user);
     }
 
-
-
-
-
     public function change_password(ChangePasswordRequest $request)
     {
         $user = $request->user();
@@ -126,7 +113,6 @@ class AuthController extends Controller
 //        $user->ApiCreateToken();
         return $this->returnDataArray($user);
     }
-
 
     public function update_profile(UpdateProfileRequest $request)
     {
@@ -139,14 +125,10 @@ class AuthController extends Controller
                 Storage::delete($temp);
             $data['profile_image'] = $this->saveImage($request->profile_image, 'uploads/profile');
         }
-
         if ($request->filled('mobile')){
             $data['mobile_verified'] = false ;
         }
-
-
         $user->update($data);
-//        $user->ApiCreateToken();
         return $this->returnDataArray($user);
     }
 
@@ -159,7 +141,6 @@ class AuthController extends Controller
             $user->access_token = $tokenResult;
             return $this->returnDataArray($user);
         }
-
         $data = $request->safe()->except('profile_image_url');
         if ($request->filled('profile_image_url')) {
             $data['profile_image'] = $this->saveImageUrl($request->profile_image_url, 'uploads/profile');
@@ -181,7 +162,6 @@ class AuthController extends Controller
         if ($request->hasFile('profile_image')) {
             $data['profile_image'] = $this->saveImage($request->profile_image, 'uploads/profile');
         }
-
         if ($request->type =='client'){
             $data['account_status'] ='pending' ;
         }
@@ -295,12 +275,10 @@ class AuthController extends Controller
         Document::insert($data);
         $documents=Document::whereUserId(\auth()->id())->get() ;
         return $this->returnDataArray($documents);
-
     }
 
     public function kitchenImages(GalleryRequest $request)
     {
-
         // reviewed by abdelrahman
         $imagesArray = [];
         if ($request->hasFile('images')) {
@@ -315,5 +293,13 @@ class AuthController extends Controller
         }
         $documents=Gallery::whereUserId(\auth()->id())->whereType('kitchen')->get() ;
         return $this->returnDataArray($documents);
+    }
+
+    public function can_delivery()
+    {
+        $user = Auth::user();
+        $user['can_delivery'] = true;
+        $user->save();
+        return $this->returnSuccess($user);
     }
 }

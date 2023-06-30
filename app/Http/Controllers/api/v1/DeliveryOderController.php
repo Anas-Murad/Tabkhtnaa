@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\api\v1\orders\ChefUpdateOrdersStatusRequest;
 use App\Models\Order;
 use App\Models\OrderHistoryDelivery;
 use App\Traits\FCMTrait;
@@ -84,6 +83,40 @@ class DeliveryOderController extends Controller
             ->first();
 
 
+           if ( $delivery->status =='accepted'){
+               return  $this->returnError('تم قبول توصيل الطلب في وقت سابق , شكرا لك');
+           }
+            if ( $delivery->status =='rejected'){
+                return  $this->returnError('تم رفض توصيل الطلب في وقت سابق , شكرا لك');
+            }
+            $order = Order::find($request->order_id);
+             switch ($request->status){
+                 case "accepted":
+                     $delivery->status ="accepted";
+                     $delivery->save() ;
+                     $order->delivery_id =$user->id ;
+                     $this->PushNotification($order->chef_id,[
+                         'title' =>"تم قبول طلب التوصيل",
+                         'body' =>"قام {$user->name} بقبول توصيل الطلب رقم {$order->id}",
+                         'order_id' =>$order->id,
+                         'delivery_id' =>$user->id,
+                         'chef_id' =>$order->chef_id,
+                         'delivery_status' =>'accepted',
+                     ]);
+                     $order->save();
+             break;
+             case "rejected":
+                 $this->PushNotification($order->chef_id,[
+                     'title' =>"تم رفض طلب التوصيل",
+                     'body' =>"قام {$user->name} برفض توصيل الطلب رقم {$order->id}",
+                     'order_id' =>$order->id,
+                     'delivery_id' =>$user->id,
+                     'chef_id' =>$order->chef_id,
+                     'delivery_status' =>'rejected',
+                 ]);
+             break;
+         }
+        return  $this->returnDataArray($order) ;
         if ($delivery->status == 'accepted') {
             return $this->returnError('تم قبول توصيل الطلب في وقت سابق , شكرا لك');
         }
