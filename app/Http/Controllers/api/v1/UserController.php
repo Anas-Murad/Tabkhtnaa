@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\v1;
 
+use App\Events\LiveLocationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\api\v1\chef\ChefIDRequest;
 use App\Http\Requests\api\v1\chef\ChefRequest;
@@ -49,14 +50,4 @@ class UserController extends Controller
         return $this->returnDataArray($chef);
     }
 
-    public function create_or_update(locationRequest $request)
-    {
-        $data = $request->all();
-        $data['user_id'] = auth()->id();
-        $location = UserLiveLocation::updateOrCreate(
-            ['user_id' => $data['user_id']],
-            $data
-        );
-        return $this->returnSuccess($location);
-    }
 }

@@ -60,6 +60,13 @@ class UserOrderController extends Controller
 
         $order->update(['status' => 'cancel']);
 
+
+
+        $order->orderStatus()->create([
+            'status'=>'cancel',
+            'action_by_type'=>'client',
+            'action_by_id'=>$request->user_id,
+        ]);
         return   $this->returnSuccess("تم الغاء الطلب رقم {$order->id} بنجاح");
     }
 
@@ -67,22 +74,7 @@ class UserOrderController extends Controller
     {
 
         $query=Order::query();
-        $query->whereUserId($request->user_id);
-        if ($request->chef_id)
-        $query->whereChefId($request->chef_id);
-
-        if ($request->payment_method)
-            $query->wherePaymentMethod($request->payment_method);
-
-        if ($request->delivery_type)
-            $query->whereDeliveryType($request->delivery_type);
-
-        if ($request->status)
-            $query->whereStatus($request->status);
-
-        if ($request->transaction_status)
-            $query->whereTransactionStatus($request->transaction_status);
-
+        $query->Filter( $request);
         $orders = $query->simplePaginate(10);
         return   $this->returnPaginateData($orders) ;
     }

@@ -9,8 +9,8 @@ return new class extends Migration {
     {
         Schema::table('users', function (Blueprint $table) {
             $table
-                ->enum('can_delivery' , ['no' , 'request','yes' ,'rejected'])
-                ->default('no')
+                ->boolean('can_delivery')
+                ->default(false)
                 ->after('type');
         });
     }

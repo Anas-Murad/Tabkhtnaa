@@ -21,38 +21,50 @@
 
 
 
-        var channel = pusher.subscribe('user-channel.1');
+        var channel = pusher.subscribe('user-channel.4');
         channel.bind('live_location', function(data) {
-            $('#log').append($(`<div>${JSON.stringify(data)}</div>`))
+            $('#log').append($(`<div>user : ${JSON.stringify(data)}</div>`))
             console.log('data ' , JSON.stringify(data))
         });
 
+        //
+        // var channel2 = pusher.subscribe('order-channel.5');
+        // channel2.bind('live_location', function(data) {
+        //     $('#log').append($(`<div>order : ${JSON.stringify(data)}</div>`))
+        //     console.log('order ' , JSON.stringify(data))
+        // });
+        //
+        var channel3 = pusher.subscribe('chat-channel.1');
+        channel3.bind('chat', function(data) {
+            $('#log').append($(`<div>chat : ${JSON.stringify(data)}</div>`))
+            console.log('chat ' , JSON.stringify(data))
+        });
 
-        var callback = (eventName, data) => {
-            var labeel = `bind global: The event ${eventName} was triggered with data ${JSON.stringify(data)}`;
-            $('#log').append($(`<div>${labeel}</div>`))
-            console.log(labeel);
-        };
-        // bind to all events on the connection
-        pusher.bind_global(callback);
 
+        // var callback = (eventName, data) => {
+        //     var labeel = `bind global: The event ${eventName} was triggered with data ${JSON.stringify(data)}`;
+        //     $('#log').append($(`<div>${labeel}</div>`))
+        //     console.log(labeel);
+        // };
+        // // bind to all events on the connection
+        // pusher.bind_global(callback);
+        //
+        //
 
-
-
-
-        var callbackchannel = (eventName, data) => {
-            var labeel = `bind global channel: The event ${eventName} was triggered with data ${JSON.stringify(
-                data
-            )}`;
-            $('#log').append($(`<div>${labeel}</div>`))
-            console.log(labeel);
-        };
-        channel.bind_global(callbackchannel);
-
+        //
+        // var callbackchannel = (eventName, data) => {
+        //     var labeel = `bind global channel: The event ${eventName} was triggered with data ${JSON.stringify(
+        //         data
+        //     )}`;
+        //     $('#log').append($(`<div>${labeel}</div>`))
+        //     console.log(labeel);
+        // };
+        // channel.bind_global(callbackchannel);
+        //
 
 
         // channel.unbind(eventName, callback);
-        pusher.trigger('user-channel.1', 'EVENT_NAME', message);
+        // pusher.trigger('user-channel.1', 'EVENT_NAME', message);
 
     </script>
 </head>

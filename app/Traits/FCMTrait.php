@@ -9,20 +9,8 @@ use App\Models\Notification;
 trait FCMTrait
 {
 
-    public function TestPushNotification()
-    {
-        $this->PushNotification(null, [
-            "title" => 'xxxxx',
-            "body" => 'xxxxx',
-            "data" => [
-                'screen' => 1,
-                'reply_id' => 2,
-                'type' => 'abc',
-            ],
-        ]);
-    }
 
-    protected $serverKey = 'AAAAVxx59HU:APA91bFajwPhJf4Jzz7SxJR-vi2XV6gfiksoHkFPfwUGIwB7aDRV-qvsFO81aKvxPHImpkF9Aebav1Z3_XNdcKSlCj-ZoiguS1xkoGitcr7SQTFKXhusUxDUoWQvtiwB61qtFB7YjsYm';
+    protected $serverKey = 'xxxxx';
 
     public function PushNotification($user_id, array $data)
     {
@@ -44,23 +32,9 @@ trait FCMTrait
                 'user_id'=>$user_id,
             ]);
         }
-
-
-
-
         return ;
-//        $d_user_id =  json_encode($user_id, JSON_UNESCAPED_UNICODE);
-//        $txt = "\n ----------------------" . date('H:i') . " ---------------------- \n \n";
-//        $fp = fopen('fcm-log.log', 'a');
-//        fwrite($fp, $txt . $d_user_id);
-//        fclose($fp);
-
-
         $this->FCMNotification($user_id, $data);
-        $this->HCMNotification($user_id, $data);
     }
-
-
     public function FCMNotification($user_id, array $data)
     {
         $url = 'https://fcm.googleapis.com/fcm/send';

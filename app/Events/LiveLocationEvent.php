@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Order;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -18,16 +19,19 @@ class LiveLocationEvent implements ShouldBroadcast
     public $latitude;
     public $longitude;
     public $userId;
+    public $order;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(float $latitude, float $longitude ,  int $userId)
+    public function __construct(float $latitude, float $longitude, int $userId,  $order = null)
     {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
         $this->userId = $userId;
+        $this->order = $order;
     }
 
     /**
@@ -37,8 +41,11 @@ class LiveLocationEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-
-        return ['user-channel.' . $this->userId];
+        $arr = ['user-channel.' . $this->userId];
+        if ($this->order) {
+            $arr[] = 'order-channel.' . $this->order;
+        };
+        return $arr;
         return new PrivateChannel('user-channel.' . $this->userId);
 
     }
