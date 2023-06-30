@@ -6,6 +6,7 @@ use App\Traits\HelperTrait;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 use Illuminate\Validation\ValidationException;
@@ -71,6 +72,11 @@ class Handler extends ExceptionHandler
 
         if ($request->wantsJson() &&  $e instanceof NotFoundHttpException) {
             return $this->returnError('Uri not found', 404,404);
+        }
+
+
+        if ($request->wantsJson() &&  $e instanceof HttpException) {
+            return $this->returnError($e->getMessage(), $e->getStatusCode(),$e->getStatusCode());
         }
 
 

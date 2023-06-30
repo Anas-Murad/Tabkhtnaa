@@ -9,6 +9,7 @@ use App\Http\Controllers\api\v1\CategoryController;
 use App\Http\Controllers\api\v1\ChefController;
 use App\Http\Controllers\api\v1\ComplaintController;
 use App\Http\Controllers\api\v1\ContentController;
+use App\Http\Controllers\api\v1\ConversationController;
 use App\Http\Controllers\api\v1\CountriesController;
 use App\Http\Controllers\api\v1\DeliveryOderController;
 use App\Http\Controllers\api\v1\MealController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\api\v1\UserController;
 use App\Http\Controllers\api\v1\SanctionController;
 use App\Http\Controllers\api\v1\RatingController;
 use App\Http\Controllers\api\v1\TranslateController;
+use App\Http\Controllers\api\v1\UserLiveLocationController;
 use App\Http\Controllers\api\v1\UserOrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -73,9 +75,7 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
         Route::get('chefs' , [UserController::class , 'all_chefs']);
         Route::get('chef' , [UserController::class , 'get_chef']);
 
-        Route::group(['prefix' => 'location'] ,function (){
-            Route::post('create_or_update' , [UserController::class , 'create_or_update']);
-        });
+
         Route::group(['prefix' => 'sanction'] ,function (){
             Route::get('list' , [SanctionController::class , 'list']);
             Route::get('seen' , [SanctionController::class , 'seen_sanction']);
@@ -132,25 +132,45 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
             Route::post('assign_delivery', [ChefController::class, 'assign_delivery']);
         });
     });
-
-
-
     Route::group(['prefix' => 'delivery'], function () {
+        Route::post('create_or_update_live_location' ,  UserLiveLocationController::class   );
 
         Route::group(['prefix' => 'orders'], function () {
-
-
             Route::get('requested', [DeliveryOderController::class, 'requested']);
             Route::post('update_request', [DeliveryOderController::class, 'update_request']);
-
-
-
-
+            Route::post('update_status', [DeliveryOderController::class, 'update_status']);
             Route::get('list', [DeliveryOderController::class, 'list']);
+            Route::get('get', [DeliveryOderController::class, 'get']);
         });
+    });
+
+
+
+
+    Route::group(['prefix' => 'conversations'], function () {
+
+
+        Route::get( 'get'   ,     [ConversationController::class , 'get']);
+        Route::get( 'list'   ,     [ConversationController::class , 'list']);
+        Route::post('create' ,  [ConversationController::class , 'store']);
+        Route::post('send_message' ,  [ConversationController::class , 'send_message']);
+        Route::post('delete' ,  [ConversationController::class , 'delete']);
+
 
 
     });
+
+
+    Route::group([
+        'prefix' => 'notification',
+        'controller' =>\App\Http\Controllers\api\v1\NotificationController::class,
+    ], function () {
+        Route::get( 'list'  ,'list');
+        Route::post( 'seen'  ,'seen');
+        Route::post( 'seen_all'  ,'seen_all');
+        Route::post( 'delete_all'  ,'delete_all');
+    });
+
 
 
 

@@ -267,6 +267,15 @@ class ChefController extends Controller
 
         }
         $order->update($data);
+
+        $order->orderStatus()->create([
+            'status'=>$request->status,
+            'action_by_type'=>'chef',
+            'action_by_id'=>$request->user_id,
+        ]);
+
+
+
         return $this->returnSuccess("تم تغيير حالة الطلب رقم {$order->id} بنجاح");
     }
 
@@ -274,22 +283,7 @@ class ChefController extends Controller
     {
         $query = Order::query();
         $query->whereChefId($request->user_id);
-        if ($request->order_user_id)
-            $query->whereUserId($request->order_user_id);
-
-        if ($request->payment_method)
-            $query->wherePaymentMethod($request->payment_method);
-
-        if ($request->delivery_type)
-            $query->whereDeliveryType($request->delivery_type);
-
-        if ($request->status)
-            $query->whereStatus($request->status);
-
-        if ($request->transaction_status)
-            $query->whereTransactionStatus($request->transaction_status);
-
-
+        $query->Filter( $request ,false);
         $query->withCount('orderMeal');
         $query->with('user:name,email,mobile,id');
         $query->with('address.cities');
@@ -309,7 +303,7 @@ class ChefController extends Controller
         ];
     }
 
- 
+
     public function get(Request $request)
     {
         $order = Order::where('chef_id' , auth()->id())->find($request->order_id);
@@ -321,5 +315,5 @@ class ChefController extends Controller
         return $this->returnSuccess($order);
     }
 
- 
+
 }
