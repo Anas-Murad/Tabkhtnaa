@@ -14,6 +14,7 @@ use App\Models\OrderMealAccessory;
 use App\Models\OrderMealAddition;
 use App\Models\UserAddress;
 use App\Traits\HelperTrait;
+use Illuminate\Http\Request;
 
 class UserOrderController extends Controller
 {
@@ -209,5 +210,16 @@ class UserOrderController extends Controller
         $order->delete();
 
         return response()->json();
+    }
+
+    public function get(Request $request)
+    {
+        $order = Order::where('user_id' , auth()->id())->find($request->order_id);
+        if (empty($order))
+            return $this->returnError('Not Found Order');
+        $order->load(['orderMeal' => function($q){
+            $q->with('accessories' , 'additions');
+        }], 'address');
+        return $this->returnSuccess($order);
     }
 }

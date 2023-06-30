@@ -15,6 +15,7 @@ class CreateComplaintRequest extends FormRequest
     {
         return [
             'type' => 'required',
+            'order_id' => 'required|numeric',
             'photo' => 'nullable|image',
             'description' => 'nullable',
             'status' => 'nullable',

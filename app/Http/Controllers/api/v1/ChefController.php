@@ -5,7 +5,6 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\api\v1\orders\ChefMyOrdersRequest;
 use App\Http\Requests\api\v1\orders\ChefUpdateOrdersStatusRequest;
-use App\Http\Requests\api\v1\orders\UserCancelOrdersRequest;
 use App\Models\Order;
 use App\Models\UserAddress;
 use App\Traits\HelperTrait;
@@ -19,7 +18,6 @@ class ChefController extends Controller
 
     public function gat_delivery(Request $request)
     {
-
         $chef_id = auth()->id();
         $chef = auth()->user();
         $request->validate([
@@ -31,13 +29,10 @@ class ChefController extends Controller
             ],
         ]);
         $chef->load('userAddress');
-
         $latitude = $chef->userAddress[0]->latitude ;
         $longitude = $chef->userAddress[0]->longitude ;
-
         //  get users  delivery type
         return UserAddress::count() ;
-
         $query_addresses = UserAddress::query();
         $query_addresses->select('*');
         $query_addresses->selectRaw("
@@ -49,25 +44,18 @@ class ChefController extends Controller
 //            ->having('distance', '<', $distance)
 //            ->orderBy('distance', 'ASC')
         ;
-
         return $query_addresses->get() ;
-
         $order = Order::whereChefId($chef_id)
             ->findOrFail($request->order_id);
-
-
     }
 
     public function update_status(ChefUpdateOrdersStatusRequest $request)
     {
-
         $order = Order::whereChefId($request->user_id)
             ->findOrFail($request->order_id);
-
             if ($order->status == $request->status) {
                 return $this->returnError('تم تعيين حاله الطلب في وقت سابق');
             }
-
         if ($order->status == 'cancel') {
             return $this->returnError('تم الغاء الطلب في وقت سابق , شكرا لك');
         }
@@ -83,11 +71,9 @@ class ChefController extends Controller
         if ($order->status == 'delivered') {
             return $this->returnError('لايمكن تعديل الطلب في الوقت الحالي , تم توصيل الطلب في وقت سابق');
         }
-
             switch ($request->status) {
                 // notification
                 case  "confirmed":
-
                     break;
                 case  "prepare":
                     if ($order->status != 'confirmed') {
@@ -109,19 +95,11 @@ class ChefController extends Controller
                     break;
 
             }
-
-
-//        "expected_order_time": null,
-//            "estimated_delivery_time": null,
-//            "estimated_time": null,
-
-
         $data = $request->safe()->only('status', 'rejected_reason', 'expected_order_time',);
         if ($request->status == 'confirmed') {
             $calcDeliveryTime = $this->calcDeliveryTime($request->expected_order_time);
             $data['estimated_delivery_time'] = $calcDeliveryTime['estimated_delivery_time'];
             $data['estimated_time'] = $calcDeliveryTime['estimated_time'];
-
         }
         $order->update($data);
         return $this->returnSuccess("تم تغيير حالة الطلب رقم {$order->id} بنجاح");
@@ -144,8 +122,6 @@ class ChefController extends Controller
 
         if ($request->transaction_status)
             $query->whereTransactionStatus($request->transaction_status);
-
-
         $query->withCount('orderMeal');
         $query->with('user:name,email,mobile,id');
         $query->with('address.cities');
@@ -155,7 +131,6 @@ class ChefController extends Controller
     }
     private function calcDeliveryTime(mixed $expected_order_time)
     {
-
         $DeliveryTime = 15;
         $TotalTime = $DeliveryTime + $expected_order_time;
         return [
@@ -164,5 +139,15 @@ class ChefController extends Controller
         ];
     }
 
+    public function get(Request $request)
+    {
+        $order = Order::where('chef_id' , auth()->id())->find($request->order_id);
+        if (empty($order))
+            return $this->returnError('Not Found Order');
+        $order->load(['orderMeal' => function($q){
+            $q->with('accessories' , 'additions');
+        }], 'address');
+        return $this->returnSuccess($order);
+    }
 
 }
