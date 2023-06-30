@@ -10,7 +10,9 @@ use App\Http\Controllers\api\v1\ChefController;
 use App\Http\Controllers\api\v1\ComplaintController;
 use App\Http\Controllers\api\v1\ContentController;
 use App\Http\Controllers\api\v1\CountriesController;
+use App\Http\Controllers\api\v1\DeliveryOderController;
 use App\Http\Controllers\api\v1\MealController;
+use App\Http\Controllers\api\v1\PusherController;
 use App\Http\Controllers\api\v1\SendSMSController;
 use App\Http\Controllers\api\v1\UserController;
 use App\Http\Controllers\api\v1\SanctionController;
@@ -29,6 +31,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('pusher', [PusherController::class, 'test']);
 
 Route::get('countries', [CountriesController::class, 'index'])->middleware('set_lang');
 Route::get('translate', [TranslateController::class, 'getAllTranslate'])->middleware('set_lang');
@@ -124,12 +128,31 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
             Route::get('list', [ChefController::class, 'list']);
             Route::get('get', [ChefController::class, 'get']);
             Route::post('update_status', [ChefController::class, 'update_status']);
-            Route::get('gat_delivery', [ChefController::class, 'gat_delivery']); //todo abd 2023
+            Route::get('gat_delivery', [ChefController::class, 'gat_delivery']);
+            Route::post('assign_delivery', [ChefController::class, 'assign_delivery']);
         });
     });
+
+
+
     Route::group(['prefix' => 'delivery'], function () {
-        Route::post('create', [UserOrderController::class, 'store']);
-        Route::get('list', [UserOrderController::class, 'list']);
-        Route::post('cancel', [UserOrderController::class, 'cancel']);
+
+        Route::group(['prefix' => 'orders'], function () {
+
+
+            Route::get('requested', [DeliveryOderController::class, 'requested']);
+            Route::post('update_request', [DeliveryOderController::class, 'update_request']);
+
+
+
+
+            Route::get('list', [DeliveryOderController::class, 'list']);
+        });
+
+
     });
+
+
+
+
 });

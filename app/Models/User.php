@@ -86,6 +86,11 @@ class User extends Authenticatable
         return $this->hasMany(Meal::class);
     }
 
+    public function liveLocation()
+    {
+        return $this->hasOne(UserLiveLocation::class ,'user_id');
+    }
+
     public function loadRates()
     {
 

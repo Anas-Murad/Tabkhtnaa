@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\api\v1\orders\ChefMyOrdersRequest;
 use App\Http\Requests\api\v1\orders\ChefUpdateOrdersStatusRequest;
 use App\Models\Order;
+use App\Models\OrderHistoryDelivery;
+use App\Models\User;
 use App\Models\UserAddress;
+use App\Models\UserLiveLocation;
 use App\Traits\HelperTrait;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -16,46 +19,198 @@ class ChefController extends Controller
 {
     use HelperTrait;
 
-    public function gat_delivery(Request $request)
+     public function gat_delivery(Request $request)
     {
+
+
+        /*  this api
+            Conditionally return all drivers
+            The account must be active and active
+            That he does not have another delivery request
+            That the request is not actually related to a delivery driver
+            To be in the same circle the neutral distance
+         */
+
+
         $chef_id = auth()->id();
         $chef = auth()->user();
         $request->validate([
             'order_id' => ['required', 'integer',
-                Rule::exists('orders', 'id')->where(function (Builder $query)  use($chef_id){
+                Rule::exists('orders', 'id')->where(function (Builder $query) use ($chef_id) {
                     return $query
-                        ->where('chef_id', $chef_id) ;
+                        ->where('chef_id', $chef_id)
+                        ;
                 }),
             ],
         ]);
         $chef->load('userAddress');
-        $latitude = $chef->userAddress[0]->latitude ;
-        $longitude = $chef->userAddress[0]->longitude ;
-        //  get users  delivery type
-        return UserAddress::count() ;
-        $query_addresses = UserAddress::query();
-        $query_addresses->select('*');
-        $query_addresses->selectRaw("
+
+        $latitude = $chef->userAddress[0]->latitude;
+        $longitude = $chef->userAddress[0]->longitude;
+        $distance = 100;
+
+        $check =  OrderHistoryDelivery::where([
+            'order_id' =>$request->order_id,
+        ])
+            ->whereIn('status' , [   'pending','accepted'])
+            ->first();
+        if ($check){
+            if ($check->status =='pending')
+                return   $this->returnError('تم ارسال طلب  في وقت سابق  الى السائق بالفعل') ;
+            if ($check->status =='accepted')
+                return   $this->returnError('تم قبول طلب التوصيل من السائق في وقت سابق بالفعل') ;
+        }
+
+
+
+        $users = User::
+        select(
+            'id' ,
+            'profile_image',
+            'mobile',
+            'name',
+            'online_status',
+        )->
+        where([
+            'account_status' => 'active',
+            'type' => 'delivery',
+            'online_status' => 'online',
+        ])->with([
+            'liveLocation' => function ($q) use ($latitude, $longitude, $distance) {
+                $q->select(
+                    'id',
+                    'user_id',
+                    'latitude',
+                    'longitude',
+                );
+                $q->selectRaw("
             ('6371' * ACOS(
-                COS(RADIANS($latitude)) * COS(RADIANS(user_addresses.latitude)) *
-                COS(RADIANS(user_addresses.longitude) - RADIANS($longitude)) +
-                SIN(RADIANS($latitude)) * SIN(RADIANS(user_addresses.latitude))
+                COS(RADIANS($latitude)) * COS(RADIANS(user_live_locations.latitude)) *
+                COS(RADIANS(user_live_locations.longitude) - RADIANS($longitude)) +
+                SIN(RADIANS($latitude)) * SIN(RADIANS(user_live_locations.latitude))
+            )) AS distance");
+                $q ->selectRaw("  ($longitude) AS order_longitude");
+                $q ->selectRaw("  ($latitude) AS order_latitude");
+            }
+        ])
+            ->whereHas('liveLocation', function ($q) use ($latitude, $longitude, $distance) {
+                $q->selectRaw("
+            ('6371' * ACOS(
+                COS(RADIANS($latitude)) * COS(RADIANS(user_live_locations.latitude)) *
+                COS(RADIANS(user_live_locations.longitude) - RADIANS($longitude)) +
+                SIN(RADIANS($latitude)) * SIN(RADIANS(user_live_locations.latitude))
             )) AS distance")
-//            ->having('distance', '<', $distance)
-//            ->orderBy('distance', 'ASC')
-        ;
-        return $query_addresses->get() ;
-        $order = Order::whereChefId($chef_id)
-            ->findOrFail($request->order_id);
+                    ->having('distance', '<', $distance)
+                    ->orderBy('distance', 'ASC');
+            })
+            ->get();
+            if ($users){
+                return  $this->returnDataArray($users);
+            }else{
+                return   $this->returnError('لم يتم العثور على موصل قريب منك , اعد المحاوله ') ;
+            }
+    }
+
+    public function assign_delivery(Request $request)
+    {
+        /*  this api Linking the request to a delivery driver with the previous conditions  */
+
+        $chef_id = auth()->id();
+        $chef = auth()->user();
+        $request->validate([
+            'order_id' => ['required', 'integer',
+                Rule::exists('orders', 'id')->where(function (Builder $query) use ($chef_id) {
+                    return $query
+                        ->where('chef_id', $chef_id)    ;
+                }),
+            ],  'delivery_id' => ['required', 'integer', ],
+        ]);
+        $chef->load('userAddress');
+        $latitude = $chef->userAddress[0]->latitude;
+        $longitude = $chef->userAddress[0]->longitude;
+        $distance = 50;
+
+
+
+        //  check  if already sent request ?
+
+          $check =  OrderHistoryDelivery::where([
+                'order_id' =>$request->order_id,
+//                'delivery_id'=>$request->delivery_id,
+            ])
+          ->whereIn('status' , [   'pending','accepted'])
+          ->first();
+          if ($check){
+              if ($check->status =='pending')
+              return   $this->returnError('تم ارسال طلب  في وقت سابق  الى السائق بالفعل') ;
+              if ($check->status =='accepted')
+                  return   $this->returnError('تم قبول طلب التوصيل من السائق في وقت سابق بالفعل') ;
+          }
+
+        $user = User::
+        select(
+            'id' ,
+            'profile_image',
+            'mobile',
+            'name',
+            'online_status',
+        )->
+        where([
+            'account_status' => 'active',
+            'type' => 'delivery',
+            'online_status' => 'online',
+
+        ])->with([
+            'liveLocation' => function ($q) use ($latitude, $longitude, $distance) {
+                $q->select(
+                    'id',
+                    'user_id',
+                    'latitude',
+                    'longitude',
+                );
+                $q->selectRaw("
+            ('6371' * ACOS(
+                COS(RADIANS($latitude)) * COS(RADIANS(user_live_locations.latitude)) *
+                COS(RADIANS(user_live_locations.longitude) - RADIANS($longitude)) +
+                SIN(RADIANS($latitude)) * SIN(RADIANS(user_live_locations.latitude))
+            )) AS distance");
+                $q ->selectRaw("  ($longitude) AS order_longitude");
+                $q ->selectRaw("  ($latitude) AS order_latitude");
+            }
+        ])
+            ->whereHas('liveLocation', function ($q) use ($latitude, $longitude, $distance) {
+                $q->selectRaw("
+            ('6371' * ACOS(
+                COS(RADIANS($latitude)) * COS(RADIANS(user_live_locations.latitude)) *
+                COS(RADIANS(user_live_locations.longitude) - RADIANS($longitude)) +
+                SIN(RADIANS($latitude)) * SIN(RADIANS(user_live_locations.latitude))
+            )) AS distance")
+                    ->having('distance', '<', $distance)
+                    ->orderBy('distance', 'ASC');
+            })
+            ->find($request->delivery_id);
+            if ($user){
+                OrderHistoryDelivery::create([
+                    'order_id' =>$request->order_id,
+                    'delivery_id'=>$request->delivery_id,
+                    'status'=>'pending',
+                ]);
+                return  $this->returnDataArray($user);
+            }else{
+                return   $this->returnError('السائق لم يعد متاحا الان') ;
+            }
     }
 
     public function update_status(ChefUpdateOrdersStatusRequest $request)
     {
+
         $order = Order::whereChefId($request->user_id)
             ->findOrFail($request->order_id);
-            if ($order->status == $request->status) {
-                return $this->returnError('تم تعيين حاله الطلب في وقت سابق');
-            }
+
+        if ($order->status == $request->status) {
+            return $this->returnError('تم تعيين حاله الطلب في وقت سابق');
+        }
+
         if ($order->status == 'cancel') {
             return $this->returnError('تم الغاء الطلب في وقت سابق , شكرا لك');
         }
@@ -71,39 +226,50 @@ class ChefController extends Controller
         if ($order->status == 'delivered') {
             return $this->returnError('لايمكن تعديل الطلب في الوقت الحالي , تم توصيل الطلب في وقت سابق');
         }
-            switch ($request->status) {
-                // notification
-                case  "confirmed":
-                    break;
-                case  "prepare":
-                    if ($order->status != 'confirmed') {
-                        return $this->returnError('يجب قبول الطلب اولا');
-                    }
-                    break;
-                case  "prepared":
-                    if ($order->status != 'prepare') {
-                        return $this->returnError('يجب تجهيز الطلب اولا');
-                    }
-                    break;
-                case  "on_way":
-                    if ($order->status != 'prepared') {
-                        return $this->returnError('يجب اكتمال تجهيز الطلب اولا');
-                    }
-                    break;
-                case  "rejected":
 
-                    break;
+        switch ($request->status) {
+            // notification
+            case  "confirmed":
 
-            }
+                break;
+            case  "prepare":
+                if ($order->status != 'confirmed') {
+                    return $this->returnError('يجب قبول الطلب اولا');
+                }
+                break;
+            case  "prepared":
+                if ($order->status != 'prepare') {
+                    return $this->returnError('يجب تجهيز الطلب اولا');
+                }
+                break;
+            case  "on_way":
+                if ($order->status != 'prepared') {
+                    return $this->returnError('يجب اكتمال تجهيز الطلب اولا');
+                }
+                break;
+            case  "rejected":
+
+                break;
+
+        }
+
+
+//        "expected_order_time": null,
+//            "estimated_delivery_time": null,
+//            "estimated_time": null,
+
+
         $data = $request->safe()->only('status', 'rejected_reason', 'expected_order_time',);
         if ($request->status == 'confirmed') {
             $calcDeliveryTime = $this->calcDeliveryTime($request->expected_order_time);
             $data['estimated_delivery_time'] = $calcDeliveryTime['estimated_delivery_time'];
             $data['estimated_time'] = $calcDeliveryTime['estimated_time'];
+
         }
         $order->update($data);
         return $this->returnSuccess("تم تغيير حالة الطلب رقم {$order->id} بنجاح");
     }
+
     public function list(ChefMyOrdersRequest $request)
     {
         $query = Order::query();
@@ -122,6 +288,8 @@ class ChefController extends Controller
 
         if ($request->transaction_status)
             $query->whereTransactionStatus($request->transaction_status);
+
+
         $query->withCount('orderMeal');
         $query->with('user:name,email,mobile,id');
         $query->with('address.cities');
@@ -129,8 +297,10 @@ class ChefController extends Controller
         $orders = $query->simplePaginate(10);
         return $this->returnPaginateData($orders);
     }
+
     private function calcDeliveryTime(mixed $expected_order_time)
     {
+
         $DeliveryTime = 15;
         $TotalTime = $DeliveryTime + $expected_order_time;
         return [
@@ -139,6 +309,7 @@ class ChefController extends Controller
         ];
     }
 
+ 
     public function get(Request $request)
     {
         $order = Order::where('chef_id' , auth()->id())->find($request->order_id);
@@ -150,4 +321,5 @@ class ChefController extends Controller
         return $this->returnSuccess($order);
     }
 
+ 
 }

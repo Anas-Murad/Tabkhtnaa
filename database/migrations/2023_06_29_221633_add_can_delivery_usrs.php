@@ -8,14 +8,17 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-
+            $table
+                ->enum('can_delivery' , ['no' , 'request','yes' ,'rejected'])
+                ->default('no')
+                ->after('type');
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn('can_delivery');
         });
     }
 };
