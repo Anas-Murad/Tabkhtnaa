@@ -179,6 +179,8 @@ class MealController extends Controller
             'user_addresses.latitude',
             'user_addresses.longitude'
         )->active()->nearby($latitude, $longitude, $distance)->where(function ($q) use ($request){
+            if ($request->filled('is_offer'))
+                $q->whereHas('offer');
             if ($request->filled('category_id'))
                 $q->where('category_id' , $request->category_id);
             if ($request->filled('min_price'))

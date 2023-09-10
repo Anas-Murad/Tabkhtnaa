@@ -114,4 +114,14 @@ class Meal extends Model
             ->get();
         $this->setRelation('CategoriesAndAdditions' ,$additionCategory ) ;
     }
+
+    public function offer()
+    {
+        return $this->hasMany(Offer::class , 'mail_id')->where('type' , 'offers');
+    }
+
+    public function discount()
+    {
+        return $this->hasMany(Offer::class , 'mail_id')->where('type' , 'discount');
+    }
 }
