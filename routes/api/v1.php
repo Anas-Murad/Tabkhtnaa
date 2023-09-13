@@ -22,6 +22,7 @@ use App\Http\Controllers\api\v1\TranslateController;
 use App\Http\Controllers\api\v1\UserLiveLocationController;
 use App\Http\Controllers\api\v1\UserOrderController;
 use App\Http\Controllers\api\v1\BankInfoController;
+use App\Http\Controllers\api\v1\OfferController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -148,6 +149,13 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
             Route::post('update_status', [ChefController::class, 'update_status']);
             Route::get('gat_delivery', [ChefController::class, 'gat_delivery']);
             Route::post('assign_delivery', [ChefController::class, 'assign_delivery']);
+        });
+
+        Route::group(['prefix' => 'offers'], function () {
+            Route::post('create', [OfferController::class, 'store']);
+            Route::get('list', [OfferController::class, 'list']);
+            Route::post('delete', [OfferController::class, 'delete']);
+            Route::post('update', [OfferController::class, 'update']);
         });
     });
     Route::group(['prefix' => 'delivery'], function () {
