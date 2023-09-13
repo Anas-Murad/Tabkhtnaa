@@ -199,4 +199,16 @@ class MealController extends Controller
             ->simplePaginate(10);
        return $this->returnDataArray($meals ,'Success Get All Meals');
     }
+    public function user_get_meal(Request $request)
+    {
+
+        $meal = Meal::active()
+        ->select('meals.*')
+        ->with([
+            'accessories',
+            'additions'
+        ])->
+        findOrFail($request->id);
+       return $this->returnDataArray($meal );
+    }
 }

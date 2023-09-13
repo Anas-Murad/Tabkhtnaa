@@ -58,14 +58,12 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
         Route::get('term-and-condition', [ContentController::class, 'term_and_condition']);
         Route::post('upload-documents', [AuthController::class, 'upload_documents']);
     });
-
     Route::group(['prefix' => 'bank_info'] ,function (){
         Route::get('get' , [BankInfoController::class , 'get']);
         Route::post('create' , [BankInfoController::class , 'create']);
         Route::post('update' , [BankInfoController::class , 'update']);
         Route::post('delete' , [BankInfoController::class , 'delete']);
     });
-
     Route::group(['prefix' => 'addresses'], function () {
         Route::post('create', [AddressesController::class, 'store']);
         Route::get('list', [AddressesController::class, 'list']);
@@ -74,26 +72,18 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
         Route::post('update', [AddressesController::class, 'update']);
     });
 
-    Route::get('category/list', [CategoryController::class, 'getCategory']);
 
+    Route::get('category/list', [CategoryController::class, 'getCategory']);
     Route::group(['prefix' => 'complaint'], function () {
         Route::get('list', [ComplaintController::class, 'getComplaint']);
         Route::post('create', [ComplaintController::class, 'createComplaint']);
     });
-
     Route::post('kitchen-images', [AuthController::class, 'kitchenImages']);
-
     Route::group(['prefix' => 'user'] ,function (){
-        Route::get('meals' , [MealController::class , 'user_meals']);
+        Route::get('meals/list' , [MealController::class , 'user_meals']);
+        Route::get('meals/get' , [MealController::class , 'user_get_meal']);
         Route::get('chefs' , [UserController::class , 'all_chefs']);
         Route::get('chef' , [UserController::class , 'get_chef']);
-
-        Route::group(['prefix' => 'bank_info'] ,function (){
-            Route::get('get' , [BankInfoController::class , 'get']);
-            Route::post('create' , [BankInfoController::class , 'create']);
-            Route::post('update' , [BankInfoController::class , 'update']);
-            Route::post('delete' , [BankInfoController::class , 'delete']);
-        });
 
         Route::group(['prefix' => 'location'] ,function (){
             Route::post('create_or_update' , [UserController::class , 'create_or_update']);
@@ -126,7 +116,6 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
             Route::post('cancel', [UserOrderController::class, 'cancel']);
         });
     });
-
     Route::group(['prefix' => 'maker'], function () {
         Route::group(['prefix' => 'additions-categories'], function () {
             Route::post('create', [AdditionCategoryController::class, 'store']);
@@ -161,10 +150,8 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
             Route::post('assign_delivery', [ChefController::class, 'assign_delivery']);
         });
     });
-
     Route::group(['prefix' => 'delivery'], function () {
         Route::post('create_or_update_live_location' ,  UserLiveLocationController::class   );
-
         Route::group(['prefix' => 'orders'], function () {
             Route::get('requested', [DeliveryOderController::class, 'requested']);
             Route::post('update_request', [DeliveryOderController::class, 'update_request']);
@@ -173,7 +160,6 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
             Route::get('get', [DeliveryOderController::class, 'get']);
         });
     });
-
     Route::group(['prefix' => 'conversations'], function () {
         Route::get( 'get'   ,     [ConversationController::class , 'get']);
         Route::get( 'list'   ,     [ConversationController::class , 'list']);
@@ -190,4 +176,5 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
         Route::post( 'seen_all'  ,'seen_all');
         Route::post( 'delete_all'  ,'delete_all');
     });
+
 });
