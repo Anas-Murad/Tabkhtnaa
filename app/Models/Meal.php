@@ -87,7 +87,7 @@ class Meal extends Model
 
     public function scopeActive($query)
     {
-        $query->join('users', 'meals.user_id', '=', 'users.id')
+        $query->select('meals.*')->join('users', 'meals.user_id', '=', 'users.id')
                   ->where('users.type', 'chef')
                   ->where('users.account_status', 'active')
                   ->where('meals.is_active', true)

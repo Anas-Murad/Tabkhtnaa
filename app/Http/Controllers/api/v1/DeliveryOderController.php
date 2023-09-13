@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\TransactionController;
 use App\Models\Order;
 use App\Models\OrderHistoryDelivery;
 use App\Traits\FCMTrait;
@@ -192,36 +193,7 @@ class DeliveryOderController extends Controller
         }
 
         switch ($request->status) {
-            case  "on_way":
-                if ($order->status != 'prepared') {
-                    return $this->returnError('يجب تجهيز الطلب الطلب اولا');
-                }
 
-
-                $this->PushNotification($order->chef_id, [
-                    'title' => "تم استلام الطلب من سائق التوصيل",
-                    'body' => "قام {$user->name} باستلام الطلب , اصبح في الطريق , طلب رقم : {$order->id}",
-                    'order_id' => $order->id,
-                    'delivery_id' => $user->id,
-                    'chef_id' => $order->chef_id,
-                    'user_id' => $order->user_id,
-                    'order_status' => 'on_way',
-                ]);
-
-
-                $this->PushNotification($order->user_id, [
-                    'title' => "طلبك في الطريق اليك",
-                    'body' => "الكابتن {$user->name} في الطريق اليك , طلب رقم : {$order->id}",
-                    'order_id' => $order->id,
-                    'delivery_id' => $user->id,
-                    'chef_id' => $order->chef_id,
-                    'user_id' => $order->user_id,
-                    'order_status' => 'on_way',
-                ]);
-
-
-
-                break;
             case  "delivered":
 
                 if ($order->status != 'on_way') {
@@ -294,6 +266,12 @@ class DeliveryOderController extends Controller
             'action_by_type'=>'delivery',
             'action_by_id'=>$user->id,
         ]);
+
+
+
+
+        if($request->status =='delivered')
+        (new TransactionController)->distribution($order);
 
         return $this->returnSuccess("تم تغيير حالة الطلب رقم {$order->id} بنجاح");
     }
