@@ -14,6 +14,18 @@ class CreateOrderRequest extends FormRequest
         return [
             'user_id' => ['required', 'integer'],
             'delivery_type' => ['required', 'in:delivery,pick_up'],
+
+            'order_id' => ['nullable', 'integer',
+                Rule::exists('orders', 'id')->where(function (Builder $query) {
+                    return $query
+                        ->where('user_id', 'user_id')
+                        ->where('status', 'not_ordered') ;
+                }),
+            ],
+
+
+
+
             'chef_id' => ['required', 'integer',
                 Rule::exists('users', 'id')->where(function (Builder $query) {
                     return $query

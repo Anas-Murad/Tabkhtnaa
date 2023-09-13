@@ -234,9 +234,10 @@ class ChefController extends Controller
         if ($order->status == 'on_way') {
             return $this->returnError('لايمكن تعديل الطلب في الوقت الحالي , اصبح طلبك في الطريق الزبون');
         }
-        if ($order->status == 'delivered') {
+
+   /*     if ($order->status == 'delivered') {
             return $this->returnError('لايمكن تعديل الطلب في الوقت الحالي , تم توصيل الطلب في وقت سابق');
-        }
+        }*/
 
         switch ($request->status) {
             // notification
@@ -257,11 +258,32 @@ class ChefController extends Controller
                 if ($order->status != 'prepared') {
                     return $this->returnError('يجب اكتمال تجهيز الطلب اولا');
                 }
-                break;
-            case  "rejected":
+                $order->loadMissing('delivery');
 
-                break;
+                if (! $order->delivery){
+                    return  $this->returnError('لم يتم تعيين سائق ');
+                }
+                $user = $order->delivery;
+                $this->PushNotification($order->chef_id, [
+                    'title' => "تم استلام الطلب من سائق التوصيل",
+                    'body' => "قام {$user->name} باستلام الطلب , اصبح في الطريق , طلب رقم : {$order->id}",
+                    'order_id' => $order->id,
+                    'delivery_id' => $user->id,
+                    'chef_id' => $order->chef_id,
+                    'user_id' => $order->user_id,
+                    'order_status' => 'on_way',
+                ]);
 
+                $this->PushNotification($order->user_id, [
+                    'title' => "طلبك في الطريق اليك",
+                    'body' => "الكابتن {$user->name} في الطريق اليك , طلب رقم : {$order->id}",
+                    'order_id' => $order->id,
+                    'delivery_id' => $user->id,
+                    'chef_id' => $order->chef_id,
+                    'user_id' => $order->user_id,
+                    'order_status' => 'on_way',
+                ]);
+                break;
         }
 
 

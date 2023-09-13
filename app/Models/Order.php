@@ -91,10 +91,23 @@ class Order extends Model
         return $this->belongsTo(User::class , 'user_id' ) ;
     }
 
+    public  function delivery(){
+        return $this->belongsTo(User::class , 'delivery_id' ) ;
+    }
+
 
     public  function chef(){
         return $this->belongsTo(User::class , 'chef_id' ) ;
     }
 
 
+
+    public function Transaction(){
+        return $this->belongsTo(Transaction::class , 'transaction_id') ;
+
+    }
+
+    public function TransactionHistory(){
+        return $this->hasMany(Transaction::class , 'order_id');
+    }
 }

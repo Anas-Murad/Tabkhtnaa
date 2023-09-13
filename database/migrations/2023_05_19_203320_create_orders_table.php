@@ -70,6 +70,7 @@ return new class extends Migration {
 
 
             $table->enum('status' ,[
+                'not_ordered', // غير مطلوب مشكله في عمليه الدفع الاونلاين
                 'pending', // جديد
                 'confirmed', // تم قبول الطلب
                 'prepare', // قيد التحضير

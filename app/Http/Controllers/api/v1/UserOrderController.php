@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\TransactionController;
 use App\Http\Requests\api\v1\orders\CreateOrderRequest;
 use App\Http\Requests\api\v1\orders\UserCancelOrdersRequest;
 use App\Http\Requests\api\v1\orders\UserMyOrdersRequest;
@@ -15,12 +16,13 @@ use App\Models\OrderMealAccessory;
 use App\Models\OrderMealAddition;
 use App\Models\User;
 use App\Models\UserAddress;
+use App\Traits\FCMTrait;
 use App\Traits\HelperTrait;
 use Illuminate\Http\Request;
 
 class UserOrderController extends Controller
 {
-    use HelperTrait;
+    use HelperTrait , FCMTrait;
 
     public function cancel(UserCancelOrdersRequest $request)
     {
@@ -87,6 +89,10 @@ class UserOrderController extends Controller
 
     public function store(CreateOrderRequest $request)
     {
+
+        // todo Change must be tested
+
+        \DB::beginTransaction();
         $cart = Cart::whereUserId($request->user_id)
             ->whereMakerId($request->chef_id)
             ->with([
@@ -98,24 +104,37 @@ class UserOrderController extends Controller
         $cart->getUpdatedData();
 
         $data = [
+
+
             'user_id' => $request->user_id,
             'chef_id' => $request->chef_id,
             'payment_method' => $request->payment_method,
             'delivery_type' => $request->delivery_type,
             'delivery_fees' => $cart->delivery_fees,
-            'tax' => $cart->delivery_fees,
+            'tax' => $cart->tax,
             'sub_total' => $cart->total,
             'discount' => 0,
             'total' => $cart->total,
             'coupon_id' => $request->coupon_id,
             'coupon' => $request->coupon,
             'details' => $request->details,
+
+
 //            'transaction_id' => null,
 //            'transaction_status' => null,
+
+
         ];
         $address = UserAddress::find($request->address_id);
-        $Order = Order::create($data);
-        $OrderAddress = OrderAddress::create([
+        if ($request->filled('order_id')){
+            $Order = Order::findOrFail($request->order_id);
+            $Order->orderMeal()->delete();
+            $Order->orderStatus()->delete();
+            $Order->address()->delete();
+        }else{
+            $Order = Order::create($data);
+        }
+        OrderAddress::create([
             'order_id' => $Order->id,
             'address_id' => $request->address_id,
             'name' => $address->name,
@@ -172,16 +191,45 @@ class UserOrderController extends Controller
                 ]) ;
             },
         ]);
-        $cart->delete() ;
 
-        //Notification
-        $this->PushNotification($Order->chef_id,[
+        if ($request->payment_method =='cash'){
+            $cart->delete();
+            $this->PushNotification($Order->chef_id,[
             'title' =>"يوجد طلب جديد ",
             'body' =>"يوجد طلب جديد قيد الانتظار  {$Order->id} ",
             'order_id' =>$Order->id,
             'chef_id' =>$Order->chef_id,
             'order_status' =>'pending',
         ]);
+        }
+
+
+        $Order->TransactionHistory()->update([
+            'tried_again'=>true
+        ]);
+
+
+        $transaction = (new TransactionController)->store([
+            'user_id'=>$Order->user_id,
+            'order_id'=>$Order->id,
+            'payment_method'=>$Order->payment_method,
+            'amount'=>$Order->total,
+            'service_type'=>'order',
+            'currency'=>'JOD',
+            'tracking_data'=>[
+                'start_order'=>now()->tz('UTC')->toDateString()
+            ],
+        ]);
+
+
+
+        $Order->update([
+            'transaction_id' => $transaction->id,
+            'transaction_status' =>'pending',
+        ]);
+
+
+        \DB::commit();
         return $this->returnDataArray($Order);
     }
 
