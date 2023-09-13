@@ -59,7 +59,6 @@ class MealController extends Controller
     public function store(CreateMealRequest $request)
     {
         $this->authorize('create', Meal::class);
-
         $meal = Meal::latest()->first();
         $id = $meal->id ?? 0;
         $pref = $request->category_id . auth()->id();
@@ -77,9 +76,6 @@ class MealController extends Controller
         $Meal = Meal::create($data);
         $Meal->accessories()->sync($request->accessories);
         $Meal->additions()->sync($request->additions);
-
-
-
         if ($request->hasFile('images')) {
             $imagesArray = [];
             foreach ($request->images as $image) {
@@ -92,8 +88,6 @@ class MealController extends Controller
             }
             Gallery::insert($imagesArray);
         }
-
-
         $Meal->load([
             'accessories' => function ($q) {
                 $q->Trans();
@@ -101,8 +95,6 @@ class MealController extends Controller
             ,'additions'
             ,'images'
         ]);
-
-
         if ($flag_code) {
             return $this->returnDataArrayWithOther($Meal, [
                 "The meal code has been changed as a result of the difference in generating the code with the difference in time , The new code is:$code"
@@ -128,7 +120,6 @@ class MealController extends Controller
             ,'additions'
             ,'images'
         ]);
-
         $meal->setCategoriesAdditions();
         return $this->returnDataArray($meal);
     }
@@ -138,16 +129,13 @@ class MealController extends Controller
         $meal = Meal::whereUserId($request->user_id)->findOrFail($request->id);
         $meal->update($request->validated());
         $this->authorize('update', $meal);
-
         $data = $request->safe()->except('image', 'user_id');
         if ($request->hasFile('image')) {
             $data['image'] = $this->saveImage($request->image, 'uploads/');
         }
         $meal->update($data);
-
         $meal->accessories()->sync($request->accessories??[]);
         $meal->additions()->sync($request->additions??[]);
-
 
         if ($request->hasFile('images')) {
             $imagesArray = [];
@@ -161,10 +149,6 @@ class MealController extends Controller
             }
             Gallery::insert($imagesArray);
         }
-
-
-
-
         $meal->load([
             'accessories' => function ($q) {
                 $q->Trans();
@@ -172,11 +156,7 @@ class MealController extends Controller
             ,'additions'
             ,'images'
         ]);
-
         $meal->setCategoriesAdditions();
-
-
-
         return $this->returnDataArray($meal);
     }
 
@@ -194,7 +174,6 @@ class MealController extends Controller
         $latitude = $request->lat;
         $longitude = $request->long;
         $distance = $request->radius ?? 30;
-
         $meals = Meal::select('meals.*' ,
             'users.name as user_name' ,
             'user_addresses.latitude',
@@ -219,5 +198,17 @@ class MealController extends Controller
         })->join('user_addresses', 'meals.user_id', '=', 'user_addresses.user_id')
             ->simplePaginate(10);
        return $this->returnDataArray($meals ,'Success Get All Meals');
+    }
+    public function user_get_meal(Request $request)
+    {
+
+        $meal = Meal::active()
+        ->select('meals.*')
+        ->with([
+            'accessories',
+            'additions'
+        ])->
+        findOrFail($request->id);
+       return $this->returnDataArray($meal );
     }
 }

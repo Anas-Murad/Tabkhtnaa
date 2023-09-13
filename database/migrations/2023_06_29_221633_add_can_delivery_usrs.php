@@ -8,14 +8,17 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-
+            $table
+                ->boolean('can_delivery')
+                ->default(false)
+                ->after('type');
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn('can_delivery');
         });
     }
 };

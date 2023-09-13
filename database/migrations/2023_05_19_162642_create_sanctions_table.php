@@ -23,12 +23,16 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            //Todo cheke
-            $table->enum('type' , ['test' , 'test1']);
+            // financial violation: مخالفة مالية /
+            // Make a block : عمل بلوك
+            // No order request : ممنوع طلب اوردر
+            // No chat : ممنوع من الشات
+            $table->enum('type' , ['financial_violation' , 'make_block' , 'no_order_request' , 'no_chat']);
             $table->enum('seen' , ['seen' , 'not_seen'])->default('not_seen');
             $table->string('note')->nullable();
             $table->string('photo')->nullable();
-
+            $table->dateTime('start_time')->nullable();
+            $table->dateTime('end_time')->nullable();
             $table->timestamps();
         });
     }

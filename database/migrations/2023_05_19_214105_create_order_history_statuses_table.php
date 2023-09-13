@@ -17,7 +17,7 @@ return new class extends Migration {
 
             $table->enum('status' ,[
                 'pending', // جديد
-                'accepted', // تم قبول الطلب
+                'confirmed', // تم قبول الطلب
                 'on_way',//في الطريق
                 'delivered',//تم التوصيل
                 'not_delivered',//لم يتم التوصيل

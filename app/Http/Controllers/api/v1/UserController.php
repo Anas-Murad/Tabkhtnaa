@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\api\v1;
 
+use App\Events\LiveLocationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\api\v1\chef\ChefIDRequest;
 use App\Http\Requests\api\v1\chef\ChefRequest;
+use App\Http\Requests\api\v1\location\locationRequest;
 use App\Models\Meal;
 use App\Models\User;
+use App\Models\UserLiveLocation;
 use App\Traits\HelperTrait;
 use Illuminate\Http\Request;
 
@@ -40,10 +43,11 @@ class UserController extends Controller
     {
         $chef = User::with([
             'meals' =>function($q){
-                $q->active() ;
+                $q->active();
             }, 'userAddress'
         ])->find( $request->id);
         $chef->loadRates();
         return $this->returnDataArray($chef);
     }
+
 }

@@ -19,6 +19,10 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->unsignedBigInteger('order_id');
+            $table->foreign('order_id')->references('id')->on('orders')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->enum('type' , ['user','maker','driver','management']);
             $table->string('photo')->nullable();
             $table->string('description')->nullable();

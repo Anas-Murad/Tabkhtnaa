@@ -12,4 +12,12 @@ class OrderHistoryDelivery extends Model
         'status',
         'rejected_reason',
     ];
+
+    public function  order()
+    {
+        return  $this->belongsTo(Order::class , 'order_id');
+    }
+
+
+
 }

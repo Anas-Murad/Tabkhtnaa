@@ -9,7 +9,10 @@ return new class extends Migration {
     {
         Schema::create('user_live_locations', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')
+                ->onUpdate('cascade')
+                ->nullOnDelete() ;
             $table->string('latitude');
             $table->string('longitude');
             $table->timestamps();

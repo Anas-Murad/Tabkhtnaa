@@ -22,7 +22,7 @@ class User extends Authenticatable
         "id", "name", "email", "residence_country_id", "country_code", "mobile", "username",
         "dob", "gender", "source", "udid", "def_lang", "profile_image", "mobile_verified",
         "online_status", "type", "account_status", "account_comment", "email_verified_at",
-        "sms_verify", "password", "remember_token", "created_at", "updated_at",
+        "sms_verify", "password", "remember_token", "created_at", "updated_at",'can_delivery'
     ];
 
 
@@ -44,6 +44,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'mobile_verified' => 'boolean',
+        'can_delivery' => 'boolean',
     ];
 
     public function setUsernameAttribute($value)
@@ -84,6 +85,11 @@ class User extends Authenticatable
     public function meals()
     {
         return $this->hasMany(Meal::class);
+    }
+
+    public function liveLocation()
+    {
+        return $this->hasOne(UserLiveLocation::class ,'user_id');
     }
 
     public function loadRates()
