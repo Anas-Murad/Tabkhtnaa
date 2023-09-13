@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Exception;
 
 class AuthController extends Controller
 {
@@ -90,7 +91,6 @@ class AuthController extends Controller
         $user->update([
             "online_status" => $request->online_status
         ]);
-        //        $user->ApiCreateToken();
         return $this->returnDataArray($user);
     }
 
@@ -102,7 +102,6 @@ class AuthController extends Controller
         $user->update([
             "mobile_verified" => 1
         ]);
-        //        $user->ApiCreateToken();
         return $this->returnDataArray($user);
     }
 

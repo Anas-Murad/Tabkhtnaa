@@ -24,8 +24,6 @@ class AdditionController extends Controller
     }
     public function update(UpdateAdditionRequest $request)
     {
-
-
         $addition = Addition::whereUserId($request->user_id )-> findOrFail($request->id);
         $addition->update($request->validated());
         return $this->returnDataArray( $addition );
@@ -38,6 +36,4 @@ class AdditionController extends Controller
         }
         return $this->returnSuccess(__('messages.deleted_successfully'));
     }
-
-
 }

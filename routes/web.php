@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('Pusher');
 });
+
+Route::get('t' , function (){
+   return view('layouts.app');
+});
