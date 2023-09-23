@@ -25,5 +25,18 @@ class Category extends Model
             return $key;
     }
 
+    public  function scopeTrans($q){
+        $lang = app()->getLocale() ;
+        $q->select(
+            'categories.id',
+            'categories.key',
+            'categories.icon',
+            "translates.$lang as name",
+        )->join('translates' ,  function ($join){
+            $join->on('translates.key', '=', 'categories.key')
+                ->where('translates.model', '=', 'categories');
+        }) ;
+    }
+
     public $timestamps = false;
 }
