@@ -22,6 +22,42 @@
                 <!-- Main -->
                 <!-- Forms -->
                 <li class="nav-item-header">
+                    <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Translation</div>
+                    <i class="ph-dots-three sidebar-resize-show"></i>
+                </li>
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link">
+                        <i class="ph-note-pencil"></i>
+                        <span>Translation</span>
+                    </a>
+                    <ul class="nav-group-sub collapse">
+                        <li class="nav-item"><a href="{{route('translations.index')}}" class="nav-link">List</a></li>
+                    </ul>
+                </li>
+                <!-- /forms -->
+            </ul>
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <!-- Main -->
+                <!-- Forms -->
+                <li class="nav-item-header">
+                    <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Complaints</div>
+                    <i class="ph-dots-three sidebar-resize-show"></i>
+                </li>
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link">
+                        <i class="ph-note-pencil"></i>
+                        <span>Complaints</span>
+                    </a>
+                    <ul class="nav-group-sub collapse">
+                        <li class="nav-item"><a href="{{route('complaints.index')}}" class="nav-link">List</a></li>
+                    </ul>
+                </li>
+                <!-- /forms -->
+            </ul>
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <!-- Main -->
+                <!-- Forms -->
+                <li class="nav-item-header">
                     <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Forms</div>
                     <i class="ph-dots-three sidebar-resize-show"></i>
                 </li>

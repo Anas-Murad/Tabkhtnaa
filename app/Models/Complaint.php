@@ -20,10 +20,20 @@ class Complaint extends Model
       'description',
       'status',
       'note',
+      'admin_id',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
+    }
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }

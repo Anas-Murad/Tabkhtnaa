@@ -28,14 +28,14 @@ class UserController extends Controller
 
             case 'chef' :
                 $pageTitle = "حسابات الطهاه " ;
-            break;
+                break;
         }
         switch ($status){
 
             case 'all' :
                 $status = null;
                 $pageTitle .= " " ;
-            break;
+                break;
             case 'pending' :
                 $pageTitle .= " - حسابات بالانتظار" ;
                 break;
@@ -48,122 +48,122 @@ class UserController extends Controller
                 break;
             case 'blocked' :
                 $pageTitle .= " -حسابات محظوره" ;
-            break;
+                break;
         }
         return (new UsersDataTable($type , $status))->render('admin.users.index'  , compact('pageTitle' , 'type' ,'status'));
     }
     public function index($status=null , $type=null )
     {
 
-/*
-        $countries= Country::with([
-            'configuration'=>function($q){
-                $q->whereIn('classification' , ['points' ,'distinction']) ;
-            }
-        ])->whereHas('users')
-//            ->with('users')
-            ->select('id' , 'name')
-            ->get();
-
-
-// نقاط , ايرادات , اوردرات
-
-
-
-        foreach ($countries as $country){
-
-
-            $config_key = $country->configuration->keyBy('config_key') ;
-
-             $users = User::whereResidenceCountryId($country->id)
-                ->withCount([
-                    'chefOrders'=>function($q){},
-                    'deliveryOrders'=>function($q){},
-                    'sanctions'=>function($q){},
-                    'userPoints'=>function($q){$q->where('status' ,'new');},
-                ])
-             ->withSum( 'chefTransfers' ,'amount')
-             ->withSum( 'deliveryTransfers' ,'amount')
-
-
-
-//            ->having('chef_orders_count' , '>=' , 1)
-//            ->having('chef_transfers_sum_amount' , '>=' , 1)
-
-//            ->having('delivery_orders_count' , '>=' , 1)
-//            ->having('delivery_transfers_sum_amount' , '>=' , 1)
-//            ->having('user_points_count' , '>=' , 1)
-            ->get();
-
-
-             $client_points_limit= $config_key['client_points_limit']->config_value;
-             $distinction_delivery_orders= $config_key['distinction_delivery_orders']->config_value;
-             $distinction_delivery_revenues= $config_key['distinction_delivery_revenues']->config_value;
-             $distinction_delivery_sanctions= $config_key['distinction_delivery_sanctions']->config_value;
-             $distinction_delivery_rate= $config_key['distinction_delivery_rate']->config_value;
-             $distinction_chef_orders= $config_key['distinction_chef_orders']->config_value;
-             $distinction_chef_revenues= $config_key['distinction_chef_revenues']->config_value;
-             $distinction_chef_sanctions= $config_key['distinction_chef_sanctions']->config_value;
-             $distinction_chef_rate= $config_key['distinction_chef_rate']->config_value;
-
-            foreach ($users as $user) {
-
-                $user->loadRates();
-                if ($user->type=='client'){
-                    if($user->user_points_count >= $client_points_limit){
-                        // add to point transfer
-
-
-
+        /*
+                $countries= Country::with([
+                    'configuration'=>function($q){
+                        $q->whereIn('classification' , ['points' ,'distinction']) ;
                     }
-                }
+                ])->whereHas('users')
+        //            ->with('users')
+                    ->select('id' , 'name')
+                    ->get();
 
 
-                if ($user->type=='delivery'){
-                    if(
-                        $user->delivery_orders_count >= $distinction_delivery_orders &&
-                        $user->delivery_transfers_sum_amount >= $distinction_delivery_revenues &&
-                        $user->raties['rating_delivery'] >= $distinction_delivery_rate &&
-                        $user->sanctions_count >= $distinction_delivery_sanctions
-                    ){
+        // نقاط , ايرادات , اوردرات
 
 
 
+                foreach ($countries as $country){
+
+
+                    $config_key = $country->configuration->keyBy('config_key') ;
+
+                     $users = User::whereResidenceCountryId($country->id)
+                        ->withCount([
+                            'chefOrders'=>function($q){},
+                            'deliveryOrders'=>function($q){},
+                            'sanctions'=>function($q){},
+                            'userPoints'=>function($q){$q->where('status' ,'new');},
+                        ])
+                     ->withSum( 'chefTransfers' ,'amount')
+                     ->withSum( 'deliveryTransfers' ,'amount')
 
 
 
+        //            ->having('chef_orders_count' , '>=' , 1)
+        //            ->having('chef_transfers_sum_amount' , '>=' , 1)
+
+        //            ->having('delivery_orders_count' , '>=' , 1)
+        //            ->having('delivery_transfers_sum_amount' , '>=' , 1)
+        //            ->having('user_points_count' , '>=' , 1)
+                    ->get();
+
+
+                     $client_points_limit= $config_key['client_points_limit']->config_value;
+                     $distinction_delivery_orders= $config_key['distinction_delivery_orders']->config_value;
+                     $distinction_delivery_revenues= $config_key['distinction_delivery_revenues']->config_value;
+                     $distinction_delivery_sanctions= $config_key['distinction_delivery_sanctions']->config_value;
+                     $distinction_delivery_rate= $config_key['distinction_delivery_rate']->config_value;
+                     $distinction_chef_orders= $config_key['distinction_chef_orders']->config_value;
+                     $distinction_chef_revenues= $config_key['distinction_chef_revenues']->config_value;
+                     $distinction_chef_sanctions= $config_key['distinction_chef_sanctions']->config_value;
+                     $distinction_chef_rate= $config_key['distinction_chef_rate']->config_value;
+
+                    foreach ($users as $user) {
+
+                        $user->loadRates();
+                        if ($user->type=='client'){
+                            if($user->user_points_count >= $client_points_limit){
+                                // add to point transfer
+
+
+
+                            }
+                        }
+
+
+                        if ($user->type=='delivery'){
+                            if(
+                                $user->delivery_orders_count >= $distinction_delivery_orders &&
+                                $user->delivery_transfers_sum_amount >= $distinction_delivery_revenues &&
+                                $user->raties['rating_delivery'] >= $distinction_delivery_rate &&
+                                $user->sanctions_count >= $distinction_delivery_sanctions
+                            ){
+
+
+
+
+
+
+                            }
+                        }
+
+                        if ($user->type=='chef'){
+                            if(
+                                $user->chef_orders_count >= $distinction_delivery_orders &&
+                                $user->chef_transfers_sum_amount >= $distinction_delivery_revenues &&
+                                $user->raties['rating_delivery'] >= $distinction_delivery_rate &&
+                                $user->sanctions_count >= $distinction_delivery_sanctions
+                            ){
+
+
+
+
+
+                            }
+                        }
+
+
+
+                            return $user ;
                     }
-                }
-
-                if ($user->type=='chef'){
-                    if(
-                        $user->chef_orders_count >= $distinction_delivery_orders &&
-                        $user->chef_transfers_sum_amount >= $distinction_delivery_revenues &&
-                        $user->raties['rating_delivery'] >= $distinction_delivery_rate &&
-                        $user->sanctions_count >= $distinction_delivery_sanctions
-                    ){
-
-
-
-
-
-                    }
-                }
-
-
-
-                    return $user ;
-            }
-*/
-            /*
-             *
+        */
+        /*
+         *
 : 0,
 : 0,
 : 0,
 : null,
 : null
 
-             * */
+         * */
 
 
 //            ->chunk(200 , function ( $users){
@@ -228,7 +228,7 @@ class UserController extends Controller
                 case 'pending':
                     $title='حسابك في الانتظار';
                     $body='تم تحويل حسابك الى قيد المراجعه';
-                break;
+                    break;
 
                 case 'active':
                     $title='تم تفعيل حسابك بنجاح';
@@ -239,12 +239,12 @@ class UserController extends Controller
                 case 'rejected':
                     $title='تم رفض عضويتك ';
                     $body='تم رفض حسابك على طبختنا , يرجى مراجعه التفاصيل ';
-                break;
+                    break;
 
                 case 'blocked':
                     $title='تم حظؤ حسابك';
                     $body='تم حظر حسابك , ربما يكون بسبب انتهاك شروط الاستخدام , تواصل معنا في حال كان هذا خطا';
-                break;
+                    break;
 
             }
             $Notifications[]=[
@@ -290,7 +290,7 @@ class UserController extends Controller
 
 
         foreach ($Notifications as $Notification)
-        $this->PushNotification($Notification['user_id'],$Notification);
+            $this->PushNotification($Notification['user_id'],$Notification);
 
         session()->flash('Success' , 'تم نحديث بيانات المستخدم بنجاح ');
         return redirect()->back() ;
@@ -308,7 +308,7 @@ class UserController extends Controller
         ]);
 
         if ($user->type=='type')
-          $user->loadRates();
+            $user->loadRates();
 
 
         return  $user ;

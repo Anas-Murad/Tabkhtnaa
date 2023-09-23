@@ -181,7 +181,7 @@ class UsersDataTable extends DataTable
                 $q->where('account_status', $this->account_status);
             })
 
-        ;
+            ;
     }
 
     /**

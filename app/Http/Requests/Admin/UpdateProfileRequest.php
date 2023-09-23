@@ -27,8 +27,6 @@ class UpdateProfileRequest extends FormRequest
             'email' =>[
                 Rule::unique('users')->where('source' ,$this->user()->source)
                     ->whereNotNull('email') ->ignore($this->user()->id)],
-            'residence_country_id' => 'required|exists:countries,id|integer',
-            'country_code' => 'required|exists:countries,phonecode',
             'name' => 'required|string',
             'dob' => 'required|date',
             'def_lang' => 'in:ar,en',

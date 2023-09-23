@@ -200,13 +200,13 @@
             </div>
         </div>
     </div>
-    @endsection
-    @section('jscript')
-        {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+@endsection
+@section('jscript')
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 
-        <script>
-            function myCustomAction(){
-                alert(1)
-            }
-        </script>
+    <script>
+        function myCustomAction(){
+            alert(1)
+        }
+    </script>
 @endsection
