@@ -29,5 +29,4 @@ class Accessories extends Model
                 ->where('translates.model', '=', 'accessories');
         }) ;
     }
-
 }

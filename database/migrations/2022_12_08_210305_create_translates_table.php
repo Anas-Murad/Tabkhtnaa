@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('key');
             $table->string('model')->nullable();
-            $table->string('en');
-            $table->string('ar');
-            $table->string('fr');
-            $table->string('tr');
+            $table->string('en')->nullable();
+            $table->string('ar')->nullable();
+            $table->string('fr')->nullable();
+            $table->string('tr')->nullable();
         });
     }
 

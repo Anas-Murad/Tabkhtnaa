@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
 @section('cssStyle')
 
 @endsection
@@ -19,5 +19,4 @@
 
 @section('jscript')
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
-    </script>
 @endsection

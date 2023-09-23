@@ -28,6 +28,10 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->enum('status' , ['pending' , 'solved' , 'cancelled'])->nullable();
             $table->string('note')->nullable();
+            $table->unsignedBigInteger('admin_id')->nullable();
+            $table->foreign('admin_id')->references('id')->on('admins')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

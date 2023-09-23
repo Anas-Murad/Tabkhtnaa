@@ -3,6 +3,9 @@
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\TranslateController;
+use App\Http\Controllers\Admin\ComplaintsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,6 +24,15 @@ Route::group(['middleware' => ['auth:admin']], function () {
         return view('admin.layouts.app');
     })->name('admin.dashboard');
     Route::resource('users', UserController::class)->names('users');
+    //translations
+    Route::resource('translations', TranslateController::class);
+
+    //complaints
+    Route::resource('complaints', ComplaintsController::class);
+    //profile
+    Route::get('profile' , [ProfileController::class , 'edit'])->name('admin.profile.edit');
+    Route::put('profile/update' , [ProfileController::class , 'update'])->name('admin.profile.update');
+
     Route::post('logout' , [LoginController::class , 'logout'])->name('admin.logout');
 });
 

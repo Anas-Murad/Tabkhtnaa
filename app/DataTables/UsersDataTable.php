@@ -24,7 +24,7 @@ class UsersDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
 
-            ->editColumn('profile_image','<img style=" width: 50px; height: 50px; " ssrc="{{asset($profile_image ?? "assets/images/demo/users/face11.jpg" )}}" />')
+            ->editColumn('profile_image','<img style=" width: 50px; height: 50px; " src="{{asset($profile_image ?? "assets/images/demo/users/face11.jpg" )}}" />')
             ->editColumn('email','<a href="mailto:{{$email}}">{{$email}}</a>')
             ->editColumn('mobile','<a href="tel:{{$country_code.$mobile}}">{{$country_code.$mobile}}</a>')
 
