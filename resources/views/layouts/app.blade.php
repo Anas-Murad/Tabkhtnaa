@@ -28,8 +28,6 @@
 
 <script type="module">
 
-
-
     /* ------------------------------------------------------------------------------
  *
  *  # Buttons extension for Datatables. HTML5 examples
@@ -37,11 +35,8 @@
  *  Demo JS code for datatable_extension_buttons_html5.html page
  *
  * ---------------------------------------------------------------------------- */
-
-
     // Setup module
     // ------------------------------
-
     const DatatableButtonsHtml5 = function() {
 
 
@@ -72,11 +67,8 @@
             }
         }
     }();
-
-
     // Initialize module
     // ------------------------------
-
     document.addEventListener('DOMContentLoaded', function() {
         DatatableButtonsHtml5.init();
     });

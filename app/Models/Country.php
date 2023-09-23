@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Country extends Model
 {
@@ -30,4 +31,15 @@ class Country extends Model
         with('cities:id,country_id,name');
 
     }
+
+    public function configuration()
+    {
+        return $this->hasMany(Configuration::class, 'country_id');
+    }
+
+    public function users()
+    {
+        return $this->hasManyThrough(User::class, UserAddress::class , 'user_id' ,'id');
+    }
+
 }
