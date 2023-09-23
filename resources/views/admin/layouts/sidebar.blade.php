@@ -61,6 +61,74 @@
                     <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Forms</div>
                     <i class="ph-dots-three sidebar-resize-show"></i>
                 </li>
+
+
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link"><i class="ph-users-three"></i> <span>ادارة المستخدمين</span></a>
+                    <ul class="nav-group-sub collapse">
+
+                        <li class="nav-item"><a href="{{ route('users.index') }}" class="nav-link">الكل</a></li>
+
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link">قيد الانتظار / جديد</a>
+                    <ul class="nav-group-sub collapse">
+                        <li class="nav-item"><a href="{{ route('usersByStatusType' ,['pending' , 'chef']) }}" class="nav-link">الطهاه</a></li>
+                        <li class="nav-item"><a href="{{ route('usersByStatusType' ,['pending' , 'delivery']) }}" class="nav-link">التوصيل</a></li>
+                    </ul>
+                </li>
+
+                        <li class="nav-item nav-item-submenu">
+                            <a href="#" class="nav-link">تم قبولهم / نشط</a>
+                            <ul class="nav-group-sub collapse">
+                                <li class="nav-item"><a href="{{ route('usersByStatusType' ,['active' , 'chef']) }}"  class="nav-link">الطهاه</a></li>
+                                <li class="nav-item"><a href="{{ route('usersByStatusType' ,['active' , 'delivery']) }}"  class="nav-link">التوصيل</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item nav-item-submenu">
+                            <a href="#" class="nav-link">طلبات انضمام مرفوضه</a>
+                            <ul class="nav-group-sub collapse">
+                                <li class="nav-item"><a href="{{ route('usersByStatusType' ,['rejected' , 'chef']) }}"  class="nav-link">الطهاه</a></li>
+                                <li class="nav-item"><a href="{{ route('usersByStatusType' ,['rejected' , 'delivery']) }}"  class="nav-link">التوصيل</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item nav-item-submenu">
+                            <a href="#" class="nav-link">  حسابات معطله Blocked</a>
+                            <ul class="nav-group-sub collapse">
+                                <li class="nav-item"><a href="{{ route('usersByStatusType' ,['blocked' , 'chef']) }}"  class="nav-link">الطهاه</a></li>
+                                <li class="nav-item"><a href="{{ route('usersByStatusType' ,['blocked' , 'delivery']) }}"  class="nav-link">التوصيل</a></li>
+                                <li class="nav-item"><a href="{{ route('usersByStatusType' ,['blocked' , 'client']) }}" class="nav-link">المستخدمين</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item"><a href="{{ route('usersByStatusType' , [ 'all','client']) }}" class="nav-link">مستخدمي التطبيق</a></li>
+{{--
+                        <li class="nav-item nav-item-submenu">
+                            <a href="#" class="nav-link">Second level with child</a>
+                            <ul class="nav-group-sub collapse">
+                                <li class="nav-item"><a href="#" class="nav-link">Third level</a></li>
+                                <li class="nav-item nav-item-submenu">
+                                    <a href="#" class="nav-link">Third level with child</a>
+                                    <ul class="nav-group-sub collapse">
+                                        <li class="nav-item"><a href="#" class="nav-link">Fourth level</a></li>
+                                        <li class="nav-item"><a href="#" class="nav-link">Fourth level</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item"><a href="#" class="nav-link">Third level</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item"><a href="#" class="nav-link">Second level</a></li>--}}
+
+                    </ul>
+                </li>
+
+
+
+
+
+
                 <li class="nav-item nav-item-submenu">
                     <a href="#" class="nav-link">
                         <i class="ph-note-pencil"></i>
@@ -83,6 +151,8 @@
                         <li class="nav-item"><a href="form_validation_library.html" class="nav-link">Validation library</a></li>
                     </ul>
                 </li>
+
+
                 <!-- /forms -->
             </ul>
         </div>

@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -44,9 +46,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'mobile_verified' => 'boolean',
-        'can_delivery' => 'boolean',
+//        'can_delivery' => 'boolean',
     ];
 
+
+    public function residenceCountry (): BelongsTo
+    {
+        return $this->belongsTo(Country::class , 'residence_country_id');
+    }
     public function setUsernameAttribute($value)
     {
         $temp = Str::slug($this->attributes['name']) . '@tabketna.com';
@@ -72,10 +79,6 @@ class User extends Authenticatable
         return $this->hasMany(Gallery::class)->where('type', '!=', 'galleryKitchen');
     }
 
-    public function documents()
-    {
-        return $this->hasMany(Document::class);
-    }
 
     public function complaints()
     {
@@ -99,7 +102,9 @@ class User extends Authenticatable
         $delivery = Rating::where('chef_id', $this->id)->avg('rating_delivery');
         $speed_chef = Rating::where('chef_id', $this->id)->avg('rating_speed_chef');
         $speed_delivery = Rating::where('chef_id', $this->id)->avg('rating_speed_delivery');
+        $rating_chef = Rating::where('chef_id', $this->id)->avg('rating_chef');
         $this->raties = [
+            "rating_speed" => $rating_chef,
             "rating_delivery" => $delivery,
             "rating_speed_chef" => $speed_chef,
             "rating_speed_delivery" => $speed_delivery,
@@ -108,7 +113,15 @@ class User extends Authenticatable
 
     public function userAddress()
     {
+
+        //
+        //
+
         return $this->hasMany(UserAddress::class);
+    }
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
     }
 
     public function scopeNearby($query, $latitude, $longitude, $distance)
@@ -120,5 +133,44 @@ class User extends Authenticatable
                 SIN(RADIANS($latitude)) * SIN(RADIANS(user_addresses.latitude))
             )) AS distance")
             ->having('distance', '<', $distance)->orderBy('distance', 'ASC');
+    }
+
+
+    public function chefOrders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'chef_id');
+    }
+
+
+    public function deliveryOrders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'delivery_id');
+    }
+
+    public function chefTransfers(): HasMany
+    {
+        return $this->hasMany(Transfer::class, 'to_id')->where('to_type' , 'chef');
+        //enum('admin', 'client', 'delivery', 'chef')
+    }
+
+    public function deliveryTransfers(): HasMany
+    {
+        return $this->hasMany(Transfer::class, 'to_id')->where('to_type' , 'delivery');
+    }
+
+
+    public function userPointTransfers(): HasMany
+    {
+        return $this->hasMany(UserPointTransfers::class, 'user_id');
+    }
+
+    public function userPoints(): HasMany
+    {
+        return $this->hasMany(UserPoint::class, 'user_id');
+    }
+
+    public function sanctions(): HasMany
+    {
+        return $this->hasMany(Sanction::class, 'user_id');
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,6 +7,8 @@
     <title>Limitless - Responsive Web Application Kit by Eugene Kopyov</title>
     @include('admin.layouts.header')
     @yield('cssStyle')
+
+
 </head>
 <body>
 <!-- Main navbar -->
@@ -29,10 +31,9 @@
             @auth('admin')
                 @include('admin.layouts.pagesHeader')
 
-                <!-- /page header -->
-                <!-- Content area -->
+
                 @yield('content')
-                <!-- /content area -->
+
 
                 @include('admin.layouts.footer')
             @endauth
@@ -45,8 +46,9 @@
 @include('admin.layouts.notifications')
 <!-- Demo config -->
 @include('admin.layouts.config')
-<!-- /demo config -->
-@yield('jscript')
+
+
+
 <script>
     let table;
     $.extend($.fn.dataTable.defaults, {
@@ -58,7 +60,7 @@
         language: {
             search: '<span class="me-3">فلتره:</span> <div class="form-control-feedback form-control-feedback-end flex-fill">_INPUT_<div class="form-control-feedback-icon"><i class="ph-magnifying-glass opacity-50"></i></div></div>',
             searchPlaceholder: 'Type to filter...',
-            lengthMenu: '<span class="me-3">عرض:</span> MENU',
+            lengthMenu: '<span class="me-3">عرض:</span> _MENU_',
             paginate: {
                 'first': 'First',
                 'last': 'Last',
@@ -163,6 +165,14 @@
             }
         });
     }
+
+
 </script>
+
+
+<!-- /demo config -->
+@yield('jscript')
+@stack('scripts')
+
 </body>
 </html>
