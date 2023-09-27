@@ -8,6 +8,9 @@ return [
   'female'=>'انثى',
   'other'=>'اخرى',
 
+    'success'=>'مكتمل',
+    'cancel'=>'ملغي',
+
     'pending'=>'بالانتظار',
     'active'=>'نشط',
     'rejected'=>'مرفوض',
@@ -41,6 +44,29 @@ return [
     'blood_test'=>'فحص الدم',
     'driving_license'=>'رخصة قيادة',
     'car_trunk_image'=>'صورة صندوق السيارة',
+
+
+    'wallet'=>'محفظه العميل',
+    'cash'=>'كاش',
+    'cards'=>'اونلاين',
+
+    'delivery_type_delivery'=>'توصيل',
+    'delivery_type_delivered'=>'توصيل',
+    'delivery_type_pick_up'=>'حجز',
+    'delivery_type_chef_delivery'=>'توصيل الشيف',
+
+
+    'status_pending'=>'بالانتظار',
+    'status_confirmed'=>'مقبول',
+    'status_prepare'=>'قيد التحضير',
+    'status_prepared'=>'تم التحضير',
+    'status_on_way'=>'في الطريق',
+    'status_delivered'=>'تم التوصيل',
+    'status_not_delivered'=>'لم يتم التوصيل',
+    'status_rejected'=>'مرفوض',
+    'status_cancel'=>'ملغي',
+    'status_not_ordered'=>'غير مطلوب',
+
 
 
 ];

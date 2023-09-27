@@ -298,6 +298,8 @@ class UserController extends Controller
 
     public function edit($id = Null)
     {
+
+        return $this->show($id);
         $user = User::findOrFail($id);
 
         $user->loadMissing([
@@ -311,8 +313,9 @@ class UserController extends Controller
             $user->loadRates();
 
 
+        return view('admin.users.show');
         return  $user ;
-        return view('admin.users.index');
+
     }
 
 

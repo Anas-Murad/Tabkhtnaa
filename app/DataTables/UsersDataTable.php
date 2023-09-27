@@ -126,10 +126,7 @@ class UsersDataTable extends DataTable
     public function query(User $model): QueryBuilder
     {
         return $model->newQuery()
-
-
             ->with('residenceCountry')
-
             ->when($this->type, function ($q) {
                 $q->where('type', $this->type);
             })
@@ -224,7 +221,7 @@ class UsersDataTable extends DataTable
             Column::make('username')->title('اسم المتسخدم'),
             Column::make('email')->title('البريد'),
             Column::make('mobile')->title('رقم الهاتف'),
-            Column::make('residence_country.name')->title('رقxxxف'),
+            Column::make('residence_country.name')->title('بلد الاقامة'),
             Column::make('dob')->title('تاريخ الميلاد'),
             Column::make('gender')->title('الجنس')->searchable(false)->orderable(false),
 

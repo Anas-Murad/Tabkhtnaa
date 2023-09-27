@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderMeal extends Model
 {
@@ -19,6 +20,12 @@ class OrderMeal extends Model
         'additions_price',
         'total',
     ];
+
+
+    public function meal(): BelongsTo
+    {
+        return $this->belongsTo(Meal::class);
+    }
 
     public  function orderMealAccessories(){
         return $this->hasMany(OrderMealAccessory::class , 'order_meal_id');

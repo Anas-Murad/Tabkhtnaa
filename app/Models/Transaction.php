@@ -28,7 +28,6 @@ class Transaction extends Model
     protected $casts =[
         'tried_again'=>'boolean',
         'tracking_data'=>'array',
-
     ];
 
 
