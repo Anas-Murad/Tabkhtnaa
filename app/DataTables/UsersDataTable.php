@@ -59,8 +59,6 @@ class UsersDataTable extends DataTable
                         return " <span class='badge bg-dark   text-white'>" . __('messages.' . $user->account_status) . "</span>";
 
                 }
-
-
             })
             ->editColumn('created_at', function ($user) {
                 return $user->created_at->toDateString();
@@ -116,7 +114,6 @@ class UsersDataTable extends DataTable
                 'gender',
                 'account_status',
                 'can_delivery',
-
             ]);
     }
 

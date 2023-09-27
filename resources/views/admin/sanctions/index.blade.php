@@ -28,13 +28,6 @@
                                                        id="search_key" placeholder="كلمة البحث ... ">
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label class="form-label">ابحث عن order number </label>
-                                                <input type="text" class="form-control" name="order_id"
-                                                       id="order_id" placeholder="Order Number ">
-                                            </div>
-                                        </div>
                                         @includeIf('admin.components.countries' , [
                                              'col_size'=>'col-md-2',
                                              'country_name'=>'country_id',
@@ -75,13 +68,26 @@
                                                             class="select2 form-control form-control-select2"
                                                             data-fouc>
                                                         <option value="">الكل</option>
-                                                        <option value="client">client</option>
-                                                        <option value="delivery">delivery</option>
-                                                        <option value="maker">chef</option>
+                                                        <option value="financial_violation">financial violation</option>
+                                                        <option value="make_block">make block</option>
+                                                        <option value="no_order_request">no order request</option>
+                                                        <option value="no_chat">no chat</option>
                                                     </select>
                                                 </div>
                                             </div>
                                         @endif
+                                        <div class="col-md-2">
+                                            <div class="mb-3">
+                                                <label class="form-label">Seen</label>
+                                                <select name="seen" id="seen"
+                                                        class="select2 form-control form-control-select2"
+                                                        data-fouc>
+                                                    <option value="">الكل</option>
+                                                    <option value="seen">seen</option>
+                                                    <option value="not_seen">not seen</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="col-md-2">
                                             <div class="mb-3">
                                                 <label class="form-label">من تاريخ:</label>
