@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\TranslateController;
 use App\Http\Controllers\Admin\ComplaintsController;
+use App\Http\Controllers\Admin\SanctionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,6 +44,8 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     //complaints
     Route::resource('complaints', ComplaintsController::class);
+    //sanctions
+    Route::resource('sanctions', SanctionController::class);
     //profile
     Route::get('profile' , [ProfileController::class , 'edit'])->name('admin.profile.edit');
     Route::put('profile/update' , [ProfileController::class , 'update'])->name('admin.profile.update');
