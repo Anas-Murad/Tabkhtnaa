@@ -2,6 +2,8 @@
 $randomId = rand(10000,99999).time()
 
 @endphp
+
+
 <div class="{{$col_size ?? "col-md-4"}}">
     <div class="mb-3" id="cnId{{$randomId}}">
         <label class="form-label">اختر الدولة</label>
