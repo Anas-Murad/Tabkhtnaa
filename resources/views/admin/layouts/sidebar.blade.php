@@ -125,9 +125,58 @@
                 </li>
 
 
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link"><i class="ph-users-three"></i> <span>قسم الطلبات</span></a>
+                    <ul class="nav-group-sub collapse">
 
 
 
+        <li class="nav-item"><a href="{{ route('admin.orders.index') }}" class="nav-link">كل الطلبات</a></li>
+        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'pending']) }}" class="nav-link"> قيد الانتظار
+            <span class="badge bg-teal align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'confirmed']) }}" class="nav-link">تم قبولها
+            <span class="badge bg-light  text-black align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'prepare']) }}" class="nav-link">قيد التحضير
+            <span class="badge bg-black align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'prepared']) }}" class="nav-link">تم التحضير
+            <span class="badge bg-primary align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'on_way']) }}" class="nav-link">في الطريق
+            <span class="badge bg-info align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'delivered']) }}" class="nav-link">تم التوصيل
+            <span class="badge bg-success align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'not_delivered']) }}" class="nav-link">لم يتم التوصيل
+            <span class="badge bg-warning align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'rejected']) }}" class="nav-link">تم رفضه
+            <span class="badge bg-danger align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+
+        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'cancel']) }}" class="nav-link">ملغي
+            <span class="badge bg-secondary align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'not_ordered']) }}" class="nav-link"> مازال غير مطلوب
+            <span class="badge bg-dark align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+
+
+                    </ul>
+                </li>
+
+
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link"><i class="ph-users-three"></i> <span>الحاله الماليه للطلبات</span></a>
+                    <ul class="nav-group-sub collapse">
+
+                        <li class="nav-item"><a href="{{ route('admin.orders.index') }}" class="nav-link">كل الطلبات</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'all' , 'transactionStatus'=>'pending']) }}" class="nav-link"> قيد الانتظار</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'all' , 'transactionStatus'=>'success']) }}" class="nav-link">تم  السداد</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'all' , 'transactionStatus'=>'cancel']) }}" class="nav-link">ملغي</a></li>
+
+                    </ul>
+                </li>
+
+             {{--   'payment_method' => ['required'  , 'in:wallet,cash,cards'],
+                delivery_type	enum('delivery', 'pick_up', 'chef_delivery')
+                transaction_status	enum('pending', 'success', 'cancel')
+--}}
+
+{{--
 
                 <li class="nav-item nav-item-submenu">
                     <a href="#" class="nav-link">
@@ -152,6 +201,7 @@
                     </ul>
                 </li>
 
+--}}
 
                 <!-- /forms -->
             </ul>

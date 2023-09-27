@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
@@ -45,6 +46,46 @@ Route::group(['middleware' => ['auth:admin']], function () {
     //profile
     Route::get('profile' , [ProfileController::class , 'edit'])->name('admin.profile.edit');
     Route::put('profile/update' , [ProfileController::class , 'update'])->name('admin.profile.update');
+
+
+
+
+
+
+    Route::group([
+        'prefix' => 'orders',
+        'controller' =>OrdersController::class
+    ], function () {
+
+        Route::get('/{status?}/{transactionStatus?}/{userID?}' ,'index')->name('admin.orders.index')
+            ->where('status', 'all|pending|confirmed|prepare|prepared|on_way|delivered|not_delivered|rejected|cancel|not_ordered')
+            ->where('transactionStatus', 'all|pending|success|cancel')
+            ->whereNumber('userID');
+
+        Route::get('/{id}' ,'show')->name('admin.orders.show')->whereNumber('id');
+
+        // Route::get('user/{userID}' ,'index')->name('admin.profile.edit');
+
+    });
+
+
+
+    Route::group([
+        'prefix' => 'transactions',
+        'controller' =>OrdersController::class
+    ], function () {
+
+        Route::get('/{id}' ,'show')->name('admin.transaction.order')->whereNumber('id');
+
+    });
+
+
+
+
+
+
+
+
 
 
 });
