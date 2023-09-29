@@ -14,6 +14,17 @@ use Yajra\DataTables\Services\DataTable;
 
 class UsersDataTable extends DataTable
 {
+
+    protected $type;
+    protected $status;
+
+    public function __construct($type = null, $status = null)
+    {
+        $this->type = $type;
+        $this->status = $status;
+    }
+
+
     /**
      * Build DataTable class.
      *
@@ -23,59 +34,87 @@ class UsersDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-
-            ->editColumn('profile_image','<img style=" width: 50px; height: 50px; " src="{{asset($profile_image ?? "assets/images/demo/users/face11.jpg" )}}" />')
-            ->editColumn('email','<a href="mailto:{{$email}}">{{$email}}</a>')
-            ->editColumn('mobile','<a href="tel:{{$country_code.$mobile}}">{{$country_code.$mobile}}</a>')
-
+            ->editColumn('profile_image', '<img style=" width: 50px; height: 50px; " src="{{asset($profile_image ?? "assets/images/demo/users/face11.jpg" )}}" />')
+            ->editColumn('email', '<a href="mailto:{{$email}}">{{$email}}</a>')
+            ->editColumn('mobile', '<a href="tel:{{$country_code.$mobile}}">{{$country_code.$mobile}}</a>')
             ->editColumn('gender', function ($user) {
-                return  $user->gender;
+                return " <span class='badge bg-success bg-opacity-10 text-success'>" . __('messages.' . $user->gender) . "</span>";
             })
-
             ->editColumn('type', function ($user) {
-                return " <span class='badge bg-success bg-opacity-10 text-success'> $user->type</span>";
+                return " <span class='badge bg-success bg-opacity-10 text-success'>" . __('messages.' . $user->type) . "</span>";
             })
-
             ->editColumn('account_status', function ($user) {
-                return  $user->account_status;
-            })
 
+                switch ($user->account_status) {
+                    case 'pending' :
+                        return " <span class='badge bg-warning bg-opacity-10 text-warning'>" . __('messages.' . $user->account_status) . "</span>";
+
+                    case 'active' :
+                        return " <span class='badge bg-success bg-opacity-10 text-success'>" . __('messages.' . $user->account_status) . "</span>";
+
+                    case 'rejected' :
+                        return " <span class='badge bg-danger bg-opacity-10 text-danger'>" . __('messages.' . $user->account_status) . "</span>";
+
+                    case 'blocked' :
+                        return " <span class='badge bg-dark   text-white'>" . __('messages.' . $user->account_status) . "</span>";
+
+                }
+            })
             ->editColumn('created_at', function ($user) {
-                return  $user->created_at->toDateString();
+                return $user->created_at->toDateString();
             })
-
             ->editColumn('updated_at', function ($user) {
-                return  $user->updated_at->toDateString();
+                return $user->updated_at->toDateString();
             })
-
             ->editColumn('can_delivery', function ($user) {
-                return  $user->can_delivery ? "Yes" :"No";
+
+                switch ($user->can_delivery) {
+                    case 'no' :
+                        return " <span class='badge bg-dark'>" . __('messages.' . $user->can_delivery) . "</span>";
+                    case 'request' :
+                        return " <span class='badge bg-warning '>" . __('messages.' . $user->can_delivery) . "</span>";
+
+                    case 'yes' :
+                        return " <span class='badge bg-success'>" . __('messages.' . $user->can_delivery) . "</span>";
+
+                    case 'rejected' :
+                        return " <span class='badge bg-danger   text-white'>" . __('messages.' . $user->can_delivery) . "</span>";
+
+                }
+
+
             })
-
-
 
             ->editColumn('action', function ($user) {
-                return   <<<HTML
-
+                $DeleteFunction = "DeleteFunction('" . route("users.destroy", $user) . "')";
+                $EditLink = (route('users.edit' , $user));
+                $ShowLink = (route('users.show' , $user));
+                return <<<HTML
                 <div class="d-inline-flex">
                         <div class="dropdown">
                             <a href="#" class="text-body" data-bs-toggle="dropdown">
                                 <i class="ph-list"></i>
                             </a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a href="#" class="dropdown-item"> <i class="ph-pencil me-2"></i> Edit </a>
-                            <a href="#" class="dropdown-item"> <i class="ph-eye me-2"></i> Show Information </a>
-                            <a href="#" class="dropdown-item"> <i class="ph-trash me-2"></i> Delete Account</a>
+                            <a href="$EditLink" class="dropdown-item"> <i class="ph-pencil me-2"></i> Edit </a>
+                            <a href="$ShowLink" class="dropdown-item"> <i class="ph-eye me-2"></i> Show Information </a>
+                            <a href="#" class="dropdown-item" onclick="' . $DeleteFunction . '" > <i class="ph-trash me-2"></i> Delete Account</a>
                         </div>
                     </div>
                 </div>
                 HTML;
             })
-
             ->setRowId('id')
-            ->rawColumns(['action','email','mobile' ,'profile_image' ,'type'])
-
-            ;
+            ->rawColumns([
+                'action',
+                'email',
+                'mobile',
+                'profile_image',
+                'type',
+                'gender',
+                'account_status',
+                'can_delivery',
+            ]);
     }
 
     /**
@@ -86,7 +125,57 @@ class UsersDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->newQuery()
+            ->with('residenceCountry')
+            ->when($this->type, function ($q) {
+                $q->where('type', $this->type);
+            })
+            ->when($this->status, function ($q) {
+                $q->where('account_status', $this->status);
+            })
+            ->when($this->request->filled('country_id') || $this->request->filled('city_id'), function ($q) {
+                $r = [];
+                if ($this->request->filled('country_id')) $r['country_id'] = $this->request->country_id;
+                if ($this->request->filled('city_id')) $r['city_id'] = $this->request->country_id;
+                $q->whereRelation('userAddress', $r);
+            })
+            ->when($this->request->filled('from_date'), function ($q) {
+                $q->where('created_at', '>=', $this->request()->input('from_date'));
+            })
+            ->when($this->request->filled('to_date'), function ($q) {
+                $q->where('created_at', '<=', $this->request()->input('to_date'));
+            })
+            ->when($this->request->filled('search_key'), function ($q) {
+                $q->where(function ($q) {
+                    $q->where('name', 'like', '%' . $this->request()->input('search_key') . '%');
+                    $q->orWhere('email', 'like', '%' . $this->request()->input('search_key') . '%');
+                    $q->orWhere('country_code', 'like', '%' . $this->request()->input('search_key') . '%');
+                    $q->orWhere('mobile', 'like', '%' . $this->request()->input('search_key') . '%');
+                    $q->orWhere('username', 'like', '%' . $this->request()->input('search_key') . '%');
+                    $q->orWhere('account_comment', 'like', '%' . $this->request()->input('search_key') . '%');
+                });
+
+            })
+            ->when($this->gender, function ($q) {
+                $q->where('gender', $this->gender);
+            })
+            ->when($this->source, function ($q) {
+                $q->where('source', $this->source);
+            })
+            ->when($this->online_status, function ($q) {
+                $q->where('online_status', $this->online_status);
+            })
+            ->when($this->type, function ($q) {
+                $q->where('type', $this->type);
+            })
+            ->when($this->can_delivery, function ($q) {
+                $q->where('can_delivery', $this->can_delivery);
+            })
+            ->when($this->account_status, function ($q) {
+                $q->where('account_status', $this->account_status);
+            })
+
+            ;
     }
 
     /**
@@ -97,20 +186,25 @@ class UsersDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
+            ->setTableId('data-table')
+            ->columns($this->getColumns())
+
+            ->ajaxWithForm(url()->current(), '#filter_form')
+//            ->minifiedAjax()
 //                    ->dom('<"datatable-header justify-content-start"f<"ms-sm-auto"l><"ms-sm-3"B>><"datatable-scroll-wrap"t><"datatable-footer"ip>')
 //                    ->orderBy(1)
 //                    ->selectStyleSingle()
-                    ->buttons([
-                        Button::make('excel'),
-                        Button::make('csv'),
-//                        Button::make('pdf'),
-                        Button::make('print'),
+            ->buttons([
+                Button::make('excel')->className('btn btn-dark')->text('<i class="ph-microsoft-excel-logo"></i> EXCEL'),
+                Button::make('csv')->className('btn btn-info')->text('<i class="ph-file-csv"></i> CSV'),
+                Button::make('print')->className('btn btn-success')->text('<i class="ph-printer"></i> طباعة'),
+                Button::make('colvis')->className('btn btn-teal')->text('<i class="ph-list"></i>'),
+//                Button::make('colvis')->action("myCustomAction")
+//                    ->className('btn btn-teal')->text('<i class="ph-plus"></i> اضافه'),
 //                        Button::make('reset'),
 //                        Button::make('reload')
-                    ]);
+
+            ]);
     }
 
     /**
@@ -121,21 +215,25 @@ class UsersDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('id')->title('#ID'),
+            Column::make('profile_image')->title('صوره'),
+            Column::make('name')->title('الاسم'),
+            Column::make('username')->title('اسم المتسخدم'),
+            Column::make('email')->title('البريد'),
+            Column::make('mobile')->title('رقم الهاتف'),
+            Column::make('residence_country.name')->title('بلد الاقامة'),
+            Column::make('dob')->title('تاريخ الميلاد'),
+            Column::make('gender')->title('الجنس')->searchable(false)->orderable(false),
+
+            Column::make('type')->title('نوع الحساب')->searchable(false)->orderable(false)
+                ->visible(!$this->type),
+            Column::make('account_status')->title('حالة الحساب')
+                ->visible(!$this->status),
 
 
-            Column::make('id')->title('معر المستخدم'),
-            Column::make('profile_image')->title('imag'),
-            Column::make('name')->title('name'),
-            Column::make('username')->title('username'),
-            Column::make('email')->title('email'),
-            Column::make('mobile')->title('mobile'),
-            Column::make('dob')->title('dob'),
-            Column::make('gender')->title('gender'),
-            Column::make('type')->title('type'),
-            Column::make('account_status')->title('status'),
-            Column::make('can_delivery')->title('can delivery'),
-            Column::make('created_at')->title('created at'),
-            Column::computed('action')
+            Column::make('can_delivery')->title('امكانيه التوصيل'),
+            Column::make('created_at')->title('تاريخ التسجيل'),
+            Column::computed('action')->title('الخيارات')
                 ->exportable(false)
                 ->printable(false)
                 ->width(60)
@@ -152,4 +250,5 @@ class UsersDataTable extends DataTable
     {
         return 'Users_' . date('YmdHis');
     }
+
 }

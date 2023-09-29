@@ -26,7 +26,8 @@ class ComplaintsDataTable extends DataTable
             ->editColumn('photo','<img style=" width: 50px; height: 50px; " src="{{asset($photo ?? "assets/images/demo/users/face1.jpg" )}}" />')
 
             ->editColumn('order_id', function ($complaint) {
-                return  "<a href='$complaint->order_id' target='_blank'> $complaint->order_id </a>";
+                $orderLink = (route('admin.orders.show' , $complaint->order_id));
+                return  "<a href='$orderLink' target='_blank'> $complaint->order_id </a>";
             })
 
             ->editColumn('type', function ($complaint) {
@@ -42,7 +43,7 @@ class ComplaintsDataTable extends DataTable
             ->editColumn('note', function ($complaint) {
                 return  $complaint->note ?? '-';
             })
-            
+
             ->editColumn('created_at', function ($complaint) {
                 return  $complaint->created_at->toDateString();
             })
@@ -81,13 +82,54 @@ class ComplaintsDataTable extends DataTable
      */
     public function query(Complaint $model): QueryBuilder
     {
-        return $model->newQuery()->with([
+        return $model->newQuery()
+            ->with([
             'user' => function($q){
-                $q->select('id','name','mobile');
+                $q->select('id','name','mobile','gender');
             },
             'admin' => function($q1){
                 $q1->select('id','name');
-            }]);
+            }])
+            ->whereHas('order', function ($q){
+                $q->when($this->request->filled('order_id'), function ($q) {
+                    $q->where('id', $this->request->order_id);
+                });
+            })
+
+            ->whereHas('user', function ($q){
+                $q->when($this->request->filled('country_id') || $this->request->filled('city_id'), function ($q) {
+                    $r = [];
+                    if ($this->request->filled('country_id')) $r['country_id'] = $this->request->country_id;
+                    if ($this->request->filled('city_id')) $r['city_id'] = $this->request->country_id;
+                    $q->whereRelation('userAddress', $r);
+                })->when($this->request->filled('search_key'), function ($q) {
+                    $q->where(function ($q) {
+                        $q->where('name', 'like', '%' . $this->request()->input('search_key') . '%');
+                        $q->orWhere('email', 'like', '%' . $this->request()->input('search_key') . '%');
+                        $q->orWhere('country_code', 'like', '%' . $this->request()->input('search_key') . '%');
+                        $q->orWhere('mobile', 'like', '%' . $this->request()->input('search_key') . '%');
+                        $q->orWhere('username', 'like', '%' . $this->request()->input('search_key') . '%');
+                        $q->orWhere('account_comment', 'like', '%' . $this->request()->input('search_key') . '%');
+                    });
+
+                })->when($this->request->filled('gender'), function ($q) {
+                        $q->where('gender', $this->request->gender);
+                    });
+            })
+
+            ->when($this->request->admin_id , function ($q){
+                $q->where('admin_id' , $this->request->admin_id);
+            })
+            ->when($this->request->filled('type'), function ($q) {
+                $q->where('type', $this->request->type);
+            })
+            ->when($this->request->filled('from_date'), function ($q) {
+                $q->where('created_at', '>=', $this->request->input('from_date'));
+            })
+            ->when($this->request->filled('to_date'), function ($q) {
+                $q->where('created_at', '<=', $this->request->input('to_date'));
+            })
+            ;
     }
 
     /**
@@ -98,11 +140,12 @@ class ComplaintsDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('complaints-table')
+                    ->setTableId('data-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(7)
+                    ->orderBy(9)
                     ->selectStyleSingle()
+                    ->ajaxWithForm(url()->current(), '#filter_form')
                     ->buttons([
                         Button::make('excel'),
                         Button::make('csv'),

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\DataTables\ComplaintsDataTable;
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Complaint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +13,8 @@ class ComplaintsController extends Controller
 {
     public function index(ComplaintsDataTable $dataTable)
     {
-        return $dataTable->render('admin.complaints.index');
+        $admins = Admin::where('account_status' , 'active')->get();
+        return $dataTable->render('admin.complaints.index' , compact('admins'));
     }
 
     public function update(Request $request)
