@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\UserDistinctionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -79,6 +80,27 @@ Route::group(['middleware' => ['auth:admin']], function () {
     ], function () {
 
         Route::get('/{id}' ,'show')->name('admin.transaction.order')->whereNumber('id');
+
+    });
+
+
+
+    Route::group([
+        'prefix' => 'distinction',
+        'controller' =>UserDistinctionController::class
+    ], function () {
+
+        Route::get('/','index')->name('admin.distinction.index');
+    });
+
+
+
+    Route::group([
+        'prefix' => 'settings',
+        'controller' =>ConfigurationController::class
+    ], function () {
+
+        Route::get('/{id}' ,'show')->name('admin.settings.configuration')->whereNumber('id');
 
     });
 

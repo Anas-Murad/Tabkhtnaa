@@ -25,20 +25,12 @@ class OrdersController extends Controller
 
                 case 'delivery':
                     $pageTitle = " طلبات الموصل " .$user->name;
-
                     break;
-
                 case 'chef':
                     $pageTitle = " طلبات الطاهي " .$user->name;
                     break;
-
             }
-
-
         }
-
-
-
 
         switch ($status){
 
@@ -86,7 +78,6 @@ class OrdersController extends Controller
                 break;
 
         }
-
         switch ($transactionStatus){
 
             case 'all' :

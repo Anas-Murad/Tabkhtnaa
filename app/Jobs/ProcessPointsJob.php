@@ -32,6 +32,8 @@ class ProcessPointsJob implements ShouldQueue
     public function handle()
     {
 
+
+
         $countries= Country::with([
             'configuration'=>function($q){
                 $q->whereIn('classification' , ['points' ,'distinction']) ;
