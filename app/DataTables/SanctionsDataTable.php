@@ -131,7 +131,7 @@ class SanctionsDataTable extends DataTable
                 ->setTableId('data-table')
                 ->columns($this->getColumns())
                 ->minifiedAjax()
-                ->orderBy(7)
+                ->orderBy(8)
                 ->selectStyleSingle()
                 ->ajaxWithForm(url()->current(), '#filter_form')
                 ->buttons([
@@ -150,7 +150,6 @@ class SanctionsDataTable extends DataTable
     {
         return [
             Column::make('photo')->title('photo'),
-            Column::make('id'),
             Column::make('admin.name')->title('Admin'),
             Column::make('user.name')->title('User'),
             Column::make('type')->title('Type'),

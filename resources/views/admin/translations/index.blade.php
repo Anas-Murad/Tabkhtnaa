@@ -1,17 +1,8 @@
 @extends('admin.layouts.app')
 @section('content')
     <div class="content">
+        @include('admin.layouts.alert-area')
         <div class="card">
-            @if(session()->has('success'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if(session()->has('error'))
-                <div class="alert alert-danger" role="alert">
-                    {{ session('error') }}
-                </div>
-            @endif
             <div id="success-message" style="display: none;" class="alert alert-success">
                 Form submitted successfully!
             </div>
@@ -156,7 +147,7 @@
                     dataType: 'json',
                     success: function (response) {
                         if (response.success) {
-                            window.location.href = '/admin/translations';
+                           location.reload();
                         } else {
                             alert('An error occurred. Please try again.');
                         }

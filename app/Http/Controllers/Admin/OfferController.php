@@ -2,26 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\DataTables\SanctionsDataTable;
+use App\DataTables\OffersDataTable;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Sanction\CreateSanctionRequest;
-use App\Models\Admin;
-use App\Models\Sanction;
-use App\Traits\HelperTrait;
 use Illuminate\Http\Request;
 
-class SanctionController extends Controller
+class OfferController extends Controller
 {
-    use HelperTrait;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(SanctionsDataTable $dataTable)
+    public function index($type = null)
     {
-        $admins = Admin::where('account_status' , 'active')->get();
-        return $dataTable->render('admin.sanctions.index' , compact('admins'));
+        return (new OffersDataTable($type))->render('admin.offers.index');
     }
 
     /**
@@ -40,21 +34,9 @@ class SanctionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateSanctionRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->all();
-        if ($request->hasFile('photo')) {
-            $data['photo'] = $this->saveImage($request->photo, 'uploads/sanction');
-        }
-        $sanction = Sanction::create($data);
-        if ($sanction)
-        {
-            session()->flash('Success' , 'تم الاضافة  بنجاح ');
-            return redirect()->back();
-        }else{
-            session()->flash('Error' , 'error');
-            return redirect()->back();
-           }
+        //
     }
 
     /**
