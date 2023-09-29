@@ -9,8 +9,16 @@
 
             <div class="col-md-6">
                 <div class="row">
-
-
+                    @if(session()->has('success'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if(session()->has('error'))
+                        <div class="alert alert-danger" role="alert">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
@@ -270,10 +278,7 @@
             <div class="col-md-6">
 
                 <div class="row">
-
-
                     @if($order->user)
-
                         @php
                             $user = $order->user;
                         @endphp
@@ -291,8 +296,6 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-
-
                                         @if($user->type)
                                             <tr>
                                                 <th class="text-nowrap" scope="row">نوع الحساب</th>
@@ -472,18 +475,12 @@
                                                 <td class="pb-2 pt-2 ">{{__('messages.def_lang_'.$user->def_lang)}}</td>
                                             </tr>
                                         @endif
-
-
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
-
                     @endif
-
-
-
                     @if($order->transaction)
                         @php
                             $transaction = $order->transaction;
@@ -544,7 +541,7 @@
 
                                         @if($transaction->created_at)
                                             <tr>
-                                              <th class="pb-2 pt-2 text-nowrap" scope="row"> تاريخ / وقت انشاء العملية</th>
+                                                <th class="pb-2 pt-2 text-nowrap" scope="row"> تاريخ / وقت انشاء العملية</th>
                                                 <td  class="pb-2 pt-2" >{{ $transaction->created_at->toDateTimeString()  }}</td>
                                             </tr>
                                         @endif
@@ -572,23 +569,15 @@
                         </div>
 
                     @endif
-
-
-
-
                 </div>
             </div>
 
             <div class="col-md-12">
-
-
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0">العمليات</h5>
                     </div>
-
                     <div class="card-body border-top">
-
                         <div class="row gx-1 gy-1">
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-info d-block w-100 border-0">
@@ -608,47 +597,35 @@
                                     <i class="ph-chat ms-2"></i>
                                 </button>
                             </div>
-
-
                             <div class="col-md-6">
                                 <button type="submit" class="btn btn-danger d-block w-100 border-0">
                                     الغاء الطلب واعاده المبلغ المالي
                                 </button>
                             </div>
-
-
                             <div class="col-md-6">
                                 <button type="submit" class="btn btn-yellow d-block w-100 border-0">
                                     اعادة مبلغ مالي في محفظه العميل
                                 </button>
                             </div>
-
-
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary d-block w-100 border-0">
-                                    ادراج عقوبه الطاهي
+                                <button type="submit" onclick="sanctionModal({{$order->chef->id}} , '{{$order->chef->name}}' , 'chef')" class="btn btn-primary d-block w-100 border-0">
+                                ادراج عقوبه الطاهي
                                 </button>
                             </div>
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-yellow d-block w-100 border-0">
+                                <button type="submit" onclick="sanctionModal({{$order->delivery->id}} , '{{$order->delivery->name}}' , 'delivery')"  class="btn btn-yellow d-block w-100 border-0">
                                     ادراج عقوبه السائق
                                 </button>
                             </div>
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-warning d-block w-100 border-0">
+                                <button type="button" onclick="sanctionModal({{$order->user->id}} , '{{$order->user->name}}' , 'user' )" class="btn btn-warning d-block w-100 border-0">
                                     ادراج عقوبه العميل
                                 </button>
                             </div>
-
-
                         </div>
-
-
                     </div>
                 </div>
             </div>
-
-
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
@@ -669,45 +646,30 @@
                             </tr>
                             </thead>
                             <tbody>
-
-
                             @foreach($order->orderMeal as $orderMeal)
                                 <tr>
-
                                     <th class="text-nowrap">
                                         {{ $orderMeal->meal_name  }}
                                     </th>
-
                                     <th class="text-nowrap">
                                         {{ $orderMeal->quantity  }}
                                     </th>
-
                                     <th class="text-nowrap">
                                         {{ $orderMeal->price  }}
                                     </th>
-
                                     <th class="text-nowrap">
                                         {{ $orderMeal->discount  }}
                                     </th>
-
                                     <th class="text-nowrap">
                                         {{ $orderMeal->additions_price  }}
                                     </th>
-
                                     <th class="text-nowrap">
                                         {{ $orderMeal->total  }}
                                     </th>
-
-
                                     <th class="text-nowrap">
-
                                         {{ $orderMeal->accessories->pluck('name')->join(' , ') }}
-
                                     </th>
-
                                     <th class="text-nowrap">
-
-
                                         <table class="table table-bordered table-striped">
                                             <thead>
                                             <tr>
@@ -716,41 +678,22 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-
                                             @foreach($orderMeal->additions as $addition)
                                                 <tr>
                                                     <th class="text-nowrap">{{$addition->name}}</th>
                                                     <th class="text-nowrap">{{$addition->price}}</th>
                                                 </tr>
                                             @endforeach
-
                                             </tbody>
                                         </table>
-
-
                                     </th>
-
-
-                                    {{--
-                                      meal
-                                      accessories
-                                      additions
-                                      --}}
-
                                 </tr>
                             @endforeach
-
-
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
-
-
-
-
             @if($order->TransactionHistory)
 
                 <div class="col-md-12">
@@ -787,7 +730,7 @@
                                         <td>
 
                                             <a  class="btn btn-yellow   border-0">
-                                              تفاصيل / Log
+                                                تفاصيل / Log
                                             </a>
 
                                         </td>
@@ -802,11 +745,81 @@
                 </div>
 
             @endif
-
-
-
         </div>
     </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="createSanctionModal" tabindex="-1" aria-labelledby="CreateSanctionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="CreateSanctionModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ route('sanctions.store') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <input class="form-control" type="hidden"  name="order_id" value="{{$order->id}}" >
+                        <input class="form-control" type="hidden"  id="user_id" name="user_id" >
+                        <div class="p-1">
+                            <label>User Name: </label>
+                            <input class="form-control" type="text" id="nameM" value="" readonly>
+                        </div>
+                        <div class="p-1">
+                            <label>Sanction Type :</label>
+                            <select class="form-control"  name="type" required>
+                                <option value="">Select Sanction Type</option>
+                                <option value="financial_violation">financial_violation</option>
+                                <option value="make_block">make_block</option>
+                                <option value="no_order_request">no_order_request</option>
+                                <option value="no_chat">no_chat</option>
+                            </select>
+                        </div>
+                        <div class="p-1">
+                            <label>Note :</label>
+                            <textarea class="form-control" type="text"  name="note"></textarea>
+                        </div>
+                        <div class="p-1">
+                            <label>Photo :</label>
+                            <input class="form-control" type="file"  name="photo">
+                        </div>
+                        <div class="p-1">
+                            <label>Start Time :</label>
+                            <input class="form-control" type="datetime-local"  name="start_time" required>
+                        </div>
+                        <div class="p-1">
+                            <label>End Time :</label>
+                            <input class="form-control" type="datetime-local"  name="end_time" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection
 @section('jscript')
+    <script>
+        function sanctionModal(id, name, type) {
+            $('#user_id').val(id);
+
+            if (type == 'user') {
+                $('#CreateSanctionModalLabel').html('ادراج عقوبه العميل');
+                $('#nameM').val(name);
+            } else if (type == 'delivery') {
+                $('#CreateSanctionModalLabel').html('ادراج عقوبه السائق');
+                $('#nameM').val(name);
+            } else if (type == 'chef') {
+                $('#CreateSanctionModalLabel').html('ادراج عقوبه الطاهي');
+                $('#nameM').val(name);
+            }
+
+            $('#createSanctionModal').modal("show");
+        }
+    </script>
 @endsection

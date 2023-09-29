@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\TranslateController;
 use App\Http\Controllers\Admin\ComplaintsController;
 use App\Http\Controllers\Admin\SanctionController;
+use App\Http\Controllers\Admin\MealController;
+use App\Http\Controllers\Admin\OfferController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,6 +48,15 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::resource('complaints', ComplaintsController::class);
     //sanctions
     Route::resource('sanctions', SanctionController::class);
+    //meals
+    Route::get('meals/{status?}' , [MealController::class , 'index'])
+        ->name('admin.meals.index')
+        ->where('status','new|confirmed|disabled');
+    Route::put('meals/update' , [MealController::class , 'update'])->name('admin.meals.update');
+    Route::get('meals/{id}' , [MealController::class , 'show'])->name('admin.meals.show');
+
+    //offers
+    Route::get('offers/{type?}', [OfferController::class, 'index'])->name('admin.offer.index');
     //profile
     Route::get('profile' , [ProfileController::class , 'edit'])->name('admin.profile.edit');
     Route::put('profile/update' , [ProfileController::class , 'update'])->name('admin.profile.update');

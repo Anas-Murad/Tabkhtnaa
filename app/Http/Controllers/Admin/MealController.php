@@ -2,26 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\DataTables\SanctionsDataTable;
+use App\DataTables\MealsDataTable;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Sanction\CreateSanctionRequest;
-use App\Models\Admin;
-use App\Models\Sanction;
-use App\Traits\HelperTrait;
+use App\Models\Meal;
 use Illuminate\Http\Request;
 
-class SanctionController extends Controller
+class MealController extends Controller
 {
-    use HelperTrait;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(SanctionsDataTable $dataTable)
+    public function index($status = null)
     {
-        $admins = Admin::where('account_status' , 'active')->get();
-        return $dataTable->render('admin.sanctions.index' , compact('admins'));
+        return (new MealsDataTable($status))->render('admin.meals.index');
     }
 
     /**
@@ -40,21 +35,9 @@ class SanctionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateSanctionRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->all();
-        if ($request->hasFile('photo')) {
-            $data['photo'] = $this->saveImage($request->photo, 'uploads/sanction');
-        }
-        $sanction = Sanction::create($data);
-        if ($sanction)
-        {
-            session()->flash('Success' , 'تم الاضافة  بنجاح ');
-            return redirect()->back();
-        }else{
-            session()->flash('Error' , 'error');
-            return redirect()->back();
-           }
+        //
     }
 
     /**
@@ -65,7 +48,9 @@ class SanctionController extends Controller
      */
     public function show($id)
     {
-        //
+        $meal = Meal::with(['accessories' , 'additions.additionCategory'])->findOrFail($id);
+
+        return view('admin.meals.show' , compact('meal'));
     }
 
     /**
@@ -86,9 +71,15 @@ class SanctionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $data = $request->all();
+        $meal = Meal::findOrFail($request->id);
+        $meal->update([
+            'admin_status' => $data['admin_status']
+        ]);
+        session()->flash('Success' , 'تم تعديل  بنجاح ');
+        return response()->json(['success' => true]);
     }
 
     /**

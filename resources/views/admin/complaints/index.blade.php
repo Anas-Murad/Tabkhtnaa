@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 @section('content')
     <div class="content">
+        @include('admin.layouts.alert-area')
         <!-- Collapse/expand card -->
         <div class="card  card-collapsed">
             <div class="card-header d-flex align-items-center">
@@ -125,18 +126,7 @@
             </div>
         </div>
         <!-- /collapse/expand card -->
-
         <div class="card">
-            @if(session()->has('success'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if(session()->has('error'))
-                <div class="alert alert-danger" role="alert">
-                    {{ session('error') }}
-                </div>
-            @endif
             <div class="card-header">
                 <h5 class="mb-0">Complaints</h5>
             </div>
@@ -246,7 +236,7 @@
                     dataType: 'json',
                     success: function (response) {
                         if (response.success) {
-                            window.location.href = '/admin/complaints';
+                            location.reload();
                         } else {
                             alert('An error occurred. Please try again.');
                         }

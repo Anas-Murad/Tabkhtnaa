@@ -61,6 +61,66 @@
                     <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Sanctions</div>
                     <i class="ph-dots-three sidebar-resize-show"></i>
                 </li>
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link">
+                        <i class="ph-note-pencil"></i>
+                        <span>Sanctions</span>
+                    </a>
+                    <ul class="nav-group-sub collapse">
+                        <li class="nav-item"><a href="{{route('sanctions.index')}}" class="nav-link">List</a></li>
+                    </ul>
+                </li>
+                <!-- /forms -->
+            </ul>
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <!-- Main -->
+                <!-- Forms -->
+                <li class="nav-item-header">
+                    <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Meals</div>
+                    <i class="ph-dots-three sidebar-resize-show"></i>
+                </li>
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link">
+                        <i class="ph-note-pencil"></i>
+                        <span>Meals</span>
+                    </a>
+                    <ul class="nav-group-sub collapse">
+                        <li class="nav-item"><a href="{{route('admin.meals.index' , ['status' => 'new'])}}" class="nav-link">new
+                        <span class="badge bg-teal align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+                        <li class="nav-item"><a href="{{route('admin.meals.index' , ['status' => 'confirmed'])}}" class="nav-link">confirmed
+                            <span class="badge bg-light  text-black align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+                        <li class="nav-item"><a href="{{route('admin.meals.index', ['status' => 'disabled'])}}" class="nav-link">disabled
+                                <span class="badge bg-warning align-self-center rounded-pill ms-auto">4.0</span></a></li>
+                    </ul>
+                </li>
+                <!-- /forms -->
+            </ul>
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <!-- Main -->
+                <!-- Forms -->
+                <li class="nav-item-header">
+                    <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Offers</div>
+                    <i class="ph-dots-three sidebar-resize-show"></i>
+                </li>
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link">
+                        <i class="ph-note-pencil"></i>
+                        <span>Offers</span>
+                    </a>
+                    <ul class="nav-group-sub collapse">
+                        <li class="nav-item"><a href="{{route('admin.offer.index',['type'=>'discount'])}}" class="nav-link">Discount</a></li>
+                        <li class="nav-item"><a href="{{route('admin.offer.index',['type'=>'offers'])}}" class="nav-link">Offers</a></li>
+                    </ul>
+                </li>
+                <!-- /forms -->
+            </ul>
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <!-- Main -->
+                <!-- Forms -->
+                <li class="nav-item-header">
+                    <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide"></div>
+                    <i class="ph-dots-three sidebar-resize-show"></i>
+                </li>
 
 
                 <li class="nav-item nav-item-submenu">

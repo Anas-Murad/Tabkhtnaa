@@ -19,6 +19,8 @@ class Sanction extends Model
         'seen',
         'note',
         'photo',
+        'start_time',
+        'end_time',
     ];
 
     public function admin()
