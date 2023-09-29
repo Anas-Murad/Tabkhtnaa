@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Addition extends Model
 {
@@ -18,6 +19,10 @@ class Addition extends Model
         'pivot',
     ];
 
+    public function additionCategory(): BelongsTo
+    {
+        return $this->belongsTo(AdditionCategory::class);
+    }
 
     public function meals()
     {

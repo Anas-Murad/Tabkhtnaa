@@ -26,7 +26,8 @@ class ComplaintsDataTable extends DataTable
             ->editColumn('photo','<img style=" width: 50px; height: 50px; " src="{{asset($photo ?? "assets/images/demo/users/face1.jpg" )}}" />')
 
             ->editColumn('order_id', function ($complaint) {
-                return  "<a href='$complaint->order_id' target='_blank'> $complaint->order_id </a>";
+                $orderLink = (route('admin.orders.show' , $complaint->order_id));
+                return  "<a href='$orderLink' target='_blank'> $complaint->order_id </a>";
             })
 
             ->editColumn('type', function ($complaint) {
@@ -142,7 +143,7 @@ class ComplaintsDataTable extends DataTable
                     ->setTableId('data-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(7)
+                    ->orderBy(9)
                     ->selectStyleSingle()
                     ->ajaxWithForm(url()->current(), '#filter_form')
                     ->buttons([

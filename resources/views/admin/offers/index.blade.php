@@ -23,72 +23,46 @@
                                         <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label class="form-label">
-                                                    ابحث عن اسم , ايميل , رقم هاتف , اسم مستخدم ,
+                                                    ابحث عن اسم  meal ,
                                                     ..الخ:</label>
                                                 <input type="text" class="form-control" name="search_key"
                                                        id="search_key" placeholder="كلمة البحث ... ">
                                             </div>
                                         </div>
-                                        @includeIf('admin.components.countries' , [
-                                             'col_size'=>'col-md-2',
-                                             'country_name'=>'country_id',
-                                             'city_name'=>'city_id',
-                                             'required'=>false,
-                                            'with_cities'=>true,
-                                        ])
                                         <div class="col-md-2">
                                             <div class="mb-3">
-                                                <label class="form-label">Admin</label>
-                                                <select name="admin_id" id="admin_id"
-                                                        class="select2 form-control form-control-select2" data-fouc>
-                                                    <option value="">الكل</option>
-                                                    @foreach($admins as $admin )
-                                                        <option value="{{$admin->id}}">{{$admin->name}}</option>
-                                                    @endforeach
-                                                </select>
+                                                <label class="form-label">ابحث عن  number </label>
+                                                <input type="text" class="form-control" name="number"
+                                                       id="number" placeholder="Number ">
                                             </div>
                                         </div>
 
                                         <div class="col-md-2">
                                             <div class="mb-3">
-                                                <label class="form-label">الجنس</label>
-                                                <select name="gender" id="gender"
-                                                        class="select2 form-control form-control-select2" data-fouc>
-                                                    <option value="">الكل</option>
-                                                    <option value="male">ذكر</option>
-                                                    <option value="female">انثى</option>
-                                                    <option value="other">اخرى</option>
-                                                </select>
+                                                <label class="form-label">ابحث عن  percent </label>
+                                                <input type="text" class="form-control" name="percent"
+                                                       id="number" placeholder="percent ">
                                             </div>
                                         </div>
-                                        @if(!isset($type) || !$type)
-                                            <div class="col-md-2">
-                                                <div class="mb-3">
-                                                    <label class="form-label">type</label>
-                                                    <select name="type" id="type"
-                                                            class="select2 form-control form-control-select2"
-                                                            data-fouc>
-                                                        <option value="">الكل</option>
-                                                        <option value="financial_violation">financial violation</option>
-                                                        <option value="make_block">make block</option>
-                                                        <option value="no_order_request">no order request</option>
-                                                        <option value="no_chat">no chat</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        @endif
                                         <div class="col-md-2">
                                             <div class="mb-3">
-                                                <label class="form-label">Seen</label>
-                                                <select name="seen" id="seen"
-                                                        class="select2 form-control form-control-select2"
-                                                        data-fouc>
-                                                    <option value="">الكل</option>
-                                                    <option value="seen">seen</option>
-                                                    <option value="not_seen">not seen</option>
-                                                </select>
+                                                <label class="form-label"> تاريخ البداية:</label>
+                                                <input type="date" placeholder="From Date" class="form-control"
+                                                       name="start_date"
+                                                       value=""
+                                                >
                                             </div>
                                         </div>
+                                        <div class="col-md-2">
+                                            <div class="mb-3">
+                                                <label class="form-label"> تاريخ النهاية:</label>
+                                                <input type="date" placeholder="From Date" class="form-control"
+                                                       name="end_date"
+                                                       value=""
+                                                >
+                                            </div>
+                                        </div>
+
                                         <div class="col-md-2">
                                             <div class="mb-3">
                                                 <label class="form-label">من تاريخ:</label>
@@ -132,10 +106,9 @@
             </div>
         </div>
         <!-- /collapse/expand card -->
-
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Complaints</h5>
+                <h5 class="mb-0">Meals</h5>
             </div>
             <div class="table-responsive">
                 {!! $dataTable->table(['class' => 'table'] ) !!}
@@ -144,15 +117,15 @@
     </div>
 
     <!-- Edit Modal -->
-    <div class="modal fade" id="editComplaintModal" tabindex="-1" aria-labelledby="ComplaintModalLabel"
+    <div class="modal fade" id="editMealModal" tabindex="-1" aria-labelledby="MealModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ComplaintModalLabel">Edit Complaint</h5>
+                    <h5 class="modal-title" id="MealModalLabel">Edit Meal</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="edit" method="POST" action="{{ route('complaints.update', ['complaint' => ':id']) }}">
+                <form id="edit" method="POST" action="{{ route('admin.meals.update', ['meal' => ':id']) }}">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
@@ -161,33 +134,12 @@
                             <input class="form-control" type="hidden" name="id">
                         </div>
                         <div class="p-1">
-                            <label>Type :</label>
-                            <input class="form-control" type="text" name="type" readonly>
-                        </div>
-                        <div class="p-1">
-                            <label>Photo :</label>
-                            <img src="{{asset('photo')}}">
-                        </div>
-                        <div class="p-1">
-                            <label>Description :</label>
-                            <input class="form-control" type="text" name="description" readonly>
-                        </div>
-                        <div class="p-1">
                             <label>Status :</label>
-                            <select class="form-control type" name="status" required>
+                            <select class="form-control type" name="admin_status" required>
                                 <option value="">Select Status</option>
-                                <option value="pending">Pending</option>
-                                <option value="solved">Solved</option>
-                                <option value="cancelled">Cancelled</option>
+                                <option value="confirmed">confirmed</option>
+                                <option value="disabled">disabled</option>
                             </select>
-                        </div>
-                        <div class="p-1">
-                            <label>Note with Admin :</label>
-                            <textarea class="form-control" type="text" name="note" required></textarea>
-                        </div>
-                        <div class="p-1">
-                            <label>Created At :</label>
-                            <input class="form-control" type="text" name="created_at" readonly>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -198,32 +150,20 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('jscript')
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
-
     <script>
-        function EditComplaintFunction(complaint) {
-            var complaintlationData = complaint;
-
-            $('#editComplaintModal input[name="id"]').val(complaintlationData.id);
-            $('#editComplaintModal input[name="type"]').val(complaintlationData.type);
-            $('#editComplaintModal input[name="description"]').val(complaintlationData.description);
-            $('#editComplaintModal input[name="photo"]').val(complaintlationData.photo);
-
-            if (complaintlationData.status !== null && complaintlationData.status !== '') {
-                $('#editComplaintModal select[name="status"]').val(complaintlationData.status);
+        function EditMealFunction(meal) {
+            var mealData = meal;
+            $('#editMealModal input[name="id"]').val(mealData.id);
+            if (mealData.admin_status !== null && mealData.admin_status !== '') {
+                $('#editMealModal select[name="admin_status"]').val(mealData.admin_status);
             } else {
-                $('#editComplaintModal select[name="status"]').val('');
+                $('#editMealModal select[name="admin_status"]').val('');
             }
-            $('#editComplaintModal textarea[name="note"]').val(complaintlationData.note);
-            var createdAtDate = new Date(complaintlationData.created_at);
-            var formattedCreatedAt = createdAtDate.toLocaleString();
-            $('#editComplaintModal input[name="created_at"]').val(formattedCreatedAt);
-
-            $('#editComplaintModal').modal('show');
+            $('#editMealModal').modal('show');
         }
     </script>
 
@@ -234,7 +174,7 @@
                 e.preventDefault();
                 console.log($(this).id)
                 var formData = $(this).serialize();
-                var url = '{{ route("complaints.update", ":id") }}';
+                var url = '{{ route("admin.meals.update", ":id") }}';
                 url = url.replace(':id', $(this).id);
                 $.ajax({
                     type: 'put',
@@ -243,7 +183,7 @@
                     dataType: 'json',
                     success: function (response) {
                         if (response.success) {
-                           location.reload()
+                            location.reload();
                         } else {
                             alert('An error occurred. Please try again.');
                         }
