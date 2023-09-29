@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\v1;
 
+use App\HelperClasses\PointsAndDistinctionProcess;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\TransactionController;
 use App\Models\Order;
@@ -81,7 +82,7 @@ class DeliveryOderController extends Controller
         $delivery = OrderHistoryDelivery::
         where('delivery_id', $user->id)
             ->where('order_id', $request->order_id)
-            ->first();
+            ->firstOrFail();
 
 
            if ( $delivery->status =='accepted'){
@@ -195,11 +196,9 @@ class DeliveryOderController extends Controller
         switch ($request->status) {
 
             case  "delivered":
-
                 if ($order->status != 'on_way') {
                     return $this->returnError('يجب الانتقال الى مرحله (في الطريق ) الطلب اولا');
                 }
-
 
                 $this->PushNotification($order->chef_id, [
                     'title' => "تم توصيل طلبك بنجاح",
@@ -210,8 +209,6 @@ class DeliveryOderController extends Controller
                     'user_id' => $order->user_id,
                     'order_status' => 'delivered',
                 ]);
-
-
                 $this->PushNotification($order->user_id, [
                     'title' => "تم توصيل طلبك بنجاح",
                     'body' => "قام {$user->name}بتوصيل طلبك رقم {$order->id} :   ",
@@ -221,10 +218,12 @@ class DeliveryOderController extends Controller
                     'user_id' => $order->user_id,
                     'order_status' => 'delivered',
                 ]);
+
+
+
+
+
                 break;
-
-
-
 
 
 
@@ -268,11 +267,10 @@ class DeliveryOderController extends Controller
         ]);
 
 
-
-
-        if($request->status =='delivered')
-        (new TransactionController)->distribution($order);
-
+        if($request->status =='delivered'){
+            (new TransactionController)->distribution($order);
+            PointsAndDistinctionProcess::Process($order);
+        }
         return $this->returnSuccess("تم تغيير حالة الطلب رقم {$order->id} بنجاح");
     }
 

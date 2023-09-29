@@ -39,50 +39,10 @@
                                             'with_cities'=>true,
                                         ])
 
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label class="form-label">الجنس</label>
-                                                <select name="gender" id="gender"
-                                                        class="select2 form-control form-control-select2" data-fouc>
-                                                    <option value="">الكل</option>
-                                                    <option value="male">ذكر</option>
-                                                    <option value="female">انثى</option>
-                                                    <option value="other">اخرى</option>
-                                                </select>
-                                            </div>
-                                        </div>
 
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label class="form-label">مصدر التسجيل</label>
-                                                <select name="source" id="source"
-                                                        class="select2 form-control form-control-select2"
-                                                        data-fouc>
-                                                    <option value="">الكل</option>
-                                                    <option value="facebook">facebook</option>
-                                                    <option value="google">google</option>
-                                                    <option value="apple">apple</option>
-                                                    <option value="normal">عادي /  التطبيق</option>
-                                                </select>
-                                            </div>
-                                        </div>
 
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label class="form-label">online_status</label>
-                                                <select name="online_status" id="online_status"
-                                                        class="select2 form-control form-control-select2"
-                                                        data-fouc>
-                                                    <option value="">الكل</option>
-                                                    <option value="online">{{__('messages.online')}}</option>
-                                                    <option value="busy">{{__('messages.busy')}}</option>
-                                                    <option value="unavailable">{{__('messages.unavailable')}}</option>
-                                                    <option value="available">{{__('messages.available')}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
 
-                                        @if(!isset($type) || !$type)
+                                   {{--     @if(!isset($type) || !$type)
                                             <div class="col-md-2">
                                                 <div class="mb-3">
                                                     <label class="form-label">type</label>
@@ -111,24 +71,58 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                        @endif
+                                        @endif--}}
 
                                         @if(!isset($status) || !$status)
                                             <div class="col-md-2">
                                                 <div class="mb-3">
-                                                    <label class="form-label">حالة الحساب</label>
-                                                    <select name="account_status" id="account_status"
+                                                    <label class="form-label">حالة الطلب</label>
+                                                    <select name="status" id="status"
                                                             class="select2 form-control form-control-select2"
                                                             data-fouc>
                                                         <option value="">الكل</option>
-                                                        <option value="pending">{{__('messages.pending')}}</option>
-                                                        <option value="active">{{__('messages.active')}}</option>
-                                                        <option value="rejected">{{__('messages.rejected')}}</option>
-                                                        <option value="blocked">{{__('messages.blocked')}}</option>
+
+                                                        @foreach(['pending','confirmed','prepare','prepared','on_way','delivered','not_delivered','rejected','cancel','not_ordered'] as $OrderStatus)
+                                                        <option value="{{$OrderStatus}}">{{__('messages.status_'.$OrderStatus)}}</option>
+                                                        @endforeach
+
                                                     </select>
                                                 </div>
                                             </div>
                                         @endif
+
+            @if(!isset($transactionStatus) || !$transactionStatus)
+                <div class="col-md-2">
+                    <div class="mb-3">
+                        <label class="form-label">حالة الدفع</label>
+                        <select name="transaction_status" id="transaction_status"
+                                class="select2 form-control form-control-select2"
+                                data-fouc>
+                            <option value="">الكل</option>
+                            @foreach(['pending', 'success', 'cancel'] as $TransStatus)
+                                <option value="{{$TransStatus}}">{{__('messages.'.$TransStatus)}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            @endif
+
+                <div class="col-md-2">
+                    <div class="mb-3">
+                        <label class="form-label">  نوع التوصيل</label>
+                        <select name="delivery_type" id="delivery_type"
+                                class="select2 form-control form-control-select2"
+                                data-fouc>
+                            <option value="">الكل</option>
+                            @foreach(['delivery', 'pick_up', 'chef_delivery'] as $deliveryType)
+                                <option value="{{$deliveryType}}">{{__('messages.'.$deliveryType)}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+
+
 
                                         <div class="col-md-2">
                                             <div class="mb-3">
