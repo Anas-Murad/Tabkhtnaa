@@ -101,7 +101,12 @@ Route::group(['middleware' => ['auth:admin']], function () {
         'controller' =>UserDistinctionController::class
     ], function () {
 
-        Route::get('/','index')->name('admin.distinction.index');
+        Route::get('/{status?}','index')->name('admin.distinction.index')
+        ->whereIn('status' ,['new' , 'active' ,'ended' ,'rejected']) ;
+        Route::get('/{id}','show')->name('admin.distinction.show')->whereNumber('id') ;
+        Route::post('/{id}','reject')->name('admin.distinction.Reject')->whereNumber('id') ;
+        Route::post('/{id}/approved','approved')->name('admin.distinction.approved')->whereNumber('id') ;
+
     });
 
 

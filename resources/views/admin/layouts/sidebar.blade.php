@@ -131,6 +131,23 @@
                 </li>
 
 
+            <li class="nav-item nav-item-submenu">
+                <a href="#" class="nav-link"><i class="ph-users-three"></i> <span>عملاء التمييز</span></a>
+                <ul class="nav-group-sub collapse">
+
+                    <li class="nav-item"><a href="{{ route('admin.distinction.index') }}" class="nav-link">كل السجلات</a></li>
+                    <li class="nav-item"><a href="{{ route('admin.distinction.index',[ 'status'=>'new']) }}" class="nav-link">  جديد</a></li>
+                    <li class="nav-item"><a href="{{ route('admin.distinction.index',[ 'status'=>'active']) }}" class="nav-link">  نشط</a></li>
+                    <li class="nav-item"><a href="{{ route('admin.distinction.index',[ 'status'=>'ended']) }}" class="nav-link">منتهي</a></li>
+                    <li class="nav-item"><a href="{{ route('admin.distinction.index',[ 'status'=>'rejected']) }}" class="nav-link">مرفوض</a></li>
+
+                </ul>
+            </li>
+
+
+
+
+
                 <li class="nav-item nav-item-submenu">
                     <a href="#" class="nav-link"><i class="ph-users-three"></i> <span>الحركات الماليه </span></a>
                     <ul class="nav-group-sub collapse">

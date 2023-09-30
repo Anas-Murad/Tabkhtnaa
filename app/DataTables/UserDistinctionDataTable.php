@@ -78,7 +78,7 @@ class UserDistinctionDataTable extends DataTable
             ->editColumn('action', function ($user) {
 
                 $btns =" <a href='".(route('users.show' , $user))."' class='dropdown-item'> <i class='ph-eye me-2'></i> الملف الشخصي</a>";
-                $btns .=" <a href='".(route('users.show' , $user))."' class='dropdown-item'> <i class='ph-eye me-2'></i> التفاصيل والقرار</a>";
+                $btns .=" <a href='".(route('admin.distinction.show' , $user))."' class='dropdown-item'> <i class='ph-eye me-2'></i> التفاصيل والقرار</a>";
                 $btns .=" <a href='".(route('users.show' , $user))."' class='dropdown-item'> <i class='ph-eye me-2'></i> سجل التمييز السابق</a>";
                 return <<<HTML
                 <div class="d-inline-flex">
@@ -116,7 +116,25 @@ class UserDistinctionDataTable extends DataTable
         return $model->newQuery()
             ->join('users' , 'users.id' ,  'user_distinctions.user_id')
             ->when($this->status, function ($q) {
-                $q->where('status', $this->status);
+                $q ->where( function ($q) {
+                switch ($this->status){
+                    case 'new';
+                        $q->where('status', 'new');
+                    break;
+                    case 'active';
+                        $q->where('status', 'active')
+                        ->where('to_date' ,'>' , now()->toDateString());
+                        break;
+                    case 'ended';
+                        $q->where('status', 'ended')
+                            ->OrWhere('to_date' ,'<=' , now()->toDateString());
+                        break;
+                    case 'rejected';
+                        $q->where('status', 'rejected');
+                        break;
+                }
+
+                });
             })
             ->when($this->userID, function ($q) {
                 $q->where('user_id', $this->userID);
@@ -152,7 +170,7 @@ class UserDistinctionDataTable extends DataTable
                 $q->where('status', $this->request->input('status'));
             })
 
-            ->select('user_distinctions.*'   ,'users.name','users.type','users.profile_image','users.email','users.mobile','users.country_code' ,'users.last_distinction_at')
+ ->select('user_distinctions.*'   ,'users.name','users.type','users.profile_image','users.email','users.mobile','users.country_code' ,'users.last_process_at')
 ->selectRaw('(select count(*) from `orders` where
  (user_distinctions.user_id = `orders`.`chef_id` or user_distinctions.user_id = `orders`.`delivery_id`)
  and `orders`.`deleted_at` is null) as `orders_count`')
@@ -204,6 +222,7 @@ class UserDistinctionDataTable extends DataTable
             Column::make('orders_count')->title('طلبات '),
             Column::make('transfers_count')->title('ايرادات '),
             Column::make('sanctions_count')->title('العقوبات'),
+
 
             Column::make('created_at')->title('تاريخ التسجيل'),
             Column::make('from_date')->title('تاريخ البدء'),

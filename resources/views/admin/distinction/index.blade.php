@@ -42,7 +42,7 @@
 
 
 
-     @if(!isset($type) || !$type)
+                                                 @if(!isset($type) || !$type)
                                                  <div class="col-md-2">
                                                      <div class="mb-3">
                                                          <label class="form-label">type</label>
@@ -50,28 +50,14 @@
                                                                  class="select2 form-control form-control-select2"
                                                                  data-fouc>
                                                              <option value="">الكل</option>
-                                                             <option value="client">client</option>
                                                              <option value="delivery">delivery</option>
                                                              <option value="chef">chef</option>
                                                          </select>
                                                      </div>
                                                  </div>
                                              @endif
-                                             @if(isset($type) && $type =='chef')
-                                                 <div class="col-md-2">
-                                                     <div class="mb-3">
-                                                         <label class="form-label">امكانيه التوصيل</label>
-                                                         <select name="can_delivery" id="can_delivery" class="select2 form-control form-control-select2"
-                                                                 data-fouc>
-                                                             <option value="">الكل</option>
-                                                             <option value="no">{{__('messages.no')}}</option>
-                                                             <option value="request">{{__('messages.request')}}</option>
-                                                             <option value="yes">{{__('messages.yes')}}</option>
-                                                             <option value="rejected">{{__('messages.rejected')}}</option>
-                                                         </select>
-                                                     </div>
-                                                 </div>
-                                             @endif
+
+
 
 
                                         @if(!isset($status) || !$status)
@@ -83,7 +69,7 @@
                                                             data-fouc>
                                                         <option value="">الكل</option>
 
-                                                        @foreach(['pending','confirmed','prepare','prepared','on_way','delivered','not_delivered','rejected','cancel','not_ordered'] as $OrderStatus)
+                                                        @foreach(['new','active','ended','rejected'] as $OrderStatus)
                                                             <option value="{{$OrderStatus}}">{{__('messages.status_'.$OrderStatus)}}</option>
                                                         @endforeach
 
@@ -91,37 +77,6 @@
                                                 </div>
                                             </div>
                                         @endif
-
-                                        @if(!isset($transactionStatus) || !$transactionStatus)
-                                            <div class="col-md-2">
-                                                <div class="mb-3">
-                                                    <label class="form-label">حالة الدفع</label>
-                                                    <select name="transaction_status" id="transaction_status"
-                                                            class="select2 form-control form-control-select2"
-                                                            data-fouc>
-                                                        <option value="">الكل</option>
-                                                        @foreach(['pending', 'success', 'cancel'] as $TransStatus)
-                                                            <option value="{{$TransStatus}}">{{__('messages.'.$TransStatus)}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        @endif
-
-                                        <div class="col-md-2">
-                                            <div class="mb-3">
-                                                <label class="form-label">  نوع التوصيل</label>
-                                                <select name="delivery_type" id="delivery_type"
-                                                        class="select2 form-control form-control-select2"
-                                                        data-fouc>
-                                                    <option value="">الكل</option>
-                                                    @foreach(['delivery', 'pick_up', 'chef_delivery'] as $deliveryType)
-                                                        <option value="{{$deliveryType}}">{{__('messages.'.$deliveryType)}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-
 
 
 

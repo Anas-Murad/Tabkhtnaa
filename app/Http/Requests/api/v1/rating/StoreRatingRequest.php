@@ -28,6 +28,7 @@ class StoreRatingRequest extends FormRequest
             'user_id' => 'required',
             'chef_id' => 'required|numeric',
             'order_id' => 'required|numeric',
+            'delivery_id' => 'nullable|numeric',
             'rating_chef' => 'nullable|numeric',
             'rating_delivery' => 'nullable|numeric',
             'rating_speed_chef' => 'nullable|numeric',
