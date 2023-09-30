@@ -28,22 +28,9 @@ class User extends Authenticatable
         "sms_verify", "password", "remember_token", "created_at", "updated_at", 'can_delivery' ,
         'last_process_at',
         'last_distinction_at',
+        'prev_distinction_at',
     ];
 
-    public function scopeDistinctionStatistics(Builder $query): Builder
-    {
-        return $query->select('id','name','type','profile_image','email','mobile','country_code' ,'last_distinction_at')
-
-            ->withCount([
-                'chefOrders',
-                'deliveryOrders',
-                'chefTransfers',
-                'deliveryTransfers',
-                'sanctions',
-            ])
-
-        ;
-    }
     /**
      * The attributes that should be hidden for serialization.
      *

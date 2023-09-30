@@ -113,7 +113,8 @@ class PointsAndDistinctionProcess
                     'status' => 'new',
                 ]);
                 $chef->update([
-                    'last_distinction_at' => now()->toDateString()
+                    'last_process_at' => now()->toDateString(),
+                    'prev_distinction_at' => $last_distinction_at,
                 ]);
             }
         }
@@ -157,7 +158,8 @@ class PointsAndDistinctionProcess
                     'status' => 'new',
                 ]);
                 $delivery->update([
-                    'last_distinction_at' => now()->toDateString()
+                    'last_process_at' => now()->toDateString(),
+                    'prev_distinction_at' => $last_distinction_at,
                 ]);
             }
         }
