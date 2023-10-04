@@ -82,7 +82,7 @@ class OrdersDataTable extends DataTable
 
 
                 if ($user->transaction_id) {
-                    $transactionLink = (route('admin.transaction.order', [$user, $user->transaction_id]));
+                    $transactionLink = (route('admin.transactions.show', [$user, $user->transaction_id]));
                     $btns .= "<a href='$transactionLink' class='dropdown-item'> <i class='ph-money me-2'></i> الحركه المالية </a>";
                 }
 

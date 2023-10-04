@@ -184,6 +184,28 @@
                 </ul>
             </li>
 
+
+
+
+
+
+    <li class="nav-item nav-item-submenu">
+        <a href="#" class="nav-link"><i class="ph-users-three"></i> <span>الحركات الماليه </span></a>
+        <ul class="nav-group-sub collapse">
+            <li class="nav-item"><a href="{{ route('admin.transactions.index' , 'completed') }}" class="nav-link"> الحركات مكتمله الدفع</a></li>
+
+
+            <li class="nav-item"><a href="{{ route('admin.transactions.index' , 'pending') }}" class="nav-link"> الحركات بانتظار المراجعه</a></li>
+            <li class="nav-item"><a href="{{ route('admin.transactions.index' , 'success') }}" class="nav-link"> الحركات مرفوضة</a></li>
+            <li class="nav-item"><a href="{{ route('admin.transactions.index' , 'failed') }}" class="nav-link"> الحركات مؤكده</a></li>
+
+
+            <li class="nav-item"><a href="{{ route('admin.transactions.index' , 'uncompleted') }}" class="nav-link"> الحركات الغير مكتمله الدفع</a></li>
+        </ul>
+    </li>
+
+
+
                 <li class="nav-item nav-item-submenu">
                     <a href="#" class="nav-link"><i class="ph-users-three"></i> <span>الحركات الماليه </span></a>
                     <ul class="nav-group-sub collapse">
@@ -191,6 +213,8 @@
                         <li class="nav-item"><a href="" class="nav-link"> الحركات الغير مكتمله</a></li>
                     </ul>
                 </li>
+
+
             </ul>
             <ul class="nav nav-sidebar" data-nav-type="accordion">
                 <li class="nav-item nav-item-submenu">
