@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\OrdersController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserDistinctionController;
 use Illuminate\Support\Facades\Route;
@@ -85,14 +86,6 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
 
 
-    Route::group([
-        'prefix' => 'transactions',
-        'controller' =>OrdersController::class
-    ], function () {
-
-        Route::get('/{id}' ,'show')->name('admin.transaction.order')->whereNumber('id');
-
-    });
 
 
 
@@ -115,12 +108,22 @@ Route::group(['middleware' => ['auth:admin']], function () {
         'prefix' => 'settings',
         'controller' =>ConfigurationController::class
     ], function () {
-
         Route::get('/{id}' ,'show')->name('admin.settings.configuration')->whereNumber('id');
-
     });
 
 
+
+    Route::group([
+        'prefix' => 'transactions',
+        'controller' =>TransactionController::class
+    ], function () {
+        Route::get('/{status?}' ,'index')->name('admin.transactions.index')
+            ->whereIn('status' ,['pending' , 'success' ,'failed' ,'completed' ,'uncompleted']) ;
+
+        Route::get('/{id}' ,'show')->name('admin.transactions.show')->whereNumber('id');
+
+
+    });
 
 
 

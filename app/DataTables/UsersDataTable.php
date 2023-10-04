@@ -215,10 +215,10 @@ class UsersDataTable extends DataTable
             ->columns($this->getColumns())
 
             ->ajaxWithForm(url()->current(), '#filter_form')
-//            ->minifiedAjax()
-//                    ->dom('<"datatable-header justify-content-start"f<"ms-sm-auto"l><"ms-sm-3"B>><"datatable-scroll-wrap"t><"datatable-footer"ip>')
-                    ->orderBy(0)
-//                    ->selectStyleSingle()
+//          ->minifiedAjax()
+//          ->dom('<"datatable-header justify-content-start"f<"ms-sm-auto"l><"ms-sm-3"B>><"datatable-scroll-wrap"t><"datatable-footer"ip>')
+//          ->selectStyleSingle()
+            ->orderBy(0)
             ->buttons([
                 Button::make('excel')->className('btn btn-dark')->text('<i class="ph-microsoft-excel-logo"></i> EXCEL'),
                 Button::make('csv')->className('btn btn-info')->text('<i class="ph-file-csv"></i> CSV'),
