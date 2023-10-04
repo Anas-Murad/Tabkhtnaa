@@ -98,7 +98,7 @@ class UsersDataTable extends DataTable
 
                 if($user->type =='delivery' || $user->type =='chef')
 
-                $btns .=" <a href='".(route('users.show' , $user))."' class='dropdown-item'> <i class='ph-star-four me-2'></i> التقييمات</a>";
+                $btns .=" <a href='".(route('admin.rating.index' , $user->id))."' class='dropdown-item'> <i class='ph-star-four me-2'></i> التقييمات</a>";
                 $btns .=" <a href='".(route('users.show' , $user))."' class='dropdown-item'> <i class='ph-money me-2'></i> الايرادات</a>";
 
                 $btns .=" <a href='".(route('admin.orders.index' , [
