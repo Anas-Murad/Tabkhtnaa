@@ -19,9 +19,77 @@
         <!-- Main navigation -->
         <div class="sidebar-section">
             <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <!-- Main -->
+                <!-- Forms -->
                 <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link">
+                        <i class="ph-note-pencil"></i>
+                        <span>Translation</span>
+                    </a>
+                    <ul class="nav-group-sub collapse">
+                        <li class="nav-item"><a href="{{route('translations.index')}}" class="nav-link">List</a></li>
+                    </ul>
+                </li>
+                <!-- /forms -->
+            </ul>
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <!-- Main -->
+                <!-- Forms -->
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link">
+                        <i class="ph-note-pencil"></i>
+                        <span>Complaints</span>
+                    </a>
                     <ul class="nav-group-sub collapse">
                         <li class="nav-item"><a href="{{route('complaints.index')}}" class="nav-link">List</a></li>
+                    </ul>
+                </li>
+                <!-- /forms -->
+            </ul>
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <!-- Main -->
+                <!-- Forms -->
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link">
+                        <i class="ph-note-pencil"></i>
+                        <span>Sanctions</span>
+                    </a>
+                    <ul class="nav-group-sub collapse">
+                        <li class="nav-item"><a href="{{route('sanctions.index')}}" class="nav-link">List</a></li>
+                    </ul>
+                </li>
+                <!-- /forms -->
+            </ul>
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <!-- Main -->
+                <!-- Forms -->
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link">
+                        <i class="ph-note-pencil"></i>
+                        <span>Meals</span>
+                    </a>
+                    <ul class="nav-group-sub collapse">
+                        <li class="nav-item"><a href="{{route('admin.meals.index' , ['status' => 'new'])}}" class="nav-link">new
+                                <span class="badge bg-teal align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+                        <li class="nav-item"><a href="{{route('admin.meals.index' , ['status' => 'confirmed'])}}" class="nav-link">confirmed
+                                <span class="badge bg-light  text-black align-self-center rounded-pill ms-auto">4.0</span>  </a></li>
+                        <li class="nav-item"><a href="{{route('admin.meals.index', ['status' => 'disabled'])}}" class="nav-link">disabled
+                                <span class="badge bg-warning align-self-center rounded-pill ms-auto">4.0</span></a></li>
+                    </ul>
+                </li>
+                <!-- /forms -->
+            </ul>
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <!-- Main -->
+                <!-- Forms -->
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link">
+                        <i class="ph-note-pencil"></i>
+                        <span>Offers</span>
+                    </a>
+                    <ul class="nav-group-sub collapse">
+                        <li class="nav-item"><a href="{{route('admin.offer.index',['type'=>'discount'])}}" class="nav-link">Discount</a></li>
+                        <li class="nav-item"><a href="{{route('admin.offer.index',['type'=>'offers'])}}" class="nav-link">Offers</a></li>
                     </ul>
                 </li>
                 <!-- /forms -->
@@ -32,7 +100,6 @@
                     <ul class="nav-group-sub collapse">
 
                         <li class="nav-item"><a href="{{ route('users.index') }}" class="nav-link">الكل</a></li>
-
                 <li class="nav-item nav-item-submenu">
                     <a href="#" class="nav-link">قيد الانتظار / جديد</a>
                     <ul class="nav-group-sub collapse">
@@ -40,7 +107,6 @@
                         <li class="nav-item"><a href="{{ route('usersByStatusType' ,['pending' , 'delivery']) }}" class="nav-link">التوصيل</a></li>
                     </ul>
                 </li>
-
                         <li class="nav-item nav-item-submenu">
                             <a href="#" class="nav-link">تم قبولهم / نشط</a>
                             <ul class="nav-group-sub collapse">
@@ -48,7 +114,6 @@
                                 <li class="nav-item"><a href="{{ route('usersByStatusType' ,['active' , 'delivery']) }}"  class="nav-link">التوصيل</a></li>
                             </ul>
                         </li>
-
                         <li class="nav-item nav-item-submenu">
                             <a href="#" class="nav-link">طلبات انضمام مرفوضه</a>
                             <ul class="nav-group-sub collapse">
@@ -56,7 +121,6 @@
                                 <li class="nav-item"><a href="{{ route('usersByStatusType' ,['rejected' , 'delivery']) }}"  class="nav-link">التوصيل</a></li>
                             </ul>
                         </li>
-
                         <li class="nav-item nav-item-submenu">
                             <a href="#" class="nav-link">  حسابات معطله Blocked</a>
                             <ul class="nav-group-sub collapse">
@@ -68,19 +132,11 @@
                         <li class="nav-item"><a href="{{ route('usersByStatusType' , [ 'all','client']) }}" class="nav-link">مستخدمي التطبيق</a></li>
                     </ul>
                 </li>
-
-
                 <li class="nav-item nav-item-submenu">
                     <a href="#" class="nav-link"><i class="ph-users-three"></i> <span>قسم الطلبات</span></a>
                     <ul class="nav-group-sub collapse">
-
-
-
-
                         <li class="nav-item"><a href="{{ route('admin.orders.index') }}" class="nav-link"> كل الطلبات
                                 <span class="badge bg-info align-self-center rounded-pill ms-auto">{{$SB_TOTAL_ORDERS}}</span>  </a></li>
-
-
         <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'pending']) }}" class="nav-link"> قيد الانتظار
             <span class="badge bg-teal align-self-center rounded-pill ms-auto">{{$SB_PENDING_ORDERS}}</span>  </a></li>
         <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'confirmed']) }}" class="nav-link">تم قبولها
@@ -102,31 +158,15 @@
             <span class="badge bg-secondary align-self-center rounded-pill ms-auto">{{$SB_CANCEL_ORDERS}}</span>  </a></li>
         <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'not_ordered']) }}" class="nav-link"> مازال غير مطلوب
             <span class="badge bg-dark align-self-center rounded-pill ms-auto">{{$SB_NOT_ORDERED_ORDERS}}</span>  </a></li>
-
-
-
-
-
-
-
-
-
-
-
-
                     </ul>
                 </li>
-
-
                 <li class="nav-item nav-item-submenu">
                     <a href="#" class="nav-link"><i class="ph-users-three"></i> <span>الحاله الماليه للطلبات</span></a>
                     <ul class="nav-group-sub collapse">
-
                         <li class="nav-item"><a href="{{ route('admin.orders.index') }}" class="nav-link">كل الطلبات</a></li>
                         <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'all' , 'transactionStatus'=>'pending']) }}" class="nav-link"> قيد الانتظار</a></li>
                         <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'all' , 'transactionStatus'=>'success']) }}" class="nav-link">تم  السداد</a></li>
                         <li class="nav-item"><a href="{{ route('admin.orders.index',['status'=>'all' , 'transactionStatus'=>'cancel']) }}" class="nav-link">ملغي</a></li>
-
                     </ul>
                 </li>
 
@@ -148,6 +188,7 @@
 
 
 
+
     <li class="nav-item nav-item-submenu">
         <a href="#" class="nav-link"><i class="ph-users-three"></i> <span>الحركات الماليه </span></a>
         <ul class="nav-group-sub collapse">
@@ -164,23 +205,26 @@
     </li>
 
 
+
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link"><i class="ph-users-three"></i> <span>الحركات الماليه </span></a>
+                    <ul class="nav-group-sub collapse">
+                        <li class="nav-item"><a href="" class="nav-link"> الحركات المكتلمه</a></li>
+                        <li class="nav-item"><a href="" class="nav-link"> الحركات الغير مكتمله</a></li>
+                    </ul>
+                </li>
+
+
             </ul>
-
-
             <ul class="nav nav-sidebar" data-nav-type="accordion">
-
                 <li class="nav-item nav-item-submenu">
                     <a href="#" class="nav-link"><i class="ph-users-three"></i> <span> اعدادات التطبيق</span></a>
                     <ul class="nav-group-sub collapse">
-
-
                         <li class="nav-item"><a href="" class="nav-link">عموله التطبيق</a></li>
                         <li class="nav-item"><a href="" class="nav-link"> قيمه النقاط على كل طلب</a></li>
                         <li class="nav-item"><a href="" class="nav-link"> حد بلوغ التمييز</a></li>
                         <li class="nav-item"><a href="" class="nav-link">  حد  استبدال النقاط</a></li>
                         <li class="nav-item"><a href="" class="nav-link"> معادلة المسافه والتوصيل</a></li>
-
-
                         <li class="nav-item nav-item-submenu">
                             <a href="#" class="nav-link">الدول المتاحة</a>
                             <ul class="nav-group-sub collapse">
@@ -188,15 +232,9 @@
                                 <li class="nav-item"><a href="" class="nav-link">اضف دولة</a></li>
                             </ul>
                         </li>
-
-
                     </ul>
                 </li>
-
-
-
             </ul>
-
         </div>
         <!-- /main navigation -->
     </div>

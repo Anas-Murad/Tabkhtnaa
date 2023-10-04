@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ComplaintsController;
 use App\Http\Controllers\Admin\SanctionController;
 use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\OfferController;
+use App\Http\Controllers\Admin\RatingController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -59,6 +60,11 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     //offers
     Route::get('offers/{type?}', [OfferController::class, 'index'])->name('admin.offer.index');
+
+    //ratings
+    Route::get('ratings/{id?}', [RatingController::class, 'index'])->name('admin.rating.index');
+
+
     //profile
     Route::get('profile' , [ProfileController::class , 'edit'])->name('admin.profile.edit');
     Route::put('profile/update' , [ProfileController::class , 'update'])->name('admin.profile.update');
