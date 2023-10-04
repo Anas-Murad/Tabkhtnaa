@@ -5,10 +5,6 @@
 
 <script src="{{asset('assets/demo/demo_configurator.js')}}"></script>
 <script src="{{asset('assets/js/bootstrap/bootstrap.bundle.min.js')}}"></script>
-
-
-
-
 <!-- /core JS files -->
 
 <!-- Theme JS files -->
