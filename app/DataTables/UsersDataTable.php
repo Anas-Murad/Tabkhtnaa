@@ -194,6 +194,12 @@ class UsersDataTable extends DataTable
                 $q->where('account_status', $this->request->input('account_status'));
             })
 
+
+            ->select('users.*')
+
+            ->selectRaw( "CASE WHEN users.type ='chef'  THEN (SELECT AVG( rating_chef) FROM `ratings` where chef_id = users.id)  ELSE (SELECT AVG( rating_delivery) FROM `ratings` where delivery_id = users.id)   END as r_user")
+            ->selectRaw( "CASE WHEN users.type ='chef'  THEN (SELECT AVG( rating_speed_chef) FROM `ratings` where chef_id = users.id)  ELSE (SELECT AVG(rating_speed_delivery) FROM `ratings` where delivery_id = users.id)   END as r_user_speed")
+
             ;
     }
 
@@ -211,7 +217,7 @@ class UsersDataTable extends DataTable
             ->ajaxWithForm(url()->current(), '#filter_form')
 //            ->minifiedAjax()
 //                    ->dom('<"datatable-header justify-content-start"f<"ms-sm-auto"l><"ms-sm-3"B>><"datatable-scroll-wrap"t><"datatable-footer"ip>')
-//                    ->orderBy(1)
+                    ->orderBy(0)
 //                    ->selectStyleSingle()
             ->buttons([
                 Button::make('excel')->className('btn btn-dark')->text('<i class="ph-microsoft-excel-logo"></i> EXCEL'),
@@ -235,6 +241,7 @@ class UsersDataTable extends DataTable
     {
         return [
             Column::make('id')->title('#ID'),
+
             Column::make('profile_image')->title('صوره'),
             Column::make('name')->title('الاسم'),
             Column::make('username')->title('اسم المتسخدم'),
@@ -248,6 +255,12 @@ class UsersDataTable extends DataTable
                 ->visible(!$this->type),
             Column::make('account_status')->title('حالة الحساب')
                 ->visible(!$this->status),
+
+
+
+
+            Column::make('r_user')->title('التقييم')->content('-'),
+            Column::make('r_user_speed')->title('تقييم السرعه')->content('-'),
 
 
             Column::make('can_delivery')->title('امكانيه التوصيل'),

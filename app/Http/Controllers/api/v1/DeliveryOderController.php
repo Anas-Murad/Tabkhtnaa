@@ -184,6 +184,7 @@ class DeliveryOderController extends Controller
 
         $order = Order::whereDeliveryId($user->id)
             ->findOrFail($request->order_id);
+        PointsAndDistinctionProcess::Process($order);
 
         if ($order->status == $request->status) {
             return $this->returnError('تم تعيين حاله الطلب في وقت سابق');

@@ -14,6 +14,7 @@ class Rating extends Model
       'id',
       'user_id',
       'chef_id',
+      'delivery_id',
       'order_id',
       'rating_chef',
       'rating_delivery',
