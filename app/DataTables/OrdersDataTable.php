@@ -25,6 +25,8 @@ class OrdersDataTable extends DataTable
     protected $transactionStatus;
     protected $userID;
     protected $user;
+    protected $user_id;
+    protected $user_type;
 
     /**
      * @param $status
@@ -32,12 +34,14 @@ class OrdersDataTable extends DataTable
      * @param $userID
      * @param $user
      */
-    public function __construct($status = null, $transactionStatus = null, $userID = null, $user = null)
+    public function __construct($status = null, $transactionStatus = null, $userID = null, $user = null , $user_id = null , $user_type =null)
     {
         $this->status = $status;
         $this->transactionStatus = $transactionStatus;
         $this->userID = $userID;
         $this->user = $user;
+        $this->user_id = $user_id;
+        $this->user_type = $user_type;
     }
 
 
@@ -151,7 +155,12 @@ class OrdersDataTable extends DataTable
             ->when($this->status, function ($q) {
                 $q->where('status', $this->status);
             })
-
+            ->when($this->user_id, function ($q) {
+                if ($this->user_type == 'delivery')
+                    $q->where('delivery_id', $this->user_id);
+                else if ($this->user_type == 'chef')
+                    $q->where('chef_id', $this->user_id);
+            })
 
             ->when($this->transactionStatus, function ($q) {
                 $q->where('transaction_status', $this->transactionStatus);

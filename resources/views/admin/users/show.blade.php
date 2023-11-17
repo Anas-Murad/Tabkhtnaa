@@ -338,7 +338,7 @@
         @break
 
         @case('active')
-        <span class="text-bg-success"> نسط</span>
+        <span class="text-bg-success"> نشط</span>
         @break
 
         @case('rejected')
