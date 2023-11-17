@@ -7,7 +7,11 @@
     <title>Limitless - Responsive Web Application Kit by Eugene Kopyov</title>
     @include('admin.layouts.header')
     @yield('cssStyle')
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        #map { height: 400px; }
+    </style>
 
 </head>
 <body>

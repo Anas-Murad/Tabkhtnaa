@@ -19,6 +19,12 @@
         <!-- Main navigation -->
         <div class="sidebar-section">
             <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <li class="nav-item">
+                    <a href="{{route('admin.dashboard')}}" class="nav-link active">
+                        <i class="ph-house"></i>
+                        Dashboard
+                    </a>
+                </li>
                 <!-- Main -->
                 <!-- Forms -->
                 <li class="nav-item nav-item-submenu">

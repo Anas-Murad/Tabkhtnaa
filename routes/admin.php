@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\SanctionController;
 use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\RatingController;
+use App\Http\Controllers\Admin\HomeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,9 +31,7 @@ Route::post('login' , [LoginController::class , 'login'])->name('login');
 Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('logout' , [LoginController::class , 'logout'])->name('admin.logout');
 
-    Route::get('/' , function (){
-        return view('admin.layouts.app');
-    })->name('admin.dashboard');
+    Route::get('/' , [HomeController::class , 'index'])->name('admin.dashboard');
 
     Route::get('users/{status}/{type}' , [UserController::class , 'index'])->name('usersByStatusType')
         ->where('status', 'all|pending|active|rejected|blocked')

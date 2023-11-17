@@ -30,7 +30,8 @@
                                                        id="search_key" placeholder="كلمة البحث ... ">
                                             </div>
                                         </div>
-
+                                        <input name="user_id" value="{{$user_id}}" type="hidden">
+                                        <input name="user_type" value="{{$user_type}}" type="hidden">
                                         @includeIf('admin.components.countries' , [
                                              'col_size'=>'col-md-2',
                                              'country_name'=>'country_id',
