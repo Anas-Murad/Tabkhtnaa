@@ -22,9 +22,11 @@ class OffersDataTable extends DataTable
      */
 
     protected $type;
-    public function __construct($type = null)
+    protected $user_id;
+    public function __construct($type = null  , $user_id = null)
     {
         $this->type = $type;
+        $this->user_id = $user_id;
     }
 
     public function dataTable(QueryBuilder $query): EloquentDataTable
@@ -62,6 +64,11 @@ class OffersDataTable extends DataTable
             ])
             ->when($this->type , function ($q){
                 $q->where('type' , $this->type);
+            })
+            ->when($this->user_id , function ($q){
+                $q->whereHas('meal' , function ($q){
+                    $q->where('user_id', $this->user_id);
+                });
             })
             ->when($this->request->filled('number'),function ($q){
                 $q->where('number' , $this->request->number);

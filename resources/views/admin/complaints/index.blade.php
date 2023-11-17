@@ -29,6 +29,7 @@
                                                        id="search_key" placeholder="كلمة البحث ... ">
                                             </div>
                                         </div>
+                                        <input name="user_id" type="hidden" value="{{$user_id}}">
                                         <div class="col-md-2">
                                             <div class="mb-3">
                                                 <label class="form-label">ابحث عن order number </label>

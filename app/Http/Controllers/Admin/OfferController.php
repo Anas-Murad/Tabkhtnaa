@@ -13,9 +13,12 @@ class OfferController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($type = null)
+    public function index($type = null , Request $request)
     {
-        return (new OffersDataTable($type))->render('admin.offers.index');
+        $user_id = null;
+        if ($request->user_id)
+            $user_id = $request->user_id;
+        return (new OffersDataTable($type , $user_id))->render('admin.offers.index' , compact('user_id'));
     }
 
     /**

@@ -21,10 +21,12 @@ class MealsDataTable extends DataTable
      * @return \Yajra\DataTables\EloquentDataTable
      */
     protected $status;
+    protected $user_id;
 
-    public function __construct($status)
+    public function __construct($status , $user_id)
     {
         $this->status = $status;
+        $this->user_id = $user_id;
     }
 
     public function dataTable(QueryBuilder $query): EloquentDataTable
@@ -105,6 +107,9 @@ class MealsDataTable extends DataTable
             ])
             ->when($this->status , function ($q){
                 $q->where('admin_status' , $this->status);
+            })
+            ->when($this->user_id , function ($q){
+                $q->where('user_id' , $this->user_id);
             })
             ->when($this->request->filled('name_meal'), function ($q) {
                 $q->where('name','like', '%' . $this->request()->input('name_meal') . '%');

@@ -14,6 +14,12 @@ use Yajra\DataTables\Services\DataTable;
 
 class SanctionsDataTable extends DataTable
 {
+    protected $user_id;
+
+    public function __construct($user_id = null)
+    {
+        $this->user_id = $user_id;
+    }
     /**
      * Build DataTable class.
      *
@@ -87,6 +93,9 @@ class SanctionsDataTable extends DataTable
                     $q1->select('id','name');
                 }
             ])
+            ->when($this->user_id, function ($q) {
+                $q->where('user_id', $this->user_id);
+            })
             ->when($this->request->admin_id , function ($q){
                 $q->where('admin_id' , $this->request->admin_id);
             })
@@ -111,7 +120,6 @@ class SanctionsDataTable extends DataTable
                         $q->orWhere('username', 'like', '%' . $this->request()->input('search_key') . '%');
                         $q->orWhere('account_comment', 'like', '%' . $this->request()->input('search_key') . '%');
                     });
-
                 })->when($this->request->filled('gender'), function ($q) {
                     $q->where('gender', $this->request->gender);
                 });
