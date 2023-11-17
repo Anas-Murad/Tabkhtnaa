@@ -20,9 +20,11 @@ return new class extends Migration {
                     ->onDelete('cascade');
 
             $table->foreignIdFor(\App\Models\UserPointTransfers::class )->index()
+                ->nullable()
                 ->constrained('user_point_transfers')
                 ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onDelete('cascade')
+            ;
 
             $table->integer('points');
 

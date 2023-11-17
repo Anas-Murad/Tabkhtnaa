@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,9 +25,11 @@ class User extends Authenticatable
         "id", "name", "email", "residence_country_id", "country_code", "mobile", "username",
         "dob", "gender", "source", "udid", "def_lang", "profile_image", "mobile_verified",
         "online_status", "type", "account_status", "account_comment", "email_verified_at",
-        "sms_verify", "password", "remember_token", "created_at", "updated_at",'can_delivery'
+        "sms_verify", "password", "remember_token", "created_at", "updated_at", 'can_delivery' ,
+        'last_process_at',
+        'last_distinction_at',
+        'prev_distinction_at',
     ];
-
 
     /**
      * The attributes that should be hidden for serialization.
@@ -50,10 +53,11 @@ class User extends Authenticatable
     ];
 
 
-    public function residenceCountry (): BelongsTo
+    public function residenceCountry(): BelongsTo
     {
-        return $this->belongsTo(Country::class , 'residence_country_id');
+        return $this->belongsTo(Country::class, 'residence_country_id');
     }
+
     public function setUsernameAttribute($value)
     {
         $temp = Str::slug($this->attributes['name']) . '@tabketna.com';
@@ -92,7 +96,7 @@ class User extends Authenticatable
 
     public function liveLocation()
     {
-        return $this->hasOne(UserLiveLocation::class ,'user_id');
+        return $this->hasOne(UserLiveLocation::class, 'user_id');
     }
 
     public function loadRates()
@@ -119,6 +123,7 @@ class User extends Authenticatable
 
         return $this->hasMany(UserAddress::class);
     }
+
     public function documents()
     {
         return $this->hasMany(Document::class);
@@ -149,13 +154,13 @@ class User extends Authenticatable
 
     public function chefTransfers(): HasMany
     {
-        return $this->hasMany(Transfer::class, 'to_id')->where('to_type' , 'chef');
+        return $this->hasMany(Transfer::class, 'to_id')->where('to_type', 'chef');
         //enum('admin', 'client', 'delivery', 'chef')
     }
 
     public function deliveryTransfers(): HasMany
     {
-        return $this->hasMany(Transfer::class, 'to_id')->where('to_type' , 'delivery');
+        return $this->hasMany(Transfer::class, 'to_id')->where('to_type', 'delivery');
     }
 
 
@@ -172,5 +177,21 @@ class User extends Authenticatable
     public function sanctions(): HasMany
     {
         return $this->hasMany(Sanction::class, 'user_id');
+    }
+
+    public function userDistinctions(): HasMany
+    {
+        return $this->hasMany(UserDistinction::class, 'user_id');
+    }
+
+
+    public function transferRecords(): HasMany
+    {
+        return $this->hasMany(TransferRecord::class, 'to_id');
+    }
+
+    public function userDriverCashes(): HasMany
+    {
+        return $this->hasMany(UserDriverCash::class, 'user_id');
     }
 }

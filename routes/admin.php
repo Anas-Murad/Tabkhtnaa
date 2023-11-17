@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\OrdersController;
+use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Admin\TransferController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\UserDistinctionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -10,6 +13,7 @@ use App\Http\Controllers\Admin\ComplaintsController;
 use App\Http\Controllers\Admin\SanctionController;
 use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\OfferController;
+use App\Http\Controllers\Admin\RatingController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -51,6 +55,11 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     //offers
     Route::get('offers/{type?}', [OfferController::class, 'index'])->name('admin.offer.index');
+
+    //ratings
+    Route::get('ratings/{id?}', [RatingController::class, 'index'])->name('admin.rating.index');
+
+
     //profile
     Route::get('profile' , [ProfileController::class , 'edit'])->name('admin.profile.edit');
     Route::put('profile/update' , [ProfileController::class , 'update'])->name('admin.profile.update');
@@ -68,11 +77,53 @@ Route::group(['middleware' => ['auth:admin']], function () {
     });
 
     Route::group([
-        'prefix' => 'transactions',
-        'controller' =>OrdersController::class
+        'prefix' => 'distinction',
+        'controller' =>UserDistinctionController::class
     ], function () {
-        Route::get('/{id}' ,'show')->name('admin.transaction.order')->whereNumber('id');
+
+        Route::get('/{status?}','index')->name('admin.distinction.index')
+        ->whereIn('status' ,['new' , 'active' ,'ended' ,'rejected']) ;
+        Route::get('/{id}','show')->name('admin.distinction.show')->whereNumber('id') ;
+        Route::post('/{id}','reject')->name('admin.distinction.Reject')->whereNumber('id') ;
+        Route::post('/{id}/approved','approved')->name('admin.distinction.approved')->whereNumber('id') ;
+
+
     });
+
+
+
+    Route::group([
+        'prefix' => 'settings',
+        'controller' =>ConfigurationController::class
+    ], function () {
+        Route::get('/{id}' ,'show')->name('admin.settings.configuration')->whereNumber('id');
+    });
+
+    Route::group([
+        'prefix' => 'transactions',
+        'controller' =>TransactionController::class
+    ], function () {
+        Route::get('/{status?}' ,'index')->name('admin.transactions.index')
+            ->whereIn('status' ,['pending' , 'success' ,'failed' ,'completed' ,'uncompleted']) ;
+
+        Route::get('/{id}' ,'show')->name('admin.transactions.show')->whereNumber('id');
+    });
+
+
+
+    Route::group([
+        'prefix' => 'transfer',
+        'controller' =>TransferController::class
+    ], function () {
+        Route::get('records/{type}' ,'records')->name('admin.transfer.records') ->whereIn('type' ,[/*'admin' ,*/ 'delivery' ,'chef' ]) ;
+        Route::get('driver-cash' ,'driver_cash')->name('admin.driver-cash')  ;
+        Route::get('driver-cash/{id}/user' ,'driver_cash_user')->name('admin.driver-cash-user')  ;
+
+        Route::get('records/{id}/user' ,'records_user')->name('admin.transfer.records_user') ->whereNumber('id');
+
+
+    });
+
 });
 
 Route::get('t' , function (){

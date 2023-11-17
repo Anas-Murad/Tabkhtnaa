@@ -13,11 +13,7 @@
             <div class="card-header">
                 <h5 class="mb-0">Profile</h5>
             </div>
-            @if(session()->has('success'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('success') }}
-                </div>
-            @endif
+
             <div class="card-body border-top">
                 <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf

@@ -74,7 +74,7 @@ class OffersDataTable extends DataTable
                 $q->where('number' , $this->request->number);
             })
             ->when($this->request->filled('percent'),function ($q){
-                $q->where('percent' , $this->request->percent);
+                $q->where('percent' , '<=' , $this->request->percent);
             })
             ->when($this->request->filled('start_date'), function ($q) {
                 $q->where('start_date', '>=', $this->request()->input('start_date'));
