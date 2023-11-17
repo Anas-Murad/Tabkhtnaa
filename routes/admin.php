@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Admin\TransferController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserDistinctionController;
 use Illuminate\Support\Facades\Route;
@@ -106,6 +107,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
         Route::post('/{id}','reject')->name('admin.distinction.Reject')->whereNumber('id') ;
         Route::post('/{id}/approved','approved')->name('admin.distinction.approved')->whereNumber('id') ;
 
+
     });
 
 
@@ -127,9 +129,28 @@ Route::group(['middleware' => ['auth:admin']], function () {
             ->whereIn('status' ,['pending' , 'success' ,'failed' ,'completed' ,'uncompleted']) ;
 
         Route::get('/{id}' ,'show')->name('admin.transactions.show')->whereNumber('id');
+    });
+
+
+
+    Route::group([
+        'prefix' => 'transfer',
+        'controller' =>TransferController::class
+    ], function () {
+        Route::get('records/{type}' ,'records')->name('admin.transfer.records') ->whereIn('type' ,[/*'admin' ,*/ 'delivery' ,'chef' ]) ;
+        Route::get('driver-cash' ,'driver_cash')->name('admin.driver-cash')  ;
+        Route::get('driver-cash/{id}/user' ,'driver_cash_user')->name('admin.driver-cash-user')  ;
+
+        Route::get('records/{id}/user' ,'records_user')->name('admin.transfer.records_user') ->whereNumber('id');
 
 
     });
+
+
+
+
+
+
 
 
 

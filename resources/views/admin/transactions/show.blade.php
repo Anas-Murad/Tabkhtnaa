@@ -144,12 +144,6 @@
                             </div>
                         </div>
                     </div>
-
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
@@ -216,24 +210,20 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
-
-            <div class="col-md-12">
-
+            <div class="col-md-6">
                 <div class="row">
-
                     @if(!$transaction->transferRecords->isEmpty())
 
                         @foreach($transaction->transferRecords as $transferRecords)
 
-                            <div class="col-md-4">
+                            <div class="col-md-12">
                                 <div class="card">
                                     <div class="card-header">
                                         <h5 class="mb-0">حصة #
-                                        {{$transferRecords->to_type}}
+                                            {{$transferRecords->to_type}}
                                         </h5>
                                     </div>
                                     <div class="table-responsive">
@@ -290,10 +280,10 @@
                                                 </tr>
                                             @endif
 
-                                                <tr>
-                                                    <th class="text-nowrap" scope="row">تاريخ التحويل الى الحساب</th>
-                                                    <td>{{$transferRecords->transfer_date}} </td>
-                                                </tr>
+                                            <tr>
+                                                <th class="text-nowrap" scope="row">تاريخ التحويل الى الحساب</th>
+                                                <td>{{$transferRecords->transfer_date}} </td>
+                                            </tr>
 
 
 
@@ -329,6 +319,8 @@
 
                 </div>
             </div>
+
+
         </div>
     </div>
 @endsection
