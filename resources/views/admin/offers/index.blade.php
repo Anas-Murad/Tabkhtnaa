@@ -36,7 +36,7 @@
                                                        id="number" placeholder="Number ">
                                             </div>
                                         </div>
-
+                                        <input name="user_id" value="{{$user_id}}" type="hidden">
                                         <div class="col-md-2">
                                             <div class="mb-3">
                                                 <label class="form-label">ابحث عن  percent </label>

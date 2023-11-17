@@ -11,10 +11,13 @@ use Illuminate\Support\Facades\Auth;
 
 class ComplaintsController extends Controller
 {
-    public function index(ComplaintsDataTable $dataTable)
+    public function index(Request $request)
     {
         $admins = Admin::where('account_status' , 'active')->get();
-        return $dataTable->render('admin.complaints.index' , compact('admins'));
+        $user_id = null;
+        if ($request->user_id)
+            $user_id = $request->user_id;
+        return (new ComplaintsDataTable($user_id))->render('admin.complaints.index'  , compact('admins' , 'user_id'));
     }
 
     public function update(Request $request)

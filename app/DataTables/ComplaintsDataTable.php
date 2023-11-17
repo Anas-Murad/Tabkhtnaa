@@ -14,6 +14,13 @@ use Yajra\DataTables\Services\DataTable;
 
 class ComplaintsDataTable extends DataTable
 {
+
+    protected $user_id;
+
+    public function __construct($user_id = null)
+    {
+        $this->user_id = $user_id;
+    }
     /**
      * Build DataTable class.
      *
@@ -90,6 +97,9 @@ class ComplaintsDataTable extends DataTable
             'admin' => function($q1){
                 $q1->select('id','name');
             }])
+            ->when($this->user_id, function ($q) {
+                $q->where('user_id', $this->user_id);
+            })
             ->whereHas('order', function ($q){
                 $q->when($this->request->filled('order_id'), function ($q) {
                     $q->where('id', $this->request->order_id);

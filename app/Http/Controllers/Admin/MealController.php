@@ -14,9 +14,12 @@ class MealController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($status = null)
+    public function index($status = null , Request $request)
     {
-        return (new MealsDataTable($status))->render('admin.meals.index');
+        $user_id = null;
+        if ($request->user_id)
+            $user_id = $request->user_id;
+        return (new MealsDataTable($status , $user_id))->render('admin.meals.index' , compact('user_id'));
     }
 
     /**
