@@ -5,6 +5,9 @@
     <div class="content">
         <!-- Scrollable datatable -->
         @include('admin.layouts.alert-area')
+        @if ($user->type != 'user')
+            @include('admin.users.processes')
+        @endif
         <div class="row">
 
             <div class="col-md-6">

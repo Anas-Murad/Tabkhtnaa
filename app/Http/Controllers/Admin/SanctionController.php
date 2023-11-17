@@ -18,10 +18,13 @@ class SanctionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(SanctionsDataTable $dataTable)
+    public function index(Request $request)
     {
+        $user_id = null;
+        if ($request->user_id)
+            $user_id = $request->user_id;
         $admins = Admin::where('account_status' , 'active')->get();
-        return $dataTable->render('admin.sanctions.index' , compact('admins'));
+        return (new SanctionsDataTable($user_id))->render('admin.sanctions.index'  , compact('admins' , 'user_id'));
     }
 
     /**

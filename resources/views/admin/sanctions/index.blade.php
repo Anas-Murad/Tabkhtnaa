@@ -48,7 +48,7 @@
                                                 </select>
                                             </div>
                                         </div>
-
+                                        <input name="user_id" type="hidden" value="{{$user_id}}">
                                         <div class="col-md-2">
                                             <div class="mb-3">
                                                 <label class="form-label">الجنس</label>
