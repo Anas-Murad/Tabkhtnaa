@@ -185,4 +185,13 @@ class User extends Authenticatable
     }
 
 
+    public function transferRecords(): HasMany
+    {
+        return $this->hasMany(TransferRecord::class, 'to_id');
+    }
+
+    public function userDriverCashes(): HasMany
+    {
+        return $this->hasMany(UserDriverCash::class, 'user_id');
+    }
 }
