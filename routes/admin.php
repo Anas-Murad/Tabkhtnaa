@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\RatingController;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\EvaluationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -54,6 +55,9 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     //offers
     Route::get('offers/{type?}', [OfferController::class, 'index'])->name('admin.offer.index');
+
+   //evaluation
+    Route::get('evaluation', [EvaluationController::class, 'index'])->name('admin.evaluation.index');
 
     //ratings
     Route::get('ratings/{id?}', [RatingController::class, 'index'])->name('admin.rating.index');

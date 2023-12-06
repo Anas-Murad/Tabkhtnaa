@@ -247,6 +247,17 @@
                     </ul>
                 </li>
             </ul>
+
+
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <li class="nav-item">
+                    <a href="{{env('APP_URL') . '/telescope'}}" class="nav-link">
+                        <i class="ph-monitor"></i>
+                        Monitoring
+                    </a>
+                </li>
+                <!-- Main -->
+            </ul>
         </div>
         <!-- /main navigation -->
     </div>

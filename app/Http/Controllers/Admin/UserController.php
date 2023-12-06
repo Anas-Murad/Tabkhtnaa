@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateProfileRequest;
 use App\Models\Country;
+use App\Models\Order;
 use App\Models\User;
 use App\Traits\FCMTrait;
 use App\Traits\HelperTrait;
@@ -214,6 +215,12 @@ class UserController extends Controller
         ]);
         if ($user->type=='type')
             $user->loadRates();
-        return view('admin.users.show' , compact('user'));
+        if ($user->type == 'client')
+           $user_order = Order::where('user_id' , $user->id)->where('status', 'delivered')->count();
+        elseif ($user->type == 'delivery')
+            $user_order = Order::where('delivery_id' , $user->id)->where('status', 'delivered')->count();
+        else
+            $user_order = Order::where('chef_id' , $user->id)->where('status', 'delivered')->count();
+        return view('admin.users.show' , compact('user' , 'user_order'));
     }
 }

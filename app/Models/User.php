@@ -141,6 +141,10 @@ class User extends Authenticatable
     }
 
 
+    public function userOrders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'user_id');
+    }
     public function chefOrders(): HasMany
     {
         return $this->hasMany(Order::class, 'chef_id');

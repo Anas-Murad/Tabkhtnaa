@@ -224,6 +224,12 @@
                                             <td>{{$user->created_at}}</td>
                                         </tr>
                                     @endif
+                                    @if($user->created_at)
+                                        <tr>
+                                            <th class="text-nowrap" scope="row">عدد الطلبات المنجزة</th>
+                                            <td>{{$user_order}}</td>
+                                        </tr>
+                                    @endif
                                     @if($user->updated_at)
                                         <tr>
                                             <th class="text-nowrap" scope="row"> تاريخ اخر تحديث</th>
