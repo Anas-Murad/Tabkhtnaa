@@ -1910,26 +1910,148 @@
             </div>
         </div>
         <!-- /dashboard content -->
-        <div id="map" style="height: 500px;padding-bottom: 50px"></div>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title text-center display-6">Orders Details</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <h4 class="mb-3 text-bg-info text-center">Orders Numbers = {{$orders_count}} </h4>
+                    <div class="col-6">
+                        <h4 class="mb-3 text-bg-pink text-center">Orders Pending = {{$orders_pending}} </h4>
+                        <h4 class="mb-3 text-bg-success text-center">Orders Confirmed = {{$orders_confirmed}} </h4>
+                        <h4 class="mb-3 text-bg-primary text-center">Orders Prepare = {{$orders_prepare}} </h4>
+                        <h4 class="mb-3 text-bg-black text-center">Orders Prepared = {{$orders_prepared}} </h4>
+                        <h4 class="mb-3 text-bg-danger text-center">Orders Cancel = {{$orders_cancel}} </h4>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="mb-3 text-bg-purple text-center">Orders Success = {{$orders_success}} </h4>
+                        <h4 class="mb-3 text-bg-warning text-center">Orders Not Delivered = {{$orders_not_delivered}} </h4>
+                        <h4 class="mb-3 text-bg-danger text-center">Orders Rejected = {{$orders_rejected}} </h4>
+                        <h4 class="mb-3 text-bg-indigo text-center">Orders On Way = {{$orders_on_way}} </h4>
+                        <h4 class="mb-3 text-bg-success text-center">Orders Transaction Success = {{$orders_transaction_status}} </h4>
+                    </div>
+                </div>
+                <div class="map-container" id="map_marker_animation"></div>
+            </div>
+        </div>
     </div>
     <!-- /content area -->
 @endsection
 
 @section('jscript')
     <script>
-        var map = L.map('map').setView([0, 0], 2); // Set initial view
+        /* ------------------------------------------------------------------------------
+  *
+  *  # Animated markers
+  *
+  *  Specific JS code additions for maps_google_markers.html page
+  *
+  * ---------------------------------------------------------------------------- */
 
-        // Use Leaflet tile layer (e.g., OpenStreetMap)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19
-        }).addTo(map);
 
-        // Loop through orders and add markers to the map
-        @foreach ($orders as $order)
-        var lat = {{ $order->address->latitude }};
-        var lng = {{ $order->address->longitude }};
-        var marker = L.marker([lat, lng]).addTo(map);
-        marker.bindPopup("Order ID: {{ $order->id }} <br> User: {{ $order->user->name }}");
-        @endforeach
+        // Setup module
+        // ------------------------------
+
+        var GoogleMapMarkerAnimation = function() {
+
+
+            //
+            // Setup module components
+            //
+
+            // Line chart
+            var _googleMapMarkerAnimation = function() {
+                if (typeof google == 'undefined') {
+                    console.warn('Warning - Google Maps library is not loaded.');
+                    return;
+                }
+
+                // If you're adding a number of markers, you may want to
+                // drop them on the map consecutively rather than all at once.
+                // This example shows how to use setTimeout() to space
+                // your markers' animation.
+
+
+                // Add Berlin coordinates
+                var jordan = new google.maps.LatLng(31.854028, 35.940254);
+
+                // Add neighborhoods coordinates
+                var neighborhoods = [
+                    new google.maps.LatLng(31.854028, 35.940254),
+                    @foreach ($orders as $order)
+                    new google.maps.LatLng({{ $order->address->latitude }}, {{ $order->address->longitude }}),
+                    @endforeach
+                ];
+
+                // Other variables
+                var markers = [];
+                var iterator = 0;
+                var map;
+
+                // Initialize
+                function initialize() {
+
+                    // Define map element
+                    var map_marker_animation_element = document.getElementById('map_marker_animation');
+
+                    // Options
+                    var mapOptions = {
+                        zoom: 8,
+                        center: jordan
+                    };
+
+                    // Apply options
+                    map = new google.maps.Map(map_marker_animation_element, mapOptions);
+                }
+
+                // Drop markers
+                function drop() {
+                    for (var i = 0; i < neighborhoods.length; i++) {
+                        setTimeout(function() {
+                            addMarker();
+                        }, i * 200);
+                    }
+                }
+
+                // Add markers
+                function addMarker() {
+                    markers.push(new google.maps.Marker({
+                        position: neighborhoods[iterator],
+                        map: map,
+                        draggable: false,
+                        animation: google.maps.Animation.DROP
+                    }));
+                    iterator++;
+                }
+
+
+                // Initialize map on window load
+                google.maps.event.addDomListener(window, 'load', initialize);
+                drop();
+            };
+
+
+            //
+            // Return objects assigned to module
+            //
+
+            return {
+                init: function() {
+                    _googleMapMarkerAnimation();
+
+                }
+            }
+        }();
+
+
+        // Initialize module
+        // ------------------------------
+
+        document.addEventListener('DOMContentLoaded', function() {
+            GoogleMapMarkerAnimation.init();
+        });
+
     </script>
 @endsection
