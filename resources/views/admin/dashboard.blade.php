@@ -2,6 +2,7 @@
 
 @section('content')
 
+
     <!-- Content area -->
     <div class="content">
         <!-- Main charts -->
@@ -76,12 +77,12 @@
                     <div class="card-header d-sm-flex align-items-sm-center py-sm-0">
                         <h5 class="py-sm-2 my-sm-1">Sales statistics</h5>
                         <div class="mt-2 mt-sm-0 ms-sm-auto">
-                            <select class="form-select" id="select_date">
-                                <option value="val1">June, 29 - July, 5</option>
-                                <option value="val2">June, 22 - June 28</option>
-                                <option value="val3" selected>June, 15 - June, 21</option>
-                                <option value="val4">June, 8 - June, 14</option>
-                            </select>
+{{--                            <select class="form-select" id="select_date">--}}
+{{--                                <option value="val1">June, 29 - July, 5</option>--}}
+{{--                                <option value="val2">June, 22 - June 28</option>--}}
+{{--                                <option value="val3" selected>June, 15 - June, 21</option>--}}
+{{--                                <option value="val4">June, 8 - June, 14</option>--}}
+{{--                            </select>--}}
                         </div>
                     </div>
 
@@ -89,21 +90,21 @@
                         <div class="row text-center">
                             <div class="col-4">
                                 <div class="mb-3">
-                                    <h5 class="mb-0">5,689</h5>
+                                    <h5 class="mb-0">{{$orders_count_new}}</h5>
                                     <div class="text-muted fs-sm">new orders</div>
                                 </div>
                             </div>
 
                             <div class="col-4">
                                 <div class="mb-3">
-                                    <h5 class="mb-0">32,568</h5>
+                                    <h5 class="mb-0">{{$ordersCountLastMonth}}</h5>
                                     <div class="text-muted fs-sm">this month</div>
                                 </div>
                             </div>
 
                             <div class="col-4">
                                 <div class="mb-3">
-                                    <h5 class="mb-0">$23,464</h5>
+                                    <h5 class="mb-0">${{$expectedProfit}}</h5>
                                     <div class="text-muted fs-sm">expected profit</div>
                                 </div>
                             </div>
@@ -117,6 +118,7 @@
 
             </div>
         </div>
+
         <!-- /main charts -->
         <!-- Dashboard content -->
         <div class="row">
@@ -1214,96 +1216,6 @@
                     </div>
                 </div>
                 <!-- /support tickets -->
-
-
-                <!-- Latest posts -->
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Latest posts</h5>
-                    </div>
-
-                    <div class="card-body pb-0">
-                        <div class="row">
-                            <div class="col-xl-6">
-                                <div class="d-sm-flex align-items-sm-start mb-3">
-                                    <a href="#" class="d-inline-block position-relative me-sm-3 mb-3 mb-sm-0">
-                                        <img src="../../../assets/images/demo/flat/1.png" class="flex-shrink-0 rounded" height="100" alt="">
-                                        <div class="d-inline-flex bg-dark bg-opacity-50 text-white position-absolute start-50 top-50 translate-middle rounded-pill p-2">
-                                            <i class="ph-play"></i>
-                                        </div>
-                                        <span class="bg-dark bg-opacity-50 text-white fs-xs lh-1 rounded-1 position-absolute bottom-0 start-0 p-1 ms-2 mb-2">12:25</span>
-                                    </a>
-
-                                    <div class="flex-fill">
-                                        <h6 class="mb-1"><a href="#">Up unpacked friendly</a></h6>
-                                        <ul class="list-inline list-inline-bullet text-muted mb-2">
-                                            <li class="list-inline-item"><a href="#" class="text-body">Video tutorials</a></li>
-                                        </ul>
-                                        The him father parish looked has sooner. Attachment frequently terminated son hello...
-                                    </div>
-                                </div>
-
-                                <div class="d-sm-flex align-items-sm-start mb-3">
-                                    <a href="#" class="d-inline-block position-relative me-sm-3 mb-3 mb-sm-0">
-                                        <img src="../../../assets/images/demo/flat/21.png" class="flex-shrink-0 rounded" height="100" alt="">
-                                        <div class="d-inline-flex bg-dark bg-opacity-50 text-white position-absolute start-50 top-50 translate-middle rounded-pill p-2">
-                                            <i class="ph-play"></i>
-                                        </div>
-                                        <span class="bg-dark bg-opacity-50 text-white fs-xs lh-1 rounded-1 position-absolute bottom-0 start-0 p-1 ms-2 mb-2">47:25</span>
-                                    </a>
-
-                                    <div class="flex-fill">
-                                        <h6 class="mb-1"><a href="#">It allowance prevailed</a></h6>
-                                        <ul class="list-inline list-inline-bullet text-muted mb-2">
-                                            <li class="list-inline-item"><a href="#" class="text-body">Video tutorials</a></li>
-                                        </ul>
-                                        Alteration literature to or an sympathize mr imprudence. Of is ferrars subject enjoyed...
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-xl-6">
-                                <div class="d-sm-flex align-items-sm-start mb-3">
-                                    <a href="#" class="d-inline-block position-relative me-sm-3 mb-3 mb-sm-0">
-                                        <img src="../../../assets/images/demo/flat/12.png" class="flex-shrink-0 rounded" height="100" alt="">
-                                        <div class="d-inline-flex bg-dark bg-opacity-50 text-white position-absolute start-50 top-50 translate-middle rounded-pill p-2">
-                                            <i class="ph-play"></i>
-                                        </div>
-                                        <span class="bg-dark bg-opacity-50 text-white fs-xs lh-1 rounded-1 position-absolute bottom-0 start-0 p-1 ms-2 mb-2">48:40</span>
-                                    </a>
-
-                                    <div class="flex-fill">
-                                        <h6 class="mb-1"><a href="#">Case read they must</a></h6>
-                                        <ul class="list-inline list-inline-bullet text-muted mb-2">
-                                            <li class="list-inline-item"><a href="#" class="text-body">Video tutorials</a></li>
-                                        </ul>
-                                        On it differed repeated wandered required in. Then girl neat why yet knew rose spot...
-                                    </div>
-                                </div>
-
-                                <div class="d-sm-flex align-items-sm-start mb-3">
-                                    <a href="#" class="d-inline-block position-relative me-sm-3 mb-3 mb-sm-0">
-                                        <img src="../../../assets/images/demo/flat/18.png" class="flex-shrink-0 rounded" height="100" alt="">
-                                        <div class="d-inline-flex bg-dark bg-opacity-50 text-white position-absolute start-50 top-50 translate-middle rounded-pill p-2">
-                                            <i class="ph-play"></i>
-                                        </div>
-                                        <span class="bg-dark bg-opacity-50 text-white fs-xs lh-1 rounded-1 position-absolute bottom-0 start-0 p-1 ms-2 mb-2">22:14</span>
-                                    </a>
-
-                                    <div class="flex-fill">
-                                        <h6 class="mb-1"><a href="#">Consider now provided</a></h6>
-                                        <ul class="list-inline list-inline-bullet text-muted mb-2">
-                                            <li class="list-inline-item"><a href="#" class="text-body">Video tutorials</a></li>
-                                        </ul>
-                                        Marianne or husbands if at stronger ye. Considered is as middletons uncommonly...
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /latest posts -->
-
             </div>
 
             <div class="col-xl-4">
@@ -1317,12 +1229,19 @@
                             <div class="card-body">
 
                                 <!-- Progress counter -->
-                                <div class="svg-center" id="hours-available-progress"></div>
+                                <div class="svg-center" id="hours-available-progress">
+                                    <div class="mb-3">
+                                        <h5 class="mb-0">{{$user_chef}}</h5>
+                                        <div class="text-muted fs-sm">Total Chefs</div>
+                                    </div>
+                                </div>
                                 <!-- /progress counter -->
 
 
                                 <!-- Bars -->
-                                <div id="hours-available-bars"></div>
+                                <div id="hours-available-bars">
+
+                                </div>
                                 <!-- /bars -->
 
                             </div>
@@ -1338,7 +1257,12 @@
                             <div class="card-body">
 
                                 <!-- Progress counter -->
-                                <div class="svg-center" id="goal-progress"></div>
+                                <div class="svg-center" id="goal-progress">
+                                    <div class="mb-3">
+                                        <h5 class="mb-0">{{$user_delivery}}</h5>
+                                        <div class="text-muted fs-sm">Total Delivery</div>
+                                    </div>
+                                </div>
                                 <!-- /progress counter -->
 
                                 <!-- Bars -->
@@ -1906,7 +1830,6 @@
                     </div>
                 </div>
                 <!-- /daily financials -->
-
             </div>
         </div>
         <!-- /dashboard content -->
@@ -1979,7 +1902,7 @@
 
                 // Add neighborhoods coordinates
                 var neighborhoods = [
-                    new google.maps.LatLng(31.854028, 35.940254),
+                    // new google.maps.LatLng(31.854028, 35.940254),
                     @foreach ($orders as $order)
                     new google.maps.LatLng({{ $order->address->latitude }}, {{ $order->address->longitude }}),
                     @endforeach

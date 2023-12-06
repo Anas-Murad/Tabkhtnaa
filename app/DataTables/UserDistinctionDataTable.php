@@ -43,15 +43,6 @@ class UserDistinctionDataTable extends DataTable
               return  '<img style=" width: 50px; height: 50px; "  src="'.asset($row->profile_image ?? "assets/images/demo/users/face11.jpg" ) . '" />' ;
             })
 
-
-
-
-
-
-
-
-
-
             ->editColumn('email', function ($row) {
                 return '<a href="mailto:'.$row->email.'">'.$row->email.'</a>' ;
             })

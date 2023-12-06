@@ -48,9 +48,11 @@
                     </a>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit"   class="btn btn-yellow d-block w-100 border-0">
-                       التميز له
-                    </button>
+                    <a href="{{ route('admin.distinction.index',[ 'user_id'=> $user->id]) }}">
+                        <button type="submit"   class="btn btn-yellow d-block w-100 border-0">
+                            التميز له
+                        </button>
+                    </a>
                 </div>
                 <div class="col-md-2">
                     <a href="{{route('admin.orders.index' , ['user_id'=>$user->id , 'user_type'=>$user->type])}}">
