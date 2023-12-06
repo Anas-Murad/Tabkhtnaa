@@ -159,11 +159,12 @@ class UserController extends Controller
         }
 
 
-        $user->update(request()->only(
+        $data = request()->only(
             'account_status',
-            'can_delivery',
             'account_comment',
-        )) ;
+        ) ;
+        $data['can_delivery'] = request()->boolean('can_delivery');
+        $user->update($data) ;
 
 
         foreach ($Notifications as $Notification)

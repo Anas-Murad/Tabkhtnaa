@@ -65,9 +65,13 @@ class TransferUserRecordsDataTable extends DataTable
 
                 if ($row->transaction_id)
                 $btns .=" <a href='".(route('admin.transactions.show' , $row->transaction_id))."' class='dropdown-item'> <i class='ph-eye me-2'></i>تفاصيل دفع الطلب</a>";
+
+
                 if ($row->transfer_id)
                 $btns .=" <a href='".(route('admin.transactions.show' , $row->transfer_id))."' class='dropdown-item'> <i class='ph-eye me-2'></i>تفاصيل التحويل لحسابه</a>";
 
+                if (!$row->admin_checked)
+                    $btns .=" <a href='#' onclick='adminChecked(`".(route('admin.transfer.records_checked' , $row->id))."`)' class='dropdown-item'> <i class='ph-check me-2'></i>تأكيد استحقاق الحركه</a>";
 
 
 
@@ -86,6 +90,7 @@ class TransferUserRecordsDataTable extends DataTable
             })
             ->setRowId('id')
             ->rawColumns([
+                'admin_notes',
                 'action',
             ]);
 

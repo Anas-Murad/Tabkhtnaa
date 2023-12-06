@@ -157,8 +157,84 @@
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 
     <script>
-        function myCustomAction(){
-            alert(1)
+
+        function adminChecked(url) {
+            swalInit.fire({
+                title: 'هل انت متأكد',
+                text:  "هل تريد بالفعل تأكيد الاستحقاق , لن تتمكن ابدامن الرجوع عن هذا الخيار ",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'نعم , تأكيد ',
+                cancelButtonText: 'لا, الغاء ',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                } ,
+
+                input: "textarea",
+                inputLabel: "ضع ملاحظاتك هنا",
+                inputPlaceholder: "يرجى كتابه ملاحظات تدل على عمليه التحقق التي تمت",
+                inputAttributes: {
+                    "aria-label": "يرجى كتابه ملاحظات تدل على عمليه التحقق التي تمت"
+                },
+            }).then(function (result) {
+
+
+
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        method: "POST",
+                        data: {
+                            '_token': "{{csrf_token()}}",
+                            'admin_notes':result.value,
+                        },
+
+                        success: function (result) {
+                            if(result !== true)
+                                if ("status" in result && result.status == false) {
+                                    swalInit.fire(
+                                        'حدث خطا ما',
+                                        result.error_msg,
+                                        'error'
+                                    );
+                                    return;
+                                }
+                            if (result) {
+                                swalInit.fire(
+                                    'تم الـاكيد',
+                                    'تم الـاكيد بنجاح',
+                                    'success'
+                                );
+                                window.LaravelDataTables["data-table"].ajax.reload()
+                            } else {
+                                swalInit.fire(
+                                    'حدث خطا ما',
+                                    'لم يتم الحذف بسبب مشكله في الخادم !',
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            swalInit.fire(
+                                'حدث خطا ما',
+                                'لم يتم الحذف بسبب مشكله في الخادم او لم يعد لديك صلاحيات كافيه !',
+                                'error'
+                            );
+                            return;
+                        }
+                    });
+                } else if (result.dismiss === swal.DismissReason.cancel) {
+                    swalInit.fire(
+                        'تم الالغاء',
+                        'تم الغاء الحذف ',
+                        'error'
+                    );
+                }
+            });
         }
+
+
     </script>
 @endsection
