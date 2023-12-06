@@ -149,7 +149,7 @@ use HelperTrait;
     }
 
 
-    public function index($status = null)
+    public function index($status = null  , $user_id = 2)
     {
 
 
@@ -174,10 +174,12 @@ use HelperTrait;
 
         }
 
-
+        $userID = null;
+        if ($user_id)
+            $userID = $user_id;
 
         return
-            (new UserDistinctionDataTable($status ))
+            (new UserDistinctionDataTable($status , $userID ))
                 ->render('admin.distinction.index'  , compact('pageTitle' ));
 //                ->render('admin.orders.index'  , compact('pageTitle' , 'transactionStatus' ,'status' ,'user'));
 

@@ -8,7 +8,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         $this->merge(['mobile' => ltrim( $this->get('mobile') , '0')]);
-        $this->merge(['source' => 'normal' , '0' ]);
+        $this->merge(['source' => 'normal' ]);
 
         return [
             'password' => 'required',
