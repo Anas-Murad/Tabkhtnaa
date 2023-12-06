@@ -16,9 +16,9 @@ return new class extends Migration {
                 ->onDelete('cascade') ;
 
             $table->string('points');
-            $table->string('offered_type');
-            $table->string('offered_id');
-            $table->date('validity_date');
+            $table->string('offered_type')->nullable();
+            $table->string('offered_id')->nullable();
+            $table->date('validity_date')->nullable();
             $table->float('discount')->nullable();
             $table->enum('status' ,['new' , 'active' ,'used']);
             $table->timestamps();

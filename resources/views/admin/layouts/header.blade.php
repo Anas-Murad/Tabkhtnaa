@@ -149,6 +149,19 @@
         width: 308px!important;
     }
 
+
+    .swal2-textarea {
+        padding: 9px 15px;
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    label.swal2-input-label {
+        font-weight: bold;
+        margin-top: 15px;
+    }
+
+
     .contented_div {
         display: flex;
         align-items: center;

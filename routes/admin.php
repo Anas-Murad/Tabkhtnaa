@@ -123,6 +123,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
         Route::get('driver-cash/{id}/user' ,'driver_cash_user')->name('admin.driver-cash-user')  ;
 
         Route::get('records/{id}/user' ,'records_user')->name('admin.transfer.records_user') ->whereNumber('id');
+        Route::post('records/{id}/checked' ,'records_checked')->name('admin.transfer.records_checked') ->whereNumber('id');
 
 
     });

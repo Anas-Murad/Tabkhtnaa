@@ -23,7 +23,8 @@ class PointsAndDistinctionProcess
             'configuration' => function ($q) {
                 $q->whereIn('classification', ['points', 'distinction']);
             }
-        ])->whereHas('users')
+        ])
+         //->whereHas('users')
         ->select('id', 'name')
         ->find($countryId);
 

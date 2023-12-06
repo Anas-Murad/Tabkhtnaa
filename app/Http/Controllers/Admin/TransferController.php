@@ -12,9 +12,12 @@ use App\Models\Order;
 use App\Models\TransferRecord;
 use App\Models\User;
 use App\Models\UserDriverCash;
+use App\Traits\HelperTrait;
 
 class TransferController extends Controller
 {
+
+    use HelperTrait ;
     public function driver_cash()
     {
 
@@ -73,6 +76,15 @@ class TransferController extends Controller
           return (new TransferRecordsDataTable( $type))
               ->render('admin.transfer.records'  , compact('pageTitle' , 'type'));
 
+    }
+
+    public function records_checked($id= null)
+    {
+        $tr = TransferRecord::findOrFail($id);
+        $data = request()->only('admin_notes');
+        $data['admin_checked'] = true ;
+        $tr->update($data );
+        return $this->returnSuccess('تم تأكيد العميله بنجاح');
     }
 
     public function records_user($user_id= null)
