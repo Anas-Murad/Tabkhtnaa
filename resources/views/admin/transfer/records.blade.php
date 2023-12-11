@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 @section('content')
     <div class="content">
+{{--
 
         <!-- Collapse/expand card -->
         <div class="card  card-collapsed">
@@ -93,6 +94,7 @@
         </div>
         <!-- /collapse/expand card -->
 
+--}}
 
         <div class="card">
 

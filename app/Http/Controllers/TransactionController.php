@@ -76,7 +76,6 @@ class TransactionController extends Controller
         $chef_amount = $sub_total - $discount ; // نسبه الطاهي
         $admin_amount = $chef_amount * 0.20; //نسبه الادمن من الطلبيه
         $admin_delivery_fees = $delivery_fees * 0.20; //نسبه الادمن من التوصيل
-
         $delivery_amount = $delivery_fees - $admin_delivery_fees ; // نسبه الموصل
 
         $total_cash = ($total + $tax ) - $delivery_amount ; //  الكاش الي لازم يتجول للادمن

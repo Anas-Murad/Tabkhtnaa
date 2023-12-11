@@ -93,14 +93,52 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     });
 
+    Route::group([
+        'prefix' => 'settings/countries',
+        'controller' =>\App\Http\Controllers\Admin\CountryController::class
+    ], function () {
+        Route::get('/' ,'index')->name('admin.settings.countries');
+        Route::get('/create' ,'create')->name('admin.settings.countries.create');
+        Route::get('/{id}/edit' ,'create')->name('admin.settings.countries.edit');
+        Route::put('/{id}/update' ,'create')->name('admin.settings.countries.update');
+    });
+
+    Route::group([
+        'prefix' => 'settings/cities',
+        'controller' =>\App\Http\Controllers\Admin\CityController::class
+    ], function () {
+
+
+        Route::get('/{country_id}/' ,'index')->name('admin.settings.countries.cities');
+        Route::get('/{country_id}/edit/{city_id}' ,'edit')->name('admin.settings.cities.edit');
+        Route::delete('/{country_id}/destroy/{city_id}' ,'destroy')->name('admin.settings.cities.destroy');
+        Route::put('/{country_id}/update/{city_id}' ,'update')->name('admin.settings.cities.update');
+        Route::post('/{country_id}/store' ,'store')->name('admin.settings.cities.store');
+
+        Route::get('/{country_id}/cities/create' ,'create')->name('admin.settings.cities.create');
+
+
+
+        //        Route::get('/{id}/cities/{city_id}/edit' ,'create')->name('admin.settings.countries.create');
+//        Route::get('/{id}/cities/{city_id}/update' ,'create')->name('admin.settings.countries.create');
+//        Route::get('/{id}/cities/{city_id}/delete' ,'create')->name('admin.settings.countries.create');
+
+
+    });
+
 
 
     Route::group([
         'prefix' => 'settings',
-        'controller' =>ConfigurationController::class
+        'controller' =>\App\Http\Controllers\Admin\ConfigurationController::class
     ], function () {
-        Route::get('/{id}' ,'show')->name('admin.settings.configuration')->whereNumber('id');
+        Route::get('/{classification}' ,'choose_country')->name('admin.settings.choose_country');
+        Route::get('/{classification}/edit' ,'edit')->name('admin.settings.edit');
+        Route::post('/{classification}/{country}/save' ,'update')->name('admin.settings.update');
     });
+
+
+
 
     Route::group([
         'prefix' => 'transactions',
@@ -118,13 +156,30 @@ Route::group(['middleware' => ['auth:admin']], function () {
         'prefix' => 'transfer',
         'controller' =>TransferController::class
     ], function () {
-        Route::get('records/{type}' ,'records')->name('admin.transfer.records') ->whereIn('type' ,[/*'admin' ,*/ 'delivery' ,'chef' ]) ;
-        Route::get('driver-cash' ,'driver_cash')->name('admin.driver-cash')  ;
-        Route::get('driver-cash/{id}/user' ,'driver_cash_user')->name('admin.driver-cash-user')  ;
+        Route::get('/{type}' ,'transfer')->name('admin.transfer.index')
+            ->whereIn('type' ,[/*'admin' ,*/ 'delivery' ,'chef' ]) ;
+        Route::get('/{transfer_id}/records' ,'transfer_records')->name('admin.transfer.transfer_records') ->whereNumber('transfer_id') ;
 
-        Route::get('records/{id}/user' ,'records_user')->name('admin.transfer.records_user') ->whereNumber('id');
+
+
+
+        Route::get('records/{type}/{status?}' ,'records')->name('admin.transfer.records') ->whereIn('type' ,[/*'admin' ,*/ 'delivery' ,'chef' ]) ;
+
+
+
         Route::post('records/{id}/checked' ,'records_checked')->name('admin.transfer.records_checked') ->whereNumber('id');
 
+
+        Route::get('driver-cash' ,'driver_cash')->name('admin.driver-cash')  ;
+        Route::get('driver-cash/{id}/user' ,'driver_cash_user')->name('admin.driver-cash-user')  ;
+        Route::get('records/{id}/user/' ,'records_user')->name('admin.transfer.records_user') ->whereNumber('id');
+        Route::get('records/{id}/user/transfer_screen' ,'transfer_screen')->name('admin.transfer.transfer_screen') ->whereNumber('id');
+        Route::post('records/{id}/user/do_transfer' ,'do_transfer')->name('admin.transfer.do_transfer') ->whereNumber('id');
+
+
+
+
+//        Route::get('checked/{type}/list' ,'records_checked_list')->name('admin.transfer.records.records_checked_list') ->whereIn('type' ,['delivery' ,'chef' ]) ;
 
     });
 

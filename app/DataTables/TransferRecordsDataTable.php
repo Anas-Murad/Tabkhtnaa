@@ -17,14 +17,16 @@ class TransferRecordsDataTable extends DataTable
 {
 
 
-    protected $type ;
+    protected $type;
+    protected $status;
 
     /**
      * @param $type
      */
-    public function __construct($type)
+    public function __construct($type, $status)
     {
         $this->type = $type;
+        $this->status = $status;
     }
 
     /**
@@ -36,19 +38,30 @@ class TransferRecordsDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-
             ->editColumn('profile_image', '<img style=" width: 50px; height: 50px; " src="{{asset($profile_image ?? "assets/images/demo/users/face11.jpg" )}}" />')
             ->editColumn('email', '<a href="mailto:{{$email}}">{{$email}}</a>')
             ->editColumn('mobile', '<a href="tel:{{$country_code.$mobile}}">{{$country_code.$mobile}}</a>')
-
-
-
             ->editColumn('action', function ($user) {
 
-                $btns =" <a href='".(route('admin.transfer.records_user' , $user))."' class='dropdown-item'> <i class='ph-list-bullets me-2'></i>  تفاصيل المستحقات</a>";
-                $btns .=" <a href='".(route('users.show' , $user))."' class='dropdown-item'> <i class='ph-eye me-2'></i> ملف العميل</a>";
-                $btns .=" <a href='".(route('users.show' , $user))."' class='dropdown-item'> <i class='ph-money me-2'></i> الايرادات</a>";
+                //   $btns .=" <a href='".(route('users.show' , $user))."' class='dropdown-item'> <i class='ph-money me-2'></i> الايرادات</a>";
 
+                if (!$this->status == 'checked') {
+                    $btns = " <a href='" . (route('admin.transfer.records_user', $user)) . "' class='dropdown-item'> <i class='ph-list-bullets me-2'></i>  تفاصيل المستحقات</a>";
+                }
+                if ($this->status == 'checked') {
+                    $btns = " <a href='" . (route('admin.transfer.transfer_screen', $user)) . "' class='dropdown-item'>
+                    <i class='ph-list-bullets me-2'></i>شاشه التحويل</a>";
+                }
+
+
+                if ($this->status == 'completed') {
+                    $btns = "";
+                }
+
+
+
+
+                $btns .= " <a href='" . (route('users.show', $user)) . "' class='dropdown-item'> <i class='ph-eye me-2'></i> ملف العميل</a>";
 
                 return <<<HTML
                 <div class="d-inline-flex">
@@ -85,36 +98,70 @@ class TransferRecordsDataTable extends DataTable
     public function query(User $model): QueryBuilder
     {
         return $model->newQuery()
-            ->whereHas('transferRecords' , function ($q){return $q->where(['to_type' =>$this->type,'transfer_status'=>'pending'])
-                ->when($this->request->filled('from_date'), function ($q) {
-                    $q->where('created_at', '>=', $this->request()->input('from_date'));
-                })
-                ->when($this->request->filled('to_date'), function ($q) {
-                    $q->where('created_at', '<=', $this->request()->input('to_date'));
-                })
+            ->whereHas('transferRecords', function ($q) {
+                return $q
+                    ->where('to_type', $this->type)
+                    ->when($this->request->filled('from_date'), function ($q) {
+                        $q->where('created_at', '>=', $this->request()->input('from_date'));
+                    })
+                    ->when($this->request->filled('to_date'), function ($q) {
+                        $q->where('created_at', '<=', $this->request()->input('to_date'));
+                    })
+                    ->when($this->status, function ($q) {
+                        if ($this->status == 'checked') {
+                            $q->where('admin_checked', true);
+                            $q->where('transfer_status', 'pending');
+                        }
+                        if ($this->status == 'completed') {
+                            $q->where('transfer_status', 'completed');
+                        }
+                    })
+                    ->when(!$this->status, function ($q) {
+                        $q->where('admin_checked', false);
+                        $q->where('transfer_status', 'pending');
+                    });
 
-                ; })
+            })
             ->with('residenceCountry')
-            ->withSum( [
-                'transferRecords as total_amount'=> function ($q){return $q->where(['to_type' =>$this->type,'transfer_status'=>'pending'])
-                    ->when($this->request->filled('from_date'), function ($q) {
-                        $q->where('created_at', '>=', $this->request()->input('from_date'));
-                    })
-                    ->when($this->request->filled('to_date'), function ($q) {
-                        $q->where('created_at', '<=', $this->request()->input('to_date'));
-                    })
-                    ; }
-            ] ,'amount')
-            ->withSum( [
-                'transferRecords as total_remainder'=> function ($q){return $q->where(['to_type' =>$this->type,'transfer_status'=>'pending'])
-                    ->when($this->request->filled('from_date'), function ($q) {
-                        $q->where('created_at', '>=', $this->request()->input('from_date'));
-                    })
-                    ->when($this->request->filled('to_date'), function ($q) {
-                        $q->where('created_at', '<=', $this->request()->input('to_date'));
-                    })
-                    ; }
-            ] ,'remainder')
+            ->withSum([
+                'transferRecords as total_amount' => function ($q) {
+                    return $q
+                        ->where('to_type', $this->type)
+                        ->when($this->request->filled('from_date'), function ($q) {
+                            $q->where('created_at', '>=', $this->request()->input('from_date'));
+                        })
+                        ->when($this->request->filled('to_date'), function ($q) {
+                            $q->where('created_at', '<=', $this->request()->input('to_date'));
+                        })
+                        ->when($this->status, function ($q) {
+                            if ($this->status == 'checked') {
+                                $q->where('admin_checked', true);
+                                $q->where('transfer_status', 'pending');
+                            }
+                            if ($this->status == 'completed') {
+                                $q->where('transfer_status', 'completed');
+                            }
+                        })
+                        ->when(!$this->status, function ($q) {
+                            $q->where('admin_checked', false);
+                            $q->where('transfer_status', 'pending');
+                        });
+
+
+                }
+            ], 'amount')
+           /* ->withSum([
+                'transferRecords as total_remainder' => function ($q) {
+                    return $q->where(['to_type' => $this->type, 'transfer_status' => 'pending'])
+                        ->when($this->request->filled('from_date'), function ($q) {
+                            $q->where('created_at', '>=', $this->request()->input('from_date'));
+                        })
+                        ->when($this->request->filled('to_date'), function ($q) {
+                            $q->where('created_at', '<=', $this->request()->input('to_date'));
+                        });
+                }
+            ], 'remainder')*/
+
 
 
 
@@ -124,11 +171,6 @@ class TransferRecordsDataTable extends DataTable
                 if ($this->request->filled('city_id')) $r['city_id'] = $this->request->country_id;
                 $q->whereRelation('userAddress', $r);
             })
-
-
-
-
-
             ->when($this->request->filled('search_key'), function ($q) {
                 $q->where(function ($q) {
                     $q->where('name', 'like', '%' . $this->request()->input('search_key') . '%');
@@ -139,9 +181,7 @@ class TransferRecordsDataTable extends DataTable
                     $q->orWhere('account_comment', 'like', '%' . $this->request()->input('search_key') . '%');
                 });
 
-            })
-
-            ;
+            });
     }
 
 
@@ -156,13 +196,13 @@ class TransferRecordsDataTable extends DataTable
             ->setTableId('data-table')
             ->columns($this->getColumns())
             ->ajaxWithForm(url()->current(), '#filter_form')
-                    ->orderBy(0)
-                    ->buttons([
-                        Button::make('excel')->className('btn btn-dark')->text('<i class="ph-microsoft-excel-logo"></i> EXCEL'),
-                        Button::make('csv')->className('btn btn-info')->text('<i class="ph-file-csv"></i> CSV'),
-                        Button::make('print')->className('btn btn-success')->text('<i class="ph-printer"></i> طباعة'),
-                        Button::make('colvis')->className('btn btn-teal')->text('<i class="ph-list"></i>'),
-                    ]);
+            ->orderBy(0)
+            ->buttons([
+                Button::make('excel')->className('btn btn-dark')->text('<i class="ph-microsoft-excel-logo"></i> EXCEL'),
+                Button::make('csv')->className('btn btn-info')->text('<i class="ph-file-csv"></i> CSV'),
+                Button::make('print')->className('btn btn-success')->text('<i class="ph-printer"></i> طباعة'),
+                Button::make('colvis')->className('btn btn-teal')->text('<i class="ph-list"></i>'),
+            ]);
     }
 
     /**

@@ -71,8 +71,33 @@ function ConfigurationData(){
             ],
 
         ],
+
+        'tax'=>[
+            [
+                'config_key' => 'order_tax',
+                'config_value' => 15,
+                'config_bool' => null,
+                'title' => "الصريبه على الطلب بالمئه",
+            ],
+        ],
+
+
     ];
 }
 
+
+function ConfigurationTransClassification($classification){
+
+
+    return (
+    [
+        "points"=>"النقاط" ,
+"distinction"=>"بلوغ التمييز" ,
+"sys_percentage"=>"نسبه النظام" ,
+"tax"=>"الضرائب" ,
+    ]
+    )[$classification];
+
+}
 
 //

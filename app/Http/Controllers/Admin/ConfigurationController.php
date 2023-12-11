@@ -4,44 +4,71 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
+use App\Models\Country;
 use Illuminate\Http\Request;
 
 class ConfigurationController extends Controller
 {
-    public function index()
+    public function choose_country(Request $request , $classification)
     {
-        return Configuration::all();
+
+
+        return view('admin.configuration.choose-country' , compact('classification'));
     }
 
-    public function store(Request $request)
+    public function edit(Request $request , $classification)
     {
-        $request->validate([
-            'country_id' => ['required'],
-            'config_key' => ['required'],
-            'config_value' => ['required'],
-            'config_bool' => ['required'],
-        ]);
 
-        return Configuration::create($request->validated());
+            $country= Country::findOrFail($request->country_id) ;
+               $config = Configuration::where('country_id' , $country->id)
+                ->whereClassification($classification)->get() ;
+               $ConfigurationData = (ConfigurationData()[$classification]);
+                 $initForm = [] ;
+               foreach ($ConfigurationData as $item){
+                    $find = $config->where('config_key' ,$item['config_key'])->first();
+                   if($find){
+                       $item['config_value']=$find->config_value;
+                   }
+                   $initForm[] = $item ;
+               }
+
+
+               unset($config) ;
+               unset($ConfigurationData) ;
+        return view('admin.configuration.edit' , compact(
+            'classification' ,
+            'initForm' ,
+                'country' ,
+        ));
     }
 
-    public function show(Configuration $configuration)
+
+
+
+
+    public function update(Request $request , $classification,  $country_id)
     {
-        return $configuration;
-    }
+        $country= Country::findOrFail($country_id) ;
+        $data=  $request->except('_token') ;
 
-    public function update(Request $request, Configuration $configuration)
-    {
-        $request->validate([
-            'country_id' => ['required'],
-            'config_key' => ['required'],
-            'config_value' => ['required'],
-            'config_bool' => ['required'],
-        ]);
+        foreach ($data as $config_key=> $config_value){
+            Configuration::updateOrCreate(
+                [
+                   'country_id'=> $country_id,
+                   'config_key'=> $config_key,
+                   'classification'=> $classification,
+                ] ,
+                [
+                    'country_id'=> $country_id,
+                    'config_key'=> $config_key  ,
+                    'classification'=> $classification,
+                    'config_value'=> $config_value,
+                ]
+            );
+        }
 
-        $configuration->update($request->validated());
-
-        return $configuration;
+        session()->flash('Success' , 'تم تعديل  بنجاح ');
+        return redirect()->back();
     }
 
     public function destroy(Configuration $configuration)

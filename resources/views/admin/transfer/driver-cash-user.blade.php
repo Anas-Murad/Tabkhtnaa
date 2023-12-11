@@ -2,6 +2,7 @@
 @section('content')
     <div class="content">
 
+{{--
         <!-- Collapse/expand card -->
         <div class="card  card-collapsed">
             <div class="card-header d-flex align-items-center">
@@ -73,6 +74,7 @@
             </div>
         </div>
         <!-- /collapse/expand card -->
+--}}
 
         <div class="row">
 
