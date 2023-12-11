@@ -2,7 +2,7 @@
 @section('content')
     <div class="content">
 
-        <!-- Collapse/expand card -->
+  {{--      <!-- Collapse/expand card -->
         <div class="card  card-collapsed">
             <div class="card-header d-flex align-items-center">
                 <h6 class="mb-0">فلتره</h6>
@@ -92,7 +92,7 @@
             </div>
         </div>
         <!-- /collapse/expand card -->
-
+--}}
 
         <div class="card">
 
