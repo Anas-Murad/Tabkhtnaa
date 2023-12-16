@@ -7,7 +7,9 @@
             <div class="card-header d-flex align-items-center">
                 <h6 class="mb-0">
                     تعديل اعدادات
-                    {{ConfigurationTransClassification($classification)}}-
+                    @if($classification !='all')
+                        {{ConfigurationTransClassification($classification)}}-
+                    @endif
                     اختر الدولة</h6>
             </div>
                 <div class="card-body">

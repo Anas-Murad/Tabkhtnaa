@@ -29,6 +29,7 @@ class User extends Authenticatable
         'last_process_at',
         'last_distinction_at',
         'prev_distinction_at',
+        'rejection_count',
     ];
 
     /**
@@ -83,6 +84,11 @@ class User extends Authenticatable
         return $this->hasMany(Gallery::class)->where('type', '!=', 'galleryKitchen');
     }
 
+
+    public function userStatuses(): HasMany
+    {
+        return $this->hasMany(UserStatus::class, 'user_id');
+    }
 
     public function complaints()
     {

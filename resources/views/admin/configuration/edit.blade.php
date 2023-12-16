@@ -7,7 +7,10 @@
             <div class="card-header d-flex align-items-center">
                 <h6 class="mb-0">
                     تعديل اعدادات
-                    {{ConfigurationTransClassification($classification)}}
+                    @if($classification !='all')
+                        {{ConfigurationTransClassification($classification)}}-
+                    @endif
+
                     - {{$country->name}}
                 </h6>
             </div>
@@ -17,39 +20,102 @@
 
                 <form action="{{ route('admin.settings.update' ,  [$classification , $country]) }}" id="submit_form" method="post">
                     @csrf
-                    <div class="row">
-                        <div class="col-md-12">
-                            <fieldset>
-                                <div class="row">
-                                    @foreach($initForm as $Form)
-                                    <div class="col-md-4">
-                                        <div class="mb-3"  >
-                                            <label class="form-label"> {{$Form['title']}}  </label>
-                                            <input type="text"
-                                                   name="{{$Form['config_key']}}"
-                                                   class="form-control"
-                                                   value="{{$Form['config_value']}}"
-                                                   required
-                                            >
+
+
+                    @if($classification !='all')
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+
+                                <fieldset>
+                                    <div class="row">
+
+
+                                        @foreach($initForm as $Form)
+                                            <div class="col-md-4">
+                                                <div class="mb-3"  >
+                                                    <label class="form-label"> {{$Form['title']}}  </label>
+                                                    <input type="text"
+                                                           name="{{$Form['config_key']}}"
+                                                           class="form-control"
+                                                           value="{{$Form['config_value']}}"
+                                                           required
+                                                    >
+                                                </div>
+                                            </div>
+                                        @endforeach
+
+
+
+                                        <div class="col-12">
+                                            <div class="text-left">
+                                                <button type="submit"
+                                                        class="btn btn-secondary">حفظ
+                                                    <i  class="ph-file-search ms-2"></i>
+                                                </button>
+                                            </div>
                                         </div>
+
                                     </div>
-                                    @endforeach
-
-
-
-                                    <div class="col-12">
-                                        <div class="text-left">
-                                            <button type="submit"
-                                                    class="btn btn-secondary">حفظ
-                                                <i  class="ph-file-search ms-2"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </fieldset>
+                                </fieldset>
+                            </div>
                         </div>
-                    </div>
+
+                    @else
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                @foreach($initForm as $key=> $FormS)
+                                        <h6 class="mb-2 mt-5">
+                                            {{ConfigurationTransClassification($key)}}
+                                        </h6>
+                                <fieldset>
+                                    <div class="row">
+
+                                        @foreach($FormS as $Form)
+                                            <div class="col-md-4">
+                                                <div class="mb-3"  >
+                                                    <label class="form-label"> {{$Form['title']}}  </label>
+                                                    <input type="text"
+                                                           name="{{$key}}[{{$Form['config_key']}}]"
+                                                           class="form-control"
+                                                           value="{{$Form['config_value']}}"
+                                                           required
+                                                    >
+                                                </div>
+                                            </div>
+                                        @endforeach
+
+
+                                    </div>
+                                </fieldset>
+                                @endforeach
+
+
+                            </div>
+
+                            <div class="col-12">
+                                <div class="text-left">
+                                    <button type="submit"
+                                            class="btn btn-secondary">حفظ
+                                        <i  class="ph-file-search ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+
+
+                    @endif
+
+
+
                 </form>
 
 

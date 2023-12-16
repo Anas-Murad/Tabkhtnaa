@@ -209,6 +209,13 @@
                                         </tr>
                                     @endif
 
+                                    @if($user->rejection_count)
+                                        <tr>
+                                            <th class="text-nowrap" scope="row"> عدد مرات الرفض </th>
+                                            <td>{{$user->rejection_count}}</td>
+                                        </tr>
+                                    @endif
+
 
 
 

@@ -116,7 +116,12 @@ class UserController extends Controller
                 case 'rejected':
                     $title='تم رفض عضويتك ';
                     $body='تم رفض حسابك على طبختنا , يرجى مراجعه التفاصيل ';
+                    $user->rejection_count = $user->rejection_count + 1 ;
+                    $user->save() ;
+
                     break;
+
+
 
                 case 'blocked':
                     $title='تم حظؤ حسابك';
@@ -130,6 +135,14 @@ class UserController extends Controller
                 'body' =>$body,
                 'screen' =>'account',
             ];
+            $user->userStatuses()->create([
+                'status'=>request()->input('account_status') ,
+                'account_comment'=>request()->input('account_comment') ,
+            ]) ;
+
+
+
+
         }
 
 
@@ -176,7 +189,6 @@ class UserController extends Controller
 
     public function edit($id = Null)
     {
-
         return $this->show($id);
         $user = User::findOrFail($id);
 
@@ -214,7 +226,7 @@ class UserController extends Controller
             },
             'documents',
         ]);
-        if ($user->type=='type')
+        if ($user->type=='chef')
             $user->loadRates();
         if ($user->type == 'client')
            $user_order = Order::where('user_id' , $user->id)->where('status', 'delivered')->count();

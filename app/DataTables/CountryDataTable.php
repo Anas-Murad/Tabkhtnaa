@@ -31,7 +31,7 @@ class CountryDataTable extends DataTable
 
                 $btns =" <a href='".(route('admin.settings.countries.cities' , $Transaction->id))."' class='dropdown-item'><i class='ph-list me-2'></i>  عرض المدن</a>";
                 $btns .=" <a href='".(route('admin.settings.cities.create' , $Transaction->id))."' class='dropdown-item'><i class='ph-plus-circle me-2'></i>   اضف مدينه</a>";
-                $btns .=" <a href='".(route('admin.settings.countries.edit' , $Transaction->id))."' class='dropdown-item'><i class='ph-paint-brush-broad me-2'></i>    تعديل</a>";
+//                $btns .=" <a href='".(route('admin.settings.countries.edit' , $Transaction->id))."' class='dropdown-item'><i class='ph-paint-brush-broad me-2'></i>    تعديل</a>";
                 return <<<HTML
                 <div class="d-inline-flex">
                         <div class="dropdown">
