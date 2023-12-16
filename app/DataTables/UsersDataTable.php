@@ -256,12 +256,9 @@ class UsersDataTable extends DataTable
             Column::make('account_status')->title('حالة الحساب')
                 ->visible(!$this->status),
 
-
-
-
+            Column::make('rejection_count')->title('عدد مرات الرفض')->content('-'),
             Column::make('r_user')->title('التقييم')->content('-'),
             Column::make('r_user_speed')->title('تقييم السرعه')->content('-'),
-
 
             Column::make('can_delivery')->title('امكانيه التوصيل'),
             Column::make('created_at')->title('تاريخ التسجيل'),

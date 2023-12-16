@@ -225,6 +225,24 @@
     */
 
 
+    img.logo50 {
+        width: 250px;
+        height: 42px;
+        object-fit: contain;
+        /* background: #f36f0f; */
+    }
+
+    .sidebar-dark .nav-sidebar {
+        --nav-sidebar-divider-color: #f3690d;
+        --nav-link-color: rgba(255, 255, 255, 0.85);
+        --nav-link-hover-color: #fff;
+        --nav-link-hover-bg: #f3690d;
+        --nav-link-hover-active-bg: rgba(var(--white-rgb), 0.15);
+        --nav-link-active-color: var(--white);
+        --nav-link-active-bg: #f3690d;
+        --nav-link-disabled-color: rgba(var(--white-rgb), 0.5);
+    }
+
 </style>
 
 

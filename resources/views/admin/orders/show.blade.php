@@ -719,7 +719,7 @@
                                         <td> {{ $transaction->updated_at->toDateTimeString()  }}</td>
                                         <td>
 
-                                            <a  class="btn btn-yellow   border-0">
+                                            <a  class="btn btn-yellow   border-0" href="{{ route('admin.transactions.show' ,$transaction) }}">
                                                 تفاصيل / Log
                                             </a>
 

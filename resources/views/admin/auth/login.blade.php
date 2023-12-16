@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Limitless - Responsive Web Application Kit by Eugene Kopyov</title>
+    <title>طبختنا | تسجيل الدخول</title>
     <!-- Global stylesheets -->
     <link href="{{asset('assets/fonts/inter/inter.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/icons/phosphor/styles.min.css')}}" rel="stylesheet" type="text/css">
@@ -17,8 +17,40 @@
     <!-- Theme JS files -->
     <script src="{{asset('assets/js/app.js')}}"></script>
     <!-- /theme JS files -->
+
+    <style>
+        button.btn.btn-primary.w-100 {
+            background: #f2670f;
+            --btn-color: #fff;
+            --btn-bg: #f2670f;
+            --btn-border-color: #f2670f;
+            --btn-hover-color: #fff;
+            --btn-hover-bg: #f2670f;
+            --btn-hover-border-color: #f2670f;
+            --btn-focus-shadow-rgb: 48,150,255;
+            --btn-active-color: #fff;
+            --btn-active-bg: #f2670f;
+            --btn-active-border-color: #f2670f;
+            --btn-active-shadow: inset 0 0 0 0 transparent;
+            --btn-disabled-color: #fff;
+            --btn-disabled-bg: #f2670f;
+            --btn-disabled-border-color: #f2670f;
+        }
+
+        .card.mb-0 {
+            border: 1px solid #f1640f;
+            box-shadow: 0px 5px 9px -3px #f1640f;
+            border-radius: 0 !important;
+        }
+        body {
+            margin-bottom: 8px;
+            background: #fff;
+        }
+    </style>
 </head>
-<body class="bg-dark">
+<body  >
+
+
 <!-- Page content -->
 <div class="page-content">
     <!-- Main content -->
@@ -39,7 +71,7 @@
                         <div class="card-body">
                             <div class="text-center mb-3">
                                 <div class="d-inline-flex align-items-center justify-content-center mb-4 mt-2">
-                                    <img src="../../../assets/images/logo_icon.svg" class="h-48px" alt="">
+                                    <img src="{{asset('logo50.png')}}" class="h-48px" alt="">
                                 </div>
                                 <h5 class="mb-0">Login to your account</h5>
                                 <span class="d-block text-muted">Enter your credentials below</span>

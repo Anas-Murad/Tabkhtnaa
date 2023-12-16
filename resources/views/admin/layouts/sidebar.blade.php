@@ -343,6 +343,12 @@
                 <li class="nav-item nav-item-submenu">
                     <a href="#" class="nav-link"><i class="ph-users-three"></i> <span> اعدادات التطبيق</span></a>
                     <ul class="nav-group-sub collapse">
+
+                        <li class="nav-item"><a href="{{ route('admin.settings.choose_country' ,'all') }}"
+                                                class="nav-link"> اعدادات ال Config كامله</a></li>
+
+
+
                         <li class="nav-item"><a href="{{ route('admin.settings.choose_country' ,'sys_percentage') }}"
                                                 class="nav-link">عموله التطبيق</a></li>
                         <li class="nav-item"><a href="{{ route('admin.settings.choose_country' ,'points') }}"
@@ -356,6 +362,9 @@
                                 النظام</a></li>
                     </ul>
                 </li>
+
+
+
                 <li class="nav-item">
                     <a href="{{url('telescope')}}" class="nav-link">
                         <i class="ph-monitor"></i>
