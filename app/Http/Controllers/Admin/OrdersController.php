@@ -7,15 +7,22 @@ use App\DataTables\UsersDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
-    public function index($status=null , $transactionStatus=null , $userID =null)
+    public function index(Request $request , $status=null , $transactionStatus=null , $userID =null)
     {
 
         $pageTitle = "جميع الطلبات" ;
         $user =  null;
-
+        $user_id =  null;
+        $user_type =  null;
+        if ($request->user_id)
+        {
+            $user_id = $request->user_id;
+            $user_type = $request->user_type;
+        }
         if ($userID){
             $user = User::findOrFail($userID) ;
             switch ($user->type){
@@ -25,20 +32,12 @@ class OrdersController extends Controller
 
                 case 'delivery':
                     $pageTitle = " طلبات الموصل " .$user->name;
-
                     break;
-
                 case 'chef':
                     $pageTitle = " طلبات الطاهي " .$user->name;
                     break;
-
             }
-
-
         }
-
-
-
 
         switch ($status){
 
@@ -86,7 +85,6 @@ class OrdersController extends Controller
                 break;
 
         }
-
         switch ($transactionStatus){
 
             case 'all' :
@@ -106,8 +104,8 @@ class OrdersController extends Controller
 
 
         return
-            (new OrdersDataTable($status , $transactionStatus  ,$userID , $user))
-           ->render('admin.orders.index'  , compact('pageTitle' , 'transactionStatus' ,'status' ,'user'));
+            (new OrdersDataTable($status , $transactionStatus  ,$userID , $user , $user_id , $user_type))
+           ->render('admin.orders.index'  , compact('user_type','user_id','pageTitle' , 'transactionStatus' ,'status' ,'user'));
 
     }
     public function show($id)

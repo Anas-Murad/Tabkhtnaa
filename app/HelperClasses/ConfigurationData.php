@@ -33,15 +33,6 @@ function ConfigurationData(){
                 'title' => "حد عقوبات الموصل لبلوغ التمييز",
             ],
             [
-                'config_key' => 'distinction_delivery_rate',
-                'config_value' => 5,
-                'config_bool' => null,
-                'title' => "حد تقييم الموصل لبلوغ التمييز",
-            ],
-
-
-
-            [
                 'config_key' => 'distinction_chef_orders',
                 'config_value' => 5,
                 'config_bool' => null,
@@ -61,14 +52,8 @@ function ConfigurationData(){
                 'config_bool' => null,
                 'title' => "حد عقوبات الطاهي لبلوغ التمييز",
             ],
-            [
-                'config_key' => 'distinction_chef_rate',
-                'config_value' => 5,
-                'config_bool' => null,
-                'title' => "حد تقييم الطاهي لبلوغ التمييز",
-            ],
-
         ],
+
         'sys_percentage'=>[
             [
                 'config_key' => 'percentage_from_delivery',
@@ -86,8 +71,33 @@ function ConfigurationData(){
             ],
 
         ],
+
+        'tax'=>[
+            [
+                'config_key' => 'order_tax',
+                'config_value' => 15,
+                'config_bool' => null,
+                'title' => "الصريبه على الطلب بالمئه",
+            ],
+        ],
+
+
     ];
 }
 
+
+function ConfigurationTransClassification($classification){
+
+
+    return (
+    [
+        "points"=>"النقاط" ,
+"distinction"=>"بلوغ التمييز" ,
+"sys_percentage"=>"نسبه النظام" ,
+"tax"=>"الضرائب" ,
+    ]
+    )[$classification];
+
+}
 
 //

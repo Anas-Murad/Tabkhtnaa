@@ -7,11 +7,12 @@
         </div>
 
         <div class="navbar-brand flex-1 flex-lg-0">
-            <a href="index.html" class="d-inline-flex align-items-center">
-                <img src="{{asset('assets/images/logo_icon.svg')}}" alt="">
-                <img src="{{asset('assets/images/logo_text_light.svg')}}" class="d-none d-sm-inline-block h-16px ms-3" alt="">
+            <a href="{{ route('admin.dashboard') }}" class="d-inline-flex align-items-center">
+                <img src="{{asset('logo50.png')}}" alt="" class="logo50"  >
+{{--                <img src="{{asset('assets/images/logo_text_light.svg')}}" class="d-none d-sm-inline-block h-16px ms-3" alt="">--}}
             </a>
         </div>
+{{--
 
         <ul class="nav flex-row">
             <li class="nav-item d-lg-none">
@@ -185,8 +186,9 @@
                 </div>
             </li>
         </ul>
+--}}
 
-        <div class="navbar-collapse justify-content-center flex-lg-1 order-2 order-lg-1 collapse" id="navbar_search">
+      {{--  <div class="navbar-collapse justify-content-center flex-lg-1 order-2 order-lg-1 collapse" id="navbar_search">
             <div class="navbar-search flex-fill position-relative mt-2 mt-lg-0 mx-lg-3">
                 <div class="form-control-feedback form-control-feedback-start flex-grow-1" data-color-theme="dark">
                     <input type="text" class="form-control bg-transparent rounded-pill" placeholder="Search" data-bs-toggle="dropdown">
@@ -376,7 +378,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>--}}
 
         <ul class="nav flex-row justify-content-end order-1 order-lg-2">
             <li class="nav-item ms-lg-2">
@@ -389,7 +391,9 @@
             <li class="nav-item nav-item-dropdown-lg dropdown ms-lg-2">
                 <a href="#" class="navbar-nav-link align-items-center rounded-pill p-1" data-bs-toggle="dropdown">
                     <div class="status-indicator-container">
-                        <img src="{{asset(Auth::guard('admin')->user()->profile_image) ?? asset('assets/images/demo/users/face1.jpg')}}" class="w-32px h-32px rounded-pill" alt="">
+                        <img src="{{/*asset(Auth::guard('admin')->user()->profile_image) ??*/ asset('assets/images/demo/users/face1.jpg')}}" class="w-32px h-32px rounded-pill" alt="">
+
+
                         <span class="status-indicator bg-success"></span>
                     </div>
                     <span class="d-none d-lg-inline-block mx-lg-2">{{Auth::guard('admin')->user()->name}}</span>
@@ -398,17 +402,12 @@
                 <div class="dropdown-menu dropdown-menu-end">
                     <a href="{{route('admin.profile.edit')}}" class="dropdown-item">
                         <i class="ph-user-circle me-2"></i>
-                        My profile
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="ph-envelope-open me-2"></i>
-                        My inbox
-                        <span class="badge bg-primary rounded-pill ms-auto">26</span>
+                     اعداد الملف الشخصي
                     </a>
                     <div class="dropdown-divider"></div>
                     <a href="{{ route('admin.logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="ph-sign-out me-2"></i>
-                        Logout
+                     تسجيل الخروج
                     </a>
                     <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
                         @csrf

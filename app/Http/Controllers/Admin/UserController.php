@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateProfileRequest;
 use App\Models\Country;
+use App\Models\Order;
 use App\Models\User;
 use App\Traits\FCMTrait;
 use App\Traits\HelperTrait;
@@ -115,7 +116,12 @@ class UserController extends Controller
                 case 'rejected':
                     $title='تم رفض عضويتك ';
                     $body='تم رفض حسابك على طبختنا , يرجى مراجعه التفاصيل ';
+                    $user->rejection_count = $user->rejection_count + 1 ;
+                    $user->save() ;
+
                     break;
+
+
 
                 case 'blocked':
                     $title='تم حظؤ حسابك';
@@ -129,6 +135,14 @@ class UserController extends Controller
                 'body' =>$body,
                 'screen' =>'account',
             ];
+            $user->userStatuses()->create([
+                'status'=>request()->input('account_status') ,
+                'account_comment'=>request()->input('account_comment') ,
+            ]) ;
+
+
+
+
         }
 
 
@@ -158,11 +172,12 @@ class UserController extends Controller
         }
 
 
-        $user->update(request()->only(
+        $data = request()->only(
             'account_status',
-            'can_delivery',
             'account_comment',
-        )) ;
+        ) ;
+        $data['can_delivery'] = request()->boolean('can_delivery');
+        $user->update($data) ;
 
 
         foreach ($Notifications as $Notification)
@@ -174,7 +189,6 @@ class UserController extends Controller
 
     public function edit($id = Null)
     {
-
         return $this->show($id);
         $user = User::findOrFail($id);
 
@@ -212,8 +226,14 @@ class UserController extends Controller
             },
             'documents',
         ]);
-        if ($user->type=='type')
+        if ($user->type=='chef')
             $user->loadRates();
-        return view('admin.users.show' , compact('user'));
+        if ($user->type == 'client')
+           $user_order = Order::where('user_id' , $user->id)->where('status', 'delivered')->count();
+        elseif ($user->type == 'delivery')
+            $user_order = Order::where('delivery_id' , $user->id)->where('status', 'delivered')->count();
+        else
+            $user_order = Order::where('chef_id' , $user->id)->where('status', 'delivered')->count();
+        return view('admin.users.show' , compact('user' , 'user_order'));
     }
 }

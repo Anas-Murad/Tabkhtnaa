@@ -1,7 +1,7 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h5 class="mb-0">العمليات</h5>
+            <h5 class="mb-0">الملف الشخصي</h5>
         </div>
         <div class="card-body border-top">
             <div class="row gx-1 gy-1">
@@ -41,19 +41,25 @@
                     </a>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit"  class="btn btn-primary d-block w-100 border-0">
-                       التقيم له
-                    </button>
+                    <a href="{{route('admin.evaluation.index' , ['user_id'=>$user->id])}}">
+                        <button type="submit"  class="btn btn-primary d-block w-100 border-0">
+                            التقيم له
+                        </button>
+                    </a>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit"   class="btn btn-yellow d-block w-100 border-0">
-                       التميز له
-                    </button>
+                    <a href="{{ route('admin.distinction.index',[ 'user_id'=> $user->id]) }}">
+                        <button type="submit"   class="btn btn-yellow d-block w-100 border-0">
+                            التميز له
+                        </button>
+                    </a>
                 </div>
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-indigo d-block w-100 border-0">
-                        حركات الطلبات الخاصة به
-                    </button>
+                    <a href="{{route('admin.orders.index' , ['user_id'=>$user->id , 'user_type'=>$user->type])}}">
+                        <button type="button" class="btn btn-indigo d-block w-100 border-0">
+                            حركات الطلبات الخاصة به
+                        </button>
+                    </a>
                 </div>
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-danger d-block w-100 border-0">

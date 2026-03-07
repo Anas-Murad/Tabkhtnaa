@@ -5,10 +5,6 @@
 
 <script src="{{asset('assets/demo/demo_configurator.js')}}"></script>
 <script src="{{asset('assets/js/bootstrap/bootstrap.bundle.min.js')}}"></script>
-
-
-
-
 <!-- /core JS files -->
 
 <!-- Theme JS files -->
@@ -28,8 +24,17 @@
 <script src="{{asset('assets/js/vendor/notifications/sweet_alert.min.js')}}"></script>
 
 
+
+<!-- Theme JS files -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbF9O9Ks9_-QNWHi2SFxLqLUBOwrMyzXk"></script>
+
+
 <script src="{{asset('assets/js/app.js')}}"></script>
 <script src="{{asset('assets/demo/pages/form_layouts.js')}}"></script>
+
+
+
+
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap" rel="stylesheet">
 
 <style>
@@ -144,6 +149,19 @@
         width: 308px!important;
     }
 
+
+    .swal2-textarea {
+        padding: 9px 15px;
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    label.swal2-input-label {
+        font-weight: bold;
+        margin-top: 15px;
+    }
+
+
     .contented_div {
         display: flex;
         align-items: center;
@@ -206,6 +224,24 @@
 
     */
 
+
+    img.logo50 {
+        width: 250px;
+        height: 42px;
+        object-fit: contain;
+        /* background: #f36f0f; */
+    }
+
+    .sidebar-dark .nav-sidebar {
+        --nav-sidebar-divider-color: #f3690d;
+        --nav-link-color: rgba(255, 255, 255, 0.85);
+        --nav-link-hover-color: #fff;
+        --nav-link-hover-bg: #f3690d;
+        --nav-link-hover-active-bg: rgba(var(--white-rgb), 0.15);
+        --nav-link-active-color: var(--white);
+        --nav-link-active-bg: #f3690d;
+        --nav-link-disabled-color: rgba(var(--white-rgb), 0.5);
+    }
 
 </style>
 

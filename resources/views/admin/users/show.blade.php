@@ -209,6 +209,13 @@
                                         </tr>
                                     @endif
 
+                                    @if($user->rejection_count)
+                                        <tr>
+                                            <th class="text-nowrap" scope="row"> عدد مرات الرفض </th>
+                                            <td>{{$user->rejection_count}}</td>
+                                        </tr>
+                                    @endif
+
 
 
 
@@ -222,6 +229,12 @@
                                         <tr>
                                             <th class="text-nowrap" scope="row"> تاريخ التسجيل</th>
                                             <td>{{$user->created_at}}</td>
+                                        </tr>
+                                    @endif
+                                    @if($user->created_at)
+                                        <tr>
+                                            <th class="text-nowrap" scope="row">عدد الطلبات المنجزة</th>
+                                            <td>{{$user_order}}</td>
                                         </tr>
                                     @endif
                                     @if($user->updated_at)
@@ -338,7 +351,7 @@
         @break
 
         @case('active')
-        <span class="text-bg-success"> نسط</span>
+        <span class="text-bg-success"> نشط</span>
         @break
 
         @case('rejected')
