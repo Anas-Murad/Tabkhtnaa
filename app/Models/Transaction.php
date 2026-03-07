@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transaction extends Model
@@ -30,20 +28,9 @@ class Transaction extends Model
     protected $casts =[
         'tried_again'=>'boolean',
         'tracking_data'=>'array',
-        'webhook'=>'array',
     ];
 
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-
-    public function transferRecords(): HasMany
-    {
-        return $this->hasMany(TransferRecord::class, 'transaction_id');
-    }
 
 
 }

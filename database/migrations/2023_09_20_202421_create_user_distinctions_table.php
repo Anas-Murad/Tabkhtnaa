@@ -18,7 +18,7 @@ return new class extends Migration {
 
             $table->date('from_date');
             $table->date('to_date');
-            $table->enum('status' ,['new' , 'active' ,'ended' ,'rejected']);
+            $table->enum('status' ,['new' , 'active' ,'ended']);
             $table->timestamps();
         });
     }

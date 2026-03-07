@@ -284,11 +284,7 @@ class ChefController extends Controller
                     'order_status' => 'on_way',
                 ]);
                 break;
-
-
         }
-
-
 
 
 //        "expected_order_time": null,

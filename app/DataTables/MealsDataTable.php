@@ -47,18 +47,6 @@ class MealsDataTable extends DataTable
 
                 return $meal->is_active == 1 ? "<span class='badge bg-success text-white'> 'Active' </span>" : " <span class='badge bg-danger  text-white'> 'In Active' </span>";
             })
-            ->editColumn('admin_status' , function ($meal){
-
-                return $meal->admin_status == 'confirmed' ?
-                    "<span class='badge bg-success text-white'>Confirmed </span>" :
-
-                    (
-                    $meal->admin_status == 'new' ?
-                        " <span class='badge bg-warning  text-white'> New </span>" :
-                         " <span class='badge bg-danger  text-white'> Disabled </span>"
-
-                    ) ;
-            })
             ->editColumn('admin_note' , function ($meal){
                 return $meal->admin_note ?? '-';
             })
@@ -91,7 +79,6 @@ class MealsDataTable extends DataTable
                 'image',
                 'type',
                 'is_active',
-                'admin_status',
                 'admin_note',
                 'preparation_time',
                 'days',

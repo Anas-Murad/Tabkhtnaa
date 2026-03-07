@@ -1,8 +1,8 @@
 <div class="navbar navbar-sm navbar-footer border-top">
     <div class="container-fluid">
-        <span>&copy; {{date('Y')}} <a href="">طبختنا | لوحه التحكم</a></span>
+        <span>&copy; 2022 <a href="https://themeforest.net/item/limitless-responsive-web-application-kit/13080328">Limitless Web App Kit</a></span>
 
-     {{--   <ul class="nav">
+        <ul class="nav">
             <li class="nav-item">
                 <a href="https://kopyov.ticksy.com/" class="navbar-nav-link navbar-nav-link-icon rounded" target="_blank">
                     <div class="d-flex align-items-center mx-md-1">
@@ -28,7 +28,5 @@
                 </a>
             </li>
         </ul>
-
-        --}}
     </div>
 </div>

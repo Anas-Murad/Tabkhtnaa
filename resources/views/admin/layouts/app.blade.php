@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>لوحه التحكم : نظام طبختنا</title>
+    <title>Limitless - Responsive Web Application Kit by Eugene Kopyov</title>
     @include('admin.layouts.header')
     @yield('cssStyle')
 
@@ -29,7 +29,7 @@
         <div class="content-inner">
             <!-- Page header -->
             @auth('admin')
-{{--                @include('admin.layouts.pagesHeader')--}}
+                @include('admin.layouts.pagesHeader')
 
 
                 @yield('content')

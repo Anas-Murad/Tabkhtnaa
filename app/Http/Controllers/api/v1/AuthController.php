@@ -154,7 +154,7 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $data = $request->safe()->except('password', 'password_confirmation', 'profile_image', 'profile_image_url' );
+        $data = $request->safe()->except('password', 'password_confirmation', 'profile_image', 'profile_image_url');
         $data['password'] = bcrypt($request->password);
         $data['username'] = null;
         $data['source'] = 'normal';

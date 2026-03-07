@@ -53,14 +53,11 @@ class Cart extends Model
             }
         ]);
 
-
-        // toDo اسعار التوصيل
         $this->setAppends([
             'total',
             'tax',
             'delivery_fees',
         ]);
-
         return $this;
     }
 }

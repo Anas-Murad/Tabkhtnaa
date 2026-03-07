@@ -69,7 +69,7 @@
 
                                         <div class="col-md-2">
                                             <div class="mb-3">
-                                                <label class="form-label">حاله اونلاين / اوفلاين </label>
+                                                <label class="form-label">online_status</label>
                                                 <select name="online_status" id="online_status"
                                                         class="select2 form-control form-control-select2"
                                                         data-fouc>
@@ -82,20 +82,17 @@
                                             </div>
                                         </div>
 
-
-
-
                                         @if(!isset($type) || !$type)
                                             <div class="col-md-2">
                                                 <div class="mb-3">
-                                                    <label class="form-label">نوع الحساب</label>
+                                                    <label class="form-label">type</label>
                                                     <select name="type" id="type"
                                                             class="select2 form-control form-control-select2"
                                                             data-fouc>
                                                         <option value="">الكل</option>
-                                                        <option value="client">{{__('messages.client')}}</option>
-                                                        <option value="delivery">{{__('messages.delivery')}}</option>
-                                                        <option value="chef">{{__('messages.chef')}}</option>
+                                                        <option value="client">client</option>
+                                                        <option value="delivery">delivery</option>
+                                                        <option value="chef">chef</option>
                                                     </select>
                                                 </div>
                                             </div>

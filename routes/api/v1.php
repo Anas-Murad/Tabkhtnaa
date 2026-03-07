@@ -116,8 +116,6 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
             Route::get('list', [UserOrderController::class, 'list']);
             Route::post('cancel', [UserOrderController::class, 'cancel']);
         });
-
-
     });
     Route::group(['prefix' => 'maker'], function () {
         Route::group(['prefix' => 'additions-categories'], function () {
@@ -181,14 +179,10 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
         'prefix' => 'notification',
         'controller' =>\App\Http\Controllers\api\v1\NotificationController::class,
     ], function () {
-
         Route::get( 'list'  ,'list');
         Route::post( 'seen'  ,'seen');
         Route::post( 'seen_all'  ,'seen_all');
         Route::post( 'delete_all'  ,'delete_all');
-
     });
-
-
 
 });

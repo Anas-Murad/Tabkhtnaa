@@ -87,27 +87,8 @@ class UsersDataTable extends DataTable
 
             ->editColumn('action', function ($user) {
                 $DeleteFunction = "DeleteFunction('" . route("users.destroy", $user) . "')";
-                //<a href="#" class="dropdown-item" onclick="' . $DeleteFunction . '" > <i class="ph-trash me-2"></i> Delete Account</a>
                 $EditLink = (route('users.edit' , $user));
-                //   <a href="$EditLink" class="dropdown-item"> <i class="ph-pencil me-2"></i> Edit </a>
-
-
-
-                $btns =" <a href='".(route('users.show' , $user))."' class='dropdown-item'> <i class='ph-eye me-2'></i> التفاصيل</a>";
-
-
-                if($user->type =='delivery' || $user->type =='chef')
-
-                $btns .=" <a href='".(route('admin.rating.index' , $user->id))."' class='dropdown-item'> <i class='ph-star-four me-2'></i> التقييمات</a>";
-                $btns .=" <a href='".(route('users.show' , $user))."' class='dropdown-item'> <i class='ph-money me-2'></i> الايرادات</a>";
-
-                $btns .=" <a href='".(route('admin.orders.index' , [
-                        'status'=>'all',
-                        'transactionStatus'=>'all',
-                        'userID'=>$user->id,
-                    ]))."' class='dropdown-item'> <i class='ph-shopping-cart me-2'></i>الطلبات</a>";
-
-
+                $ShowLink = (route('users.show' , $user));
                 return <<<HTML
                 <div class="d-inline-flex">
                         <div class="dropdown">
@@ -115,7 +96,9 @@ class UsersDataTable extends DataTable
                                 <i class="ph-list"></i>
                             </a>
                         <div class="dropdown-menu dropdown-menu-end">
-                         $btns
+                            <a href="$EditLink" class="dropdown-item"> <i class="ph-pencil me-2"></i> Edit </a>
+                            <a href="$ShowLink" class="dropdown-item"> <i class="ph-eye me-2"></i> Show Information </a>
+                            <a href="#" class="dropdown-item" onclick="' . $DeleteFunction . '" > <i class="ph-trash me-2"></i> Delete Account</a>
                         </div>
                     </div>
                 </div>
@@ -156,8 +139,6 @@ class UsersDataTable extends DataTable
                 if ($this->request->filled('city_id')) $r['city_id'] = $this->request->country_id;
                 $q->whereRelation('userAddress', $r);
             })
-
-
             ->when($this->request->filled('from_date'), function ($q) {
                 $q->where('created_at', '>=', $this->request()->input('from_date'));
             })
@@ -175,30 +156,24 @@ class UsersDataTable extends DataTable
                 });
 
             })
-            ->when($this->request->filled('gender'), function ($q) {
-                $q->where('gender', $this->request->input('gender'));
+            ->when($this->gender, function ($q) {
+                $q->where('gender', $this->gender);
             })
-            ->when($this->request->filled('source'), function ($q) {
-                $q->where('source', $this->request->input('source'));
+            ->when($this->source, function ($q) {
+                $q->where('source', $this->source);
             })
-            ->when($this->request->filled('online_status'), function ($q) {
-                $q->where('online_status', $this->request->input('online_status'));
+            ->when($this->online_status, function ($q) {
+                $q->where('online_status', $this->online_status);
             })
-            ->when($this->request->filled('type'), function ($q) {
-                $q->where('type', $this->request->input('type'));
+            ->when($this->type, function ($q) {
+                $q->where('type', $this->type);
             })
             ->when($this->can_delivery, function ($q) {
-                $q->where('can_delivery', $this->request->input('can_delivery'));
+                $q->where('can_delivery', $this->can_delivery);
             })
-            ->when($this->request->filled('account_status'), function ($q) {
-                $q->where('account_status', $this->request->input('account_status'));
+            ->when($this->account_status, function ($q) {
+                $q->where('account_status', $this->account_status);
             })
-
-
-            ->select('users.*')
-
-            ->selectRaw( "CASE WHEN users.type ='chef'  THEN (SELECT AVG( rating_chef) FROM `ratings` where chef_id = users.id)  ELSE (SELECT AVG( rating_delivery) FROM `ratings` where delivery_id = users.id)   END as r_user")
-            ->selectRaw( "CASE WHEN users.type ='chef'  THEN (SELECT AVG( rating_speed_chef) FROM `ratings` where chef_id = users.id)  ELSE (SELECT AVG(rating_speed_delivery) FROM `ratings` where delivery_id = users.id)   END as r_user_speed")
 
             ;
     }
@@ -215,10 +190,10 @@ class UsersDataTable extends DataTable
             ->columns($this->getColumns())
 
             ->ajaxWithForm(url()->current(), '#filter_form')
-//          ->minifiedAjax()
-//          ->dom('<"datatable-header justify-content-start"f<"ms-sm-auto"l><"ms-sm-3"B>><"datatable-scroll-wrap"t><"datatable-footer"ip>')
-//          ->selectStyleSingle()
-            ->orderBy(0)
+//            ->minifiedAjax()
+//                    ->dom('<"datatable-header justify-content-start"f<"ms-sm-auto"l><"ms-sm-3"B>><"datatable-scroll-wrap"t><"datatable-footer"ip>')
+//                    ->orderBy(1)
+//                    ->selectStyleSingle()
             ->buttons([
                 Button::make('excel')->className('btn btn-dark')->text('<i class="ph-microsoft-excel-logo"></i> EXCEL'),
                 Button::make('csv')->className('btn btn-info')->text('<i class="ph-file-csv"></i> CSV'),
@@ -241,7 +216,6 @@ class UsersDataTable extends DataTable
     {
         return [
             Column::make('id')->title('#ID'),
-
             Column::make('profile_image')->title('صوره'),
             Column::make('name')->title('الاسم'),
             Column::make('username')->title('اسم المتسخدم'),
@@ -256,9 +230,6 @@ class UsersDataTable extends DataTable
             Column::make('account_status')->title('حالة الحساب')
                 ->visible(!$this->status),
 
-            Column::make('rejection_count')->title('عدد مرات الرفض')->content('-'),
-            Column::make('r_user')->title('التقييم')->content('-'),
-            Column::make('r_user_speed')->title('تقييم السرعه')->content('-'),
 
             Column::make('can_delivery')->title('امكانيه التوصيل'),
             Column::make('created_at')->title('تاريخ التسجيل'),

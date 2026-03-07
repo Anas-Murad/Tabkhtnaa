@@ -12,11 +12,8 @@ $randomId = rand(10000,99999).time()
                 @if($with_cities)
                     onchange="changeCountry(this)"
                 @endif
-
-
-                    @if($required) required @endif
                 data-fouc>
-            <option value="">الدول</option>
+            <option value="">الكل</option>
             @foreach($countries as $Country)
                 <option value="{{$Country->id}}">{{$Country->native}} - {{$Country->name}} </option>
             @endforeach
