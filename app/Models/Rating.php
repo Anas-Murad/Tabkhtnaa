@@ -14,7 +14,6 @@ class Rating extends Model
       'id',
       'user_id',
       'chef_id',
-      'delivery_id',
       'order_id',
       'rating_chef',
       'rating_delivery',
@@ -31,9 +30,5 @@ class Rating extends Model
     public function chef()
     {
         return $this->belongsTo(User::class , 'chef_id');
-    }
-    public function order()
-    {
-        return $this->belongsTo(Order::class , 'order_id');
     }
 }

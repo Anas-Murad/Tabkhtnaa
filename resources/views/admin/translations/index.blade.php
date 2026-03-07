@@ -161,34 +161,6 @@
     </script>
 
     <script>
-        $(document).ready(function () {
-            // When the form is submitted
-            $('#create').submit(function (e) {
-                e.preventDefault();
-                console.log($(this).id)
-                var formData = $(this).serialize();
-                var url = '{{ route("translations.store") }}';
-                $.ajax({
-                    type: 'post',
-                    url: url,
-                    data: formData,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            location.reload();
-                        } else {
-                            alert('An error occurred. Please try again.');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error(error);
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
         function createTranslations(){
             $('#createTransactionModal').modal('show');
         }

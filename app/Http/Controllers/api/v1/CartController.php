@@ -117,8 +117,8 @@ class CartController extends Controller
                 }),
             ],
         ]);
-        $id =  request()->cart_item_id ;
-        CartMeal::whereUserId( $user_id )->delete($id);
+       $id =  request()->cart_item_id ;
+        CartMeal::whereUserId( $user_id )->destroy($id);
         $cart = Cart::whereUserId( $user_id )->latest()->first();
         if ($cart){
             return $this->returnDataArray($cart->getUpdatedData() , __('messages.cart item was deleted successfully'));

@@ -18,6 +18,7 @@ return new class extends Migration
 
              $table->date('last_process_at')->nullable();
              $table->date('last_distinction_at')->nullable();
+             $table->date('last_points_transfer_at')->nullable();
 
 
 
