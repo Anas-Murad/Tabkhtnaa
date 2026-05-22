@@ -13,8 +13,18 @@ class TranslateController extends Controller
 
     public function getAllTranslate()
     {
-        $translates = Translate::all();
-        return $this->returnDataArray($translates,'Success Get All Translate');
+        $lang = app()->getLocale();
+        if (!in_array($lang, ['ar', 'en', 'fr', 'tr'], true)) {
+            $lang = 'ar';
+        }
+
+        $map = [];
+        foreach (Translate::all() as $row) {
+            $value = $row->{$lang} ?? $row->en ?? $row->ar ?? $row->key;
+            $map[$row->key] = $value;
+        }
+
+        return $this->returnDataArray($map, 'Success Get All Translate');
     }
 
 

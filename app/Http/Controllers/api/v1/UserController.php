@@ -46,8 +46,22 @@ class UserController extends Controller
                 $q->active();
             }, 'userAddress'
         ])->find( $request->id);
+        if (!$chef) {
+            return $this->returnError(__('messages.not_found_data'));
+        }
         $chef->loadRates();
         return $this->returnDataArray($chef);
+    }
+
+    public function create_or_update(locationRequest $request)
+    {
+        $data = $request->validated();
+        $data['user_id'] = auth()->id();
+        $location = UserLiveLocation::updateOrCreate(
+            ['user_id' => $data['user_id']],
+            $data
+        );
+        return $this->returnDataArray($location);
     }
 
 }

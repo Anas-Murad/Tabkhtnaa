@@ -12,11 +12,11 @@ class setLangMiddleware
 
 
 
-        //  todo 45
-        if ($request->filled('lang')   &&  in_array($request->filled('lang') , ['ar' , 'en']) ){
-            app()->setLocale($request->lang);
-        }else{
-            app()->setLocale('ae');
+        $lang = $request->input('lang') ?? $request->header('lang');
+        if ($lang && in_array($lang, ['ar', 'en'], true)) {
+            app()->setLocale($lang);
+        } else {
+            app()->setLocale('ar');
         }
         return $next($request);
     }

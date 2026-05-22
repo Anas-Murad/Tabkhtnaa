@@ -199,7 +199,7 @@ class MealController extends Controller
                 });
         })->join('user_addresses', 'meals.user_id', '=', 'user_addresses.user_id')
             ->simplePaginate(10);
-       return $this->returnDataArray($meals ,'Success Get All Meals');
+       return $this->returnPaginateData($meals);
     }
     public function user_get_meal(Request $request)
     {

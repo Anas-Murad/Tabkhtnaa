@@ -76,7 +76,7 @@ class User extends Authenticatable
 
     public function galleryKitchen()
     {
-        return $this->hasMany(Gallery::class)->where('type', '!=', 'galleryKitchen');
+        return $this->hasMany(Gallery::class)->where('type', 'kitchen');
     }
 
 

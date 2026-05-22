@@ -14,9 +14,10 @@ class ChefRequest extends FormRequest
     public function rules()
     {
         return [
-            'lat' => 'required',
-            'long' => 'required',
-            'radius' => 'required',
+            'lat' => 'required|numeric',
+            'long' => 'required|numeric',
+            'radius' => 'nullable|numeric',
+            'search' => 'nullable|string',
         ];
     }
 

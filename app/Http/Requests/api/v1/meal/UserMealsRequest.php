@@ -14,9 +14,14 @@ class UserMealsRequest extends FormRequest
     public function rules()
     {
         return [
-            'lat' => 'required',
-            'long' => 'required',
-            'radius' => 'required',
+            'lat' => 'required|numeric',
+            'long' => 'required|numeric',
+            'radius' => 'nullable|numeric',
+            'category_id' => 'nullable|integer',
+            'search' => 'nullable|string',
+            'is_offer' => 'nullable|boolean',
+            'min_price' => 'nullable|numeric',
+            'max_price' => 'nullable|numeric',
         ];
     }
 

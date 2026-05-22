@@ -18,6 +18,7 @@ use App\Http\Controllers\api\v1\SendSMSController;
 use App\Http\Controllers\api\v1\UserController;
 use App\Http\Controllers\api\v1\SanctionController;
 use App\Http\Controllers\api\v1\RatingController;
+use App\Http\Controllers\api\v1\LanguagesController;
 use App\Http\Controllers\api\v1\TranslateController;
 use App\Http\Controllers\api\v1\UserLiveLocationController;
 use App\Http\Controllers\api\v1\UserOrderController;
@@ -38,6 +39,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('pusher', [PusherController::class, 'test']);
 Route::get('countries', [CountriesController::class, 'index'])->middleware('set_lang');
+Route::get('languages', [LanguagesController::class, 'index'])->middleware('set_lang');
 Route::get('translate', [TranslateController::class, 'getAllTranslate'])->middleware('set_lang');
 
 Route::group(['prefix' => 'auth', 'middleware' => ['set_lang']], function () {
