@@ -27,6 +27,18 @@ class LanguagesController extends Controller
                 'native' => 'English',
                 'rtl' => false,
             ],
+             [
+                'code' => 'fr',
+                'name' => 'Français',
+                'native' => 'Français',
+                'rtl' => false,
+            ],
+            [
+                'code' => 'tr',
+                'name' => 'Turkish',
+                'native' => 'Türkçe',
+                'rtl' => false,
+            ],
         ];
 
         return $this->returnDataArray($data, 'Success Get Languages');

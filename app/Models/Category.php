@@ -19,10 +19,15 @@ class Category extends Model
 
     public function getIconAttribute($key)
     {
-        if ($key != null)
-            return asset($key);
-        else
+        if ($key === null || $key === '') {
             return $key;
+        }
+
+        if (str_starts_with($key, 'http://') || str_starts_with($key, 'https://')) {
+            return $key;
+        }
+
+        return asset($key);
     }
 
     public  function scopeTrans($q){

@@ -18,6 +18,11 @@ class ContentController extends Controller
             'key',
             $request->lang ? $request->lang.'_text as text' : 'en_text as text',
         )->where('key' , 'term_and_condition')->first();
+
+        if (!$term_and_condition) {
+            return $this->returnDataArray(['text' => '']);
+        }
+
         return $this->returnDataArray($term_and_condition);
     }
 }

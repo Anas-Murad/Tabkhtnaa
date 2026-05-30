@@ -9,7 +9,6 @@ class OnlineStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|numeric',
             'online_status' => 'required|in:online,busy,unavailable,available',
         ];
     }

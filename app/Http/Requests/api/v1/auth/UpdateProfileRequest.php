@@ -18,7 +18,7 @@ class UpdateProfileRequest extends FormRequest
             'country_code' => 'required|exists:countries,phonecode',
             'name' => 'required|string',
             'dob' => 'required|date',
-            'def_lang' => 'in:ar,en',
+            'def_lang' => 'nullable|in:ar,en,fr',
             'mobile' =>['required','numeric' ,Rule::unique('users')->where('country_code' ,request()->country_code) ->ignore($this->user()->id)] ,
             'gender' => 'required|in:male,female,other',
         ];
