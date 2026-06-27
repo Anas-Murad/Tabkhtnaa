@@ -46,8 +46,7 @@
                                                         class="select2 form-control form-control-select2" data-fouc>
                                                     <option value="">الكل</option>
                                                     <option value="male">ذكر</option>
-                                                    <option value="female">انثى</option>
-                                                    <option value="other">اخرى</option>
+                                                    <option value="female">أنثى</option>
                                                 </select>
                                             </div>
                                         </div>

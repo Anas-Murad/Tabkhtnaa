@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 
 class ConversationMessage extends Model
 {
+    use Auditable;
     protected $fillable = [
         'conversation_id',
         'user_id',

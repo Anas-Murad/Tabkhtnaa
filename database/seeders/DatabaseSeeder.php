@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             AdminSeeder::class,
             ConfigurationSeeder::class,
+            AccessoriesSeeder::class,
+            BusinessSettingsSeeder::class,
             DemoDataSeeder::class,
         ]);
     }

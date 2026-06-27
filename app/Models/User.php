@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +14,7 @@ use  Str;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Auditable;
 
     /**
      * The attributes that are mass assignable.
@@ -47,6 +48,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'mobile_verified' => 'boolean',
 //        'can_delivery' => 'boolean',
+    ];
+
+    protected array $auditExclude = [
+        'password',
+        'remember_token',
     ];
 
 
@@ -104,6 +110,7 @@ class User extends Authenticatable
         $speed_delivery = Rating::where('chef_id', $this->id)->avg('rating_speed_delivery');
         $rating_chef = Rating::where('chef_id', $this->id)->avg('rating_chef');
         $this->raties = [
+            "rating_chef" => $rating_chef,
             "rating_speed" => $rating_chef,
             "rating_delivery" => $delivery,
             "rating_speed_chef" => $speed_chef,

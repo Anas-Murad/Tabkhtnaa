@@ -31,7 +31,7 @@ class UpdateProfileRequest extends FormRequest
             'dob' => 'required|date',
             'def_lang' => 'in:ar,en',
             'mobile' =>['required','numeric' ,Rule::unique('users')->where('country_code' ,request()->country_code) ->ignore($this->user()->id)] ,
-            'gender' => 'required|in:male,female,other',
+            'gender' => 'required|in:male,female',
         ];
     }
 }

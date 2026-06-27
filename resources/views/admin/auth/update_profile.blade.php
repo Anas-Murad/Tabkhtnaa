@@ -59,11 +59,6 @@
                                     <input type="radio" class="form-check-input" value="female" name="gender" @checked($user->gender == 'female')>
                                     <span class="form-check-label">Female</span>
                                 </label>
-
-                                <label class="form-check form-check-inline">
-                                    <input type="radio" class="form-check-input" value="other" name="gender" @checked($user->gender == 'other')>
-                                    <span class="form-check-label">Other</span>
-                                </label>
                             </div>
                         </div>
                     </div>

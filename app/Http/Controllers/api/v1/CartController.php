@@ -16,16 +16,23 @@ class CartController extends Controller
     use HelperTrait ;
 
 
-    public function list()
+    public function list(Request $request)
     {
         $user_id =  auth()->id() ;
         $cart = Cart::whereUserId( $user_id )->latest()->first();
         if ($cart){
-            return $this->returnDataArray($cart->getUpdatedData());
+            return $this->returnDataArray(
+                $cart->getUpdatedData($request->query('delivery_type'))
+            );
         }
         else{
             return $this->returnError(__('messages.no data found'));
         }
+    }
+
+    public function accessories()
+    {
+        return (new MealController)->accessories();
     }
     public function store(CreateCartRequest $request)
     {
@@ -74,6 +81,12 @@ class CartController extends Controller
 
         if ($OldMeal){
             $OldMeal->increment('quantity'  ,  $mealData['quantity']);
+            if ($request->filled('accessories')) {
+                $OldMeal->accessories()->sync($accessoriesData);
+            }
+            if ($request->filled('additions')) {
+                $OldMeal->additions()->sync($additionsData);
+            }
         }else{
            $CartMeal = CartMeal::create($mealData) ;
             $CartMeal->accessories()->sync($accessoriesData);
@@ -131,6 +144,24 @@ class CartController extends Controller
          Cart::whereUserId( $user_id )->delete();
          CartMeal::whereUserId( $user_id )->delete();
          return $this->returnError(__('messages.cart was deleted successfully'));
+    }
+
+    public function set_accessories(Request $request)
+    {
+        $user_id = auth()->id();
+        $request->validate([
+            'accessories' => ['nullable', 'array'],
+            'accessories.*' => ['integer', 'exists:accessories,id'],
+        ]);
+
+        $cart = Cart::whereUserId($user_id)->latest()->firstOrFail();
+        $accessories = $request->input('accessories', []);
+
+        foreach ($cart->meals as $mealItem) {
+            $mealItem->accessories()->sync($accessories);
+        }
+
+        return $this->returnDataArray($cart->getUpdatedData($request->query('delivery_type')));
     }
 
 

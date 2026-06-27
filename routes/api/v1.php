@@ -18,6 +18,7 @@ use App\Http\Controllers\api\v1\SendSMSController;
 use App\Http\Controllers\api\v1\UserController;
 use App\Http\Controllers\api\v1\SanctionController;
 use App\Http\Controllers\api\v1\RatingController;
+use App\Http\Controllers\api\v1\SettingsController;
 use App\Http\Controllers\api\v1\LanguagesController;
 use App\Http\Controllers\api\v1\TranslateController;
 use App\Http\Controllers\api\v1\UserLiveLocationController;
@@ -39,6 +40,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('pusher', [PusherController::class, 'test']);
 Route::get('countries', [CountriesController::class, 'index'])->middleware('set_lang');
+Route::get('settings', [SettingsController::class, 'index'])->middleware('set_lang');
 Route::get('languages', [LanguagesController::class, 'index'])->middleware('set_lang');
 Route::get('translate', [TranslateController::class, 'getAllTranslate'])->middleware('set_lang');
 
@@ -106,9 +108,11 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
         Route::group(['prefix' => 'cart'], function () {
             Route::post('create', [CartController::class, 'store']);
             Route::get('list', [CartController::class, 'list']);
+            Route::get('accessories', [CartController::class, 'accessories']);
             Route::post('delete_item', [CartController::class, 'delete_item']);
             Route::post('delete_all', [CartController::class, 'delete_all']);
             Route::post('update_quantity', [CartController::class, 'update_quantity']);
+            Route::post('set_accessories', [CartController::class, 'set_accessories']);
         });
 
         Route::group(['prefix' => 'orders'], function () {

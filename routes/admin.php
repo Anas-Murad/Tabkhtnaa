@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BusinessSettingsController;
 use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Admin\ComplaintsController;
 use App\Http\Controllers\Admin\SanctionController;
 use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\OfferController;
+use App\Http\Controllers\Admin\AuditTrailController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -55,6 +57,9 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('profile' , [ProfileController::class , 'edit'])->name('admin.profile.edit');
     Route::put('profile/update' , [ProfileController::class , 'update'])->name('admin.profile.update');
 
+    Route::get('settings', [BusinessSettingsController::class, 'edit'])->name('admin.settings.edit');
+    Route::put('settings', [BusinessSettingsController::class, 'update'])->name('admin.settings.update');
+
     Route::group([
         'prefix' => 'orders',
         'controller' =>OrdersController::class
@@ -73,6 +78,9 @@ Route::group(['middleware' => ['auth:admin']], function () {
     ], function () {
         Route::get('/{id}' ,'show')->name('admin.transaction.order')->whereNumber('id');
     });
+
+    Route::get('audit-trails', [AuditTrailController::class, 'index'])->name('admin.audit_trails.index');
+    Route::get('audit-trails/{id}', [AuditTrailController::class, 'show'])->name('admin.audit_trails.show')->whereNumber('id');
 });
 
 Route::get('t' , function (){

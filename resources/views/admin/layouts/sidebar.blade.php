@@ -19,6 +19,24 @@
         <!-- Main navigation -->
         <div class="sidebar-section">
             <ul class="nav nav-sidebar" data-nav-type="accordion">
+                <li class="nav-item-header">
+                    <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">سجل التدقيق</div>
+                    <i class="ph-dots-three sidebar-resize-show"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.settings.edit') }}" class="nav-link">
+                        <i class="ph-gear"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.audit_trails.index') }}" class="nav-link">
+                        <i class="ph-clipboard-text"></i>
+                        <span>سجل التدقيق</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
                 <!-- Main -->
                 <!-- Forms -->
                 <li class="nav-item-header">

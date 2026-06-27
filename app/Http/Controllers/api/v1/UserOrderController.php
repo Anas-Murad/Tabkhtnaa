@@ -102,6 +102,7 @@ class UserOrderController extends Controller
             ])
             ->find($request->cart_id);
         $cart->getUpdatedData();
+        $totals = $cart->totalsForDeliveryType($request->delivery_type);
 
         $data = [
 
@@ -110,11 +111,11 @@ class UserOrderController extends Controller
             'chef_id' => $request->chef_id,
             'payment_method' => $request->payment_method,
             'delivery_type' => $request->delivery_type,
-            'delivery_fees' => $cart->delivery_fees,
-            'tax' => $cart->tax,
-            'sub_total' => $cart->total,
+            'delivery_fees' => $totals['delivery_fees'],
+            'tax' => $totals['tax'],
+            'sub_total' => $totals['sub_total'],
             'discount' => 0,
-            'total' => $cart->total,
+            'total' => $totals['total'],
             'coupon_id' => $request->coupon_id,
             'coupon' => $request->coupon,
             'details' => $request->details,
@@ -274,11 +275,16 @@ class UserOrderController extends Controller
 
     public function get(Request $request)
     {
-        $order = Order::where('user_id' , auth()->id())->findOrFail($request->order_id);
-        $order->load(['orderMeal' => function($q){
-            $q->with('accessories' , 'additions');
-        }], 'address');
-        return $this->returnSuccess($order);
+        $orderId = $request->order_id ?? $request->id;
+        $order = Order::where('user_id', auth()->id())->findOrFail($orderId);
+        $order->load([
+            'orderMeal' => function ($q) {
+                $q->with('accessories', 'additions', 'meal:id,image');
+            },
+            'address',
+            'chef:id,name,phone,image',
+        ]);
+        return $this->returnDataArray($order);
     }
 
     public function re_order(UserMyReOrdersRequest $request)
@@ -292,8 +298,8 @@ class UserOrderController extends Controller
             'payment_method' => $old_data->payment_method,
             'delivery_type' => $old_data->delivery_type,
             'delivery_fees' => $old_data->delivery_fees,
-            'tax' => $old_data->delivery_fees,
-            'sub_total' => $old_data->total,
+            'tax' => $old_data->tax,
+            'sub_total' => $old_data->sub_total,
             'discount' => 0,
             'total' => $old_data->total,
             'coupon_id' => $old_data->coupon_id,

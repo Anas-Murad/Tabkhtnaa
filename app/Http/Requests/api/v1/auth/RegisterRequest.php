@@ -17,7 +17,7 @@ class RegisterRequest extends FormRequest
             'dob' => 'required|date',
             'mobile' =>['required','numeric' ,
                 Rule::unique('users')->where('country_code' ,request()->country_code)] ,
-            'gender' => 'required|in:male,female,other',
+            'gender' => 'required|in:male,female',
             'profile_image' => 'required|image',
             'type' => 'required|in:client,delivery,chef',
             'password' => 'required|min:6|confirmed',

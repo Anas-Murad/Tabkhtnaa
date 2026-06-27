@@ -17,6 +17,7 @@ use App\Http\Requests\api\v1\auth\UploadDocumentsRequest;
 use App\Models\Document;
 use App\Models\Gallery;
 use App\Models\User;
+use App\Services\AuditService;
 use App\Traits\HelperTrait;
 use Carbon\Carbon;
 use Str;
@@ -51,6 +52,7 @@ class AuthController extends Controller
             return $this->returnError(__('messages.reset_token_expired'));
         }
         $user->update(['password' => bcrypt($request->new_password)]);
+        AuditService::log('password_changed', $user, null, ['password' => '[REDACTED]'], $user->id);
         $user->ApiCreateToken();
         return $this->returnDataArray($user);
     }
@@ -109,6 +111,7 @@ class AuthController extends Controller
     {
         $user = $request->user();
         $user->update(['password' => bcrypt($request->password)]);
+        AuditService::log('password_changed', $user, null, ['password' => '[REDACTED]'], $user->id);
 //        $user->ApiCreateToken();
         return $this->returnDataArray($user);
     }
@@ -138,6 +141,7 @@ class AuthController extends Controller
             $user->tokens()->delete();
             $tokenResult = $user->createToken('authToken')->plainTextToken;
             $user->access_token = $tokenResult;
+            AuditService::log('login', $user, null, ['source' => 'social', 'udid' => $request->udid], $user->id);
             return $this->returnDataArray($user);
         }
         $data = $request->safe()->except('profile_image_url');
@@ -272,7 +276,13 @@ class AuthController extends Controller
             ];
         }
         Document::insert($data);
-        $documents=Document::whereUserId(\auth()->id())->get() ;
+        $documents = Document::whereUserId(\auth()->id())
+            ->orderByDesc('id')
+            ->limit(count($data))
+            ->get();
+        foreach ($documents as $document) {
+            AuditService::log('created', $document);
+        }
         return $this->returnDataArray($documents);
     }
 
@@ -290,7 +300,17 @@ class AuthController extends Controller
             }
             Gallery::insert($imagesArray);
         }
-        $documents=Gallery::whereUserId(\auth()->id())->whereType('kitchen')->get() ;
+        $documents = Gallery::whereUserId(\auth()->id())->whereType('kitchen')->get();
+        if (!empty($imagesArray)) {
+            $recent = Gallery::whereUserId(\auth()->id())
+                ->whereType('kitchen')
+                ->orderByDesc('id')
+                ->limit(count($imagesArray))
+                ->get();
+            foreach ($recent as $gallery) {
+                AuditService::log('created', $gallery);
+            }
+        }
         return $this->returnDataArray($documents);
     }
 

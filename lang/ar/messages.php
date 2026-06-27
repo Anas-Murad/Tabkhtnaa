@@ -5,8 +5,7 @@ return [
   'delivery'=>'موصل',
   'chef'=>'شيف',
   'male'=>'ذكر',
-  'female'=>'انثى',
-  'other'=>'اخرى',
+  'female'=>'أنثى',
 
     'success'=>'مكتمل',
     'cancel'=>'ملغي',
