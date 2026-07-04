@@ -282,7 +282,7 @@ class UserOrderController extends Controller
                 $q->with('accessories', 'additions', 'meal:id,image');
             },
             'address',
-            'chef:id,name,phone,image',
+            'chef:id,name,country_code,mobile,profile_image',
         ]);
         return $this->returnDataArray($order);
     }
