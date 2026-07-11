@@ -18,6 +18,7 @@ use App\Models\Document;
 use App\Models\Gallery;
 use App\Models\User;
 use App\Services\AuditService;
+use App\Services\LoyaltyService;
 use App\Traits\HelperTrait;
 use Carbon\Carbon;
 use Str;
@@ -169,6 +170,17 @@ class AuthController extends Controller
             $data['account_status'] ='pending' ;
         }
         $user = User::create($data);
+        if ($user->type === 'client') {
+            app(LoyaltyService::class)->applyWelcomeBonus($user);
+            app(LoyaltyService::class)->ensureReferralCode($user);
+            if ($request->filled('referral_code')) {
+                try {
+                    app(LoyaltyService::class)->useReferralCode($user->fresh(), $request->referral_code);
+                } catch (\RuntimeException) {
+                    // Registration succeeds even if referral code is invalid.
+                }
+            }
+        }
         $user->ApiCreateToken();
         return $this->returnDataArray($user);
     }

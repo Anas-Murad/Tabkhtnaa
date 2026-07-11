@@ -29,6 +29,19 @@
                         <span>Settings</span>
                     </a>
                 </li>
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link">
+                        <i class="ph-star"></i>
+                        <span>نظام الولاء</span>
+                    </a>
+                    <ul class="nav-group-sub collapse">
+                        <li class="nav-item"><a href="{{ route('admin.loyalty.dashboard') }}" class="nav-link">لوحة التحكم</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.loyalty.settings.edit') }}" class="nav-link">الإعدادات</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.loyalty.tiers.index') }}" class="nav-link">المستويات</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.loyalty.transactions.index') }}" class="nav-link">حركات النقاط</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.loyalty.campaigns.index') }}" class="nav-link">حملات المضاعفة</a></li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.audit_trails.index') }}" class="nav-link">
                         <i class="ph-clipboard-text"></i>

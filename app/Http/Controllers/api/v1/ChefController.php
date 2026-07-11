@@ -10,6 +10,7 @@ use App\Models\OrderHistoryDelivery;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\UserLiveLocation;
+use App\Services\LoyaltyService;
 use App\Traits\FCMTrait;
 use App\Traits\HelperTrait;
 use Illuminate\Database\Query\Builder;
@@ -316,7 +317,9 @@ class ChefController extends Controller
             'action_by_id'=>$request->user_id,
         ]);
 
-
+        if ($request->status === 'prepared' && $order->delivery_type === 'pick_up') {
+            app(LoyaltyService::class)->awardPointsForOrder($order->fresh());
+        }
 
         return $this->returnSuccess("تم تغيير حالة الطلب رقم {$order->id} بنجاح");
     }

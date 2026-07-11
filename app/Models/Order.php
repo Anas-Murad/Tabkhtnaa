@@ -33,6 +33,13 @@ class Order extends Model
         'status',
         'rejected_reason',
         'refund_id',
+        'points_earned',
+        'points_redeemed',
+        'loyalty_points_awarded',
+    ];
+
+    protected $casts = [
+        'loyalty_points_awarded' => 'boolean',
     ];
 
     public  function scopeFilter($query , $request  , $userIdFlag=true){

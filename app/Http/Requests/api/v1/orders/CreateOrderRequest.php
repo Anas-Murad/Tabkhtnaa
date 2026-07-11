@@ -67,7 +67,7 @@ class CreateOrderRequest extends FormRequest
             ],
             'details' => ['nullable'],
             'payment_method' => ['required'  , 'in:wallet,cash,cards'],
-
+            'points_to_redeem' => ['nullable', 'integer', 'min:1'],
         ];
     }
 }

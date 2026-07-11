@@ -25,7 +25,8 @@ class User extends Authenticatable
         "id", "name", "email", "residence_country_id", "country_code", "mobile", "username",
         "dob", "gender", "source", "udid", "def_lang", "profile_image", "mobile_verified",
         "online_status", "type", "account_status", "account_comment", "email_verified_at",
-        "sms_verify", "password", "remember_token", "created_at", "updated_at",'can_delivery'
+        "sms_verify", "password", "remember_token", "created_at", "updated_at",'can_delivery',
+        'total_points', 'lifetime_spending', 'current_tier', 'referral_code', 'referred_by', 'welcome_bonus_awarded',
     ];
 
 
@@ -47,6 +48,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'mobile_verified' => 'boolean',
+        'total_points' => 'integer',
+        'lifetime_spending' => 'decimal:2',
+        'welcome_bonus_awarded' => 'boolean',
 //        'can_delivery' => 'boolean',
     ];
 
@@ -174,6 +178,31 @@ class User extends Authenticatable
     public function userPoints(): HasMany
     {
         return $this->hasMany(UserPoint::class, 'user_id');
+    }
+
+    public function loyaltyTransactions(): HasMany
+    {
+        return $this->hasMany(LoyaltyTransaction::class);
+    }
+
+    public function redemptions(): HasMany
+    {
+        return $this->hasMany(Redemption::class);
+    }
+
+    public function tierHistory(): HasMany
+    {
+        return $this->hasMany(UserTierHistory::class);
+    }
+
+    public function referrer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'referred_by');
+    }
+
+    public function clientOrders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'user_id');
     }
 
     public function sanctions(): HasMany

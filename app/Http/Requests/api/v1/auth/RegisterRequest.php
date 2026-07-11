@@ -21,6 +21,7 @@ class RegisterRequest extends FormRequest
             'profile_image' => 'required|image',
             'type' => 'required|in:client,delivery,chef',
             'password' => 'required|min:6|confirmed',
+            'referral_code' => 'nullable|string|max:32',
         ];
     }
 

@@ -8,6 +8,7 @@
         @if ($user->type != 'user')
             @include('admin.users.processes')
         @endif
+        @include('admin.users.loyalty')
         <div class="row">
 
             <div class="col-md-6">

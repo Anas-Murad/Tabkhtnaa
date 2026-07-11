@@ -23,6 +23,10 @@ class DatabaseSeeder extends Seeder
             AccessoriesSeeder::class,
             BusinessSettingsSeeder::class,
             DemoDataSeeder::class,
+            TranslateSeeder::class,
+            LoyaltySettingSeeder::class,
+            LoyaltyTierSeeder::class,
+            DoublePointsCampaignSeeder::class,
         ]);
     }
 }

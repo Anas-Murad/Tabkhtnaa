@@ -2,18 +2,28 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Translate;
 use Illuminate\Database\Seeder;
 
 class TranslateSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        //
+  /**
+   * Seed app UI translations (ar / en / fr).
+   */
+  public function run(): void
+  {
+    $rows = require database_path('data/app_translations.php');
+
+    foreach ($rows as $row) {
+      Translate::updateOrCreate(
+        ['key' => $row['key'], 'model' => $row['model'] ?? 'app'],
+        [
+          'ar' => $row['ar'] ?? null,
+          'en' => $row['en'] ?? null,
+          'fr' => $row['fr'] ?? null,
+          'tr' => $row['tr'] ?? null,
+        ]
+      );
     }
+  }
 }

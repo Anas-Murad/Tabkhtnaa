@@ -12,6 +12,12 @@ use App\Http\Controllers\Admin\SanctionController;
 use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\AuditTrailController;
+use App\Http\Controllers\Admin\LoyaltySettingController;
+use App\Http\Controllers\Admin\LoyaltyTierController;
+use App\Http\Controllers\Admin\LoyaltyTransactionController;
+use App\Http\Controllers\Admin\LoyaltyDashboardController;
+use App\Http\Controllers\Admin\LoyaltyCustomerController;
+use App\Http\Controllers\Admin\DoublePointsCampaignController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -81,6 +87,24 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     Route::get('audit-trails', [AuditTrailController::class, 'index'])->name('admin.audit_trails.index');
     Route::get('audit-trails/{id}', [AuditTrailController::class, 'show'])->name('admin.audit_trails.show')->whereNumber('id');
+
+    Route::prefix('loyalty')->name('admin.loyalty.')->group(function () {
+        Route::get('dashboard', [LoyaltyDashboardController::class, 'index'])->name('dashboard');
+        Route::get('settings', [LoyaltySettingController::class, 'edit'])->name('settings.edit');
+        Route::put('settings', [LoyaltySettingController::class, 'update'])->name('settings.update');
+        Route::get('tiers', [LoyaltyTierController::class, 'index'])->name('tiers.index');
+        Route::post('tiers', [LoyaltyTierController::class, 'store'])->name('tiers.store');
+        Route::post('tiers/update', [LoyaltyTierController::class, 'update'])->name('tiers.update');
+        Route::delete('tiers/{id}', [LoyaltyTierController::class, 'destroy'])->name('tiers.destroy')->whereNumber('id');
+        Route::get('transactions', [LoyaltyTransactionController::class, 'index'])->name('transactions.index');
+        Route::get('campaigns', [DoublePointsCampaignController::class, 'index'])->name('campaigns.index');
+        Route::post('campaigns', [DoublePointsCampaignController::class, 'store'])->name('campaigns.store');
+        Route::put('campaigns/{id}', [DoublePointsCampaignController::class, 'update'])->name('campaigns.update')->whereNumber('id');
+        Route::delete('campaigns/{id}', [DoublePointsCampaignController::class, 'destroy'])->name('campaigns.destroy')->whereNumber('id');
+        Route::post('customers/{id}/add-points', [LoyaltyCustomerController::class, 'addPoints'])->name('customers.add-points')->whereNumber('id');
+        Route::post('customers/{id}/deduct-points', [LoyaltyCustomerController::class, 'deductPoints'])->name('customers.deduct-points')->whereNumber('id');
+        Route::post('customers/{id}/check-tier', [LoyaltyCustomerController::class, 'checkTier'])->name('customers.check-tier')->whereNumber('id');
+    });
 });
 
 Route::get('t' , function (){

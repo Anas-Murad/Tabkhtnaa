@@ -88,31 +88,27 @@ pink
 
 
 
-            ->editColumn('action', function ($user) {
-                $orderLink = (route('admin.orders.show' , $user));
+            ->editColumn('action', function ($order) {
+                $orderLink = route('admin.orders.show', $order);
 
                 $btns = "";
                 $btns .= "<a href='$orderLink' class='dropdown-item'> <i class='ph-shopping-cart me-2'></i> التفاصيل </a>";
 
-
-                if ($user->transaction_id){
-                    $transactionLink = (route('admin.transaction.order' , [$user , $user->transaction_id]));
+                if ($order->transaction_id) {
+                    $transactionLink = route('admin.transaction.order', [$order, $order->transaction_id]);
                     $btns .= "<a href='$transactionLink' class='dropdown-item'> <i class='ph-money me-2'></i> الحركه المالية </a>";
                 }
 
-
-                if ($user->user->id){
-                     $userEditLink = (route('users.show' , $user->user->id));
+                if ($order->user?->id) {
+                    $userEditLink = route('users.show', $order->user->id);
                     $btns .= "<a href='$userEditLink' class='dropdown-item'> <i class='ph-user me-2'></i> ملف العميل </a>";
-
                 }
-                if ($user->chef->id){
-                        $chefEditLink = (route('users.show' , $user->chef->id));
+                if ($order->chef?->id) {
+                    $chefEditLink = route('users.show', $order->chef->id);
                     $btns .= "<a href='$chefEditLink' class='dropdown-item'> <i class='ph-cooking-pot me-2'></i> ملف الطاهي </a>";
-
                 }
-                if ($user->delivery->id){
-                     $deliveryEditLink = (route('users.show' , $user->delivery->id));
+                if ($order->delivery?->id) {
+                    $deliveryEditLink = route('users.show', $order->delivery->id);
                     $btns .= "<a href='$deliveryEditLink' class='dropdown-item'> <i class='ph-jeep me-2'></i> ملف الموصل </a>";
                 }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\TransactionController;
 use App\Models\Order;
 use App\Models\OrderHistoryDelivery;
+use App\Services\LoyaltyService;
 use App\Traits\FCMTrait;
 use App\Traits\HelperTrait;
 use Illuminate\Database\Query\Builder;
@@ -270,8 +271,10 @@ class DeliveryOderController extends Controller
 
 
 
-        if($request->status =='delivered')
-        (new TransactionController)->distribution($order);
+        if($request->status =='delivered') {
+            (new TransactionController)->distribution($order);
+            app(LoyaltyService::class)->awardPointsForOrder($order->fresh());
+        }
 
         return $this->returnSuccess("تم تغيير حالة الطلب رقم {$order->id} بنجاح");
     }

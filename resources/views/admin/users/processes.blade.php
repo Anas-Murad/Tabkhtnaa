@@ -19,6 +19,11 @@
                         </button>
                     </a>
                 </div>
+                <div class="col-md-6">
+                    <a href="{{ route('admin.loyalty.transactions.index', ['user_id' => $user->id]) }}">
+                        <button type="button" class="btn btn-success d-block w-100 border-0">نقاط الولاء</button>
+                    </a>
+                </div>
                 <div class="col-md-2">
                     <a href="{{route('admin.offer.index',['type'=>'offers' , 'user_id'=>$user->id])}}">
                         <button type="submit" class="btn btn-dark d-block w-100 border-0">

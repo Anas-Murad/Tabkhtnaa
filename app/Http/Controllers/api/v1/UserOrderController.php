@@ -16,6 +16,7 @@ use App\Models\OrderMealAccessory;
 use App\Models\OrderMealAddition;
 use App\Models\User;
 use App\Models\UserAddress;
+use App\Services\LoyaltyService;
 use App\Traits\FCMTrait;
 use App\Traits\HelperTrait;
 use Illuminate\Http\Request;
@@ -192,6 +193,20 @@ class UserOrderController extends Controller
                 ]) ;
             },
         ]);
+
+        if ($request->filled('points_to_redeem') && (int) $request->points_to_redeem > 0) {
+            try {
+                app(LoyaltyService::class)->redeemPoints(
+                    User::findOrFail($request->user_id),
+                    (int) $request->points_to_redeem,
+                    $Order->id
+                );
+                $Order->refresh();
+            } catch (\RuntimeException $e) {
+                \DB::rollBack();
+                return $this->returnError($e->getMessage());
+            }
+        }
 
         if ($request->payment_method =='cash'){
             $cart->delete();

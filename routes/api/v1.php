@@ -24,6 +24,7 @@ use App\Http\Controllers\api\v1\TranslateController;
 use App\Http\Controllers\api\v1\UserLiveLocationController;
 use App\Http\Controllers\api\v1\UserOrderController;
 use App\Http\Controllers\api\v1\BankInfoController;
+use App\Http\Controllers\api\v1\LoyaltyController;
 use App\Http\Controllers\api\v1\OfferController;
 use Illuminate\Support\Facades\Route;
 
@@ -121,6 +122,19 @@ Route::group(['middleware' => ['auth:sanctum', 'set_lang']], function () {
             Route::get('get', [UserOrderController::class, 'get']);
             Route::get('list', [UserOrderController::class, 'list']);
             Route::post('cancel', [UserOrderController::class, 'cancel']);
+        });
+
+        Route::group(['prefix' => 'loyalty'], function () {
+            Route::get('profile', [LoyaltyController::class, 'profile']);
+            Route::get('tiers', [LoyaltyController::class, 'tiers']);
+            Route::get('transactions', [LoyaltyController::class, 'transactions']);
+            Route::get('expiry-info', [LoyaltyController::class, 'expiryInfo']);
+            Route::post('redeem/calculate', [LoyaltyController::class, 'calculateRedeem']);
+            Route::post('redeem', [LoyaltyController::class, 'redeem']);
+            Route::get('campaigns/active', [LoyaltyController::class, 'activeCampaigns']);
+            Route::get('referral/code', [LoyaltyController::class, 'referralCode']);
+            Route::post('referral/use', [LoyaltyController::class, 'useReferralCode']);
+            Route::get('rewards', [LoyaltyController::class, 'rewards']);
         });
     });
     Route::group(['prefix' => 'maker'], function () {

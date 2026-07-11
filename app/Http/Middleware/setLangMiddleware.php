@@ -13,7 +13,7 @@ class setLangMiddleware
 
 
         $lang = $request->input('lang') ?? $request->header('lang');
-        if ($lang && in_array($lang, ['ar', 'en'], true)) {
+        if ($lang && in_array($lang, ['ar', 'en', 'fr', 'tr'], true)) {
             app()->setLocale($lang);
         } else {
             app()->setLocale('ar');

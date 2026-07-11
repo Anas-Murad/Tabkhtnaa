@@ -40,8 +40,12 @@ class OffersDataTable extends DataTable
                 return '%'.$offer->percent;
             })
             ->editColumn('meal_id', function ($offer) {
-                $mealLink = (route('admin.meals.show' , $offer->meal->id));
-                return  "<a href='$mealLink' target='_blank'> {$offer->meal->name} </a>";
+                if (!$offer->meal) {
+                    return '-';
+                }
+                $mealLink = route('admin.meals.show', $offer->meal->id);
+
+                return "<a href='$mealLink' target='_blank'> {$offer->meal->name} </a>";
             })
             ->setRowId('id')
             ->rawColumns(['image' , 'number' , 'meal_id'])
