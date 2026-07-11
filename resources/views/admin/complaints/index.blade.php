@@ -32,9 +32,9 @@
                                         <input name="user_id" type="hidden" value="{{$user_id}}">
                                         <div class="col-md-2">
                                             <div class="mb-3">
-                                                <label class="form-label">ابحث عن order number </label>
+                                                <label class="form-label">رقم الطلب</label>
                                                 <input type="text" class="form-control" name="order_id"
-                                                       id="order_id" placeholder="Order Number ">
+                                                       id="order_id" placeholder="رقم الطلب">
                                             </div>
                                         </div>
                                         @includeIf('admin.components.countries' , [

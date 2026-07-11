@@ -161,6 +161,13 @@ class CartController extends Controller
             $mealItem->accessories()->sync($accessories);
         }
 
+        $cart->unsetRelation('meals');
+        $cart->load([
+            'meals' => function ($q) {
+                $q->with(['meal', 'accessories', 'additions']);
+            },
+        ]);
+
         return $this->returnDataArray($cart->getUpdatedData($request->query('delivery_type')));
     }
 

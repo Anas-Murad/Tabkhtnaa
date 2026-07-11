@@ -86,9 +86,13 @@ class UsersDataTable extends DataTable
             })
 
             ->editColumn('action', function ($user) {
-                $DeleteFunction = "DeleteFunction('" . route("users.destroy", $user) . "')";
-                $EditLink = (route('users.edit' , $user));
-                $ShowLink = (route('users.show' , $user));
+                $deleteFunction = "DeleteFunction('" . route('users.destroy', $user) . "')";
+                $editLink = route('users.edit', $user);
+                $showLink = route('users.show', $user);
+                $editLabel = __('messages.admin_edit');
+                $showLabel = __('messages.admin_show');
+                $deleteLabel = __('messages.admin_delete_account');
+
                 return <<<HTML
                 <div class="d-inline-flex">
                         <div class="dropdown">
@@ -96,9 +100,9 @@ class UsersDataTable extends DataTable
                                 <i class="ph-list"></i>
                             </a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a href="$EditLink" class="dropdown-item"> <i class="ph-pencil me-2"></i> Edit </a>
-                            <a href="$ShowLink" class="dropdown-item"> <i class="ph-eye me-2"></i> Show Information </a>
-                            <a href="#" class="dropdown-item" onclick="' . $DeleteFunction . '" > <i class="ph-trash me-2"></i> Delete Account</a>
+                            <a href="$editLink" class="dropdown-item"> <i class="ph-pencil me-2"></i> $editLabel </a>
+                            <a href="$showLink" class="dropdown-item"> <i class="ph-eye me-2"></i> $showLabel </a>
+                            <a href="#" class="dropdown-item" onclick="{$deleteFunction}"> <i class="ph-trash me-2"></i> $deleteLabel</a>
                         </div>
                     </div>
                 </div>

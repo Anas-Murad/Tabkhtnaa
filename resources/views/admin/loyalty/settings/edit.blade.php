@@ -1,5 +1,6 @@
 @extends('admin.layouts.app')
 @section('title') إعدادات الولاء @endsection
+@section('page') نظام الولاء @endsection
 @section('page') نظام الولاء — الإعدادات @endsection
 @section('content')
 <div class="content">

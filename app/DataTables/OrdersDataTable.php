@@ -150,20 +150,45 @@ pink
      */
     public function query(Order $model): QueryBuilder
     {
-        return $model->newQuery()
+        $query = $model->newQuery()
             ->select('orders.*')
             ->with([
                 'user:id,name',
                 'chef:id,name',
                 'delivery:id,name',
-                'address'=>function($q){
+                'address' => function ($q) {
                     $q->with([
                         'country:id,name,currency_name',
                         'cities:id,name',
                     ]);
                 },
-            ])
-        ;
+            ]);
+
+        if ($this->userID) {
+            if ($this->user) {
+                match ($this->user->type) {
+                    'chef' => $query->where('orders.chef_id', $this->userID),
+                    'delivery' => $query->where('orders.delivery_id', $this->userID),
+                    default => $query->where('orders.user_id', $this->userID),
+                };
+            } else {
+                $query->where(function ($q) {
+                    $q->where('orders.user_id', $this->userID)
+                        ->orWhere('orders.chef_id', $this->userID)
+                        ->orWhere('orders.delivery_id', $this->userID);
+                });
+            }
+        }
+
+        if ($this->status) {
+            $query->where('orders.status', $this->status);
+        }
+
+        if ($this->transactionStatus) {
+            $query->where('orders.transaction_status', $this->transactionStatus);
+        }
+
+        return $query;
     }
 
     /**

@@ -40,8 +40,11 @@ class TranslateDataTable extends DataTable
             })
 
             ->editColumn('action', function ($translation) {
-                $deleteRoute = route("translations.destroy", $translation->id);
-                $EditLink = "EditFunction(" . htmlspecialchars(json_encode($translation), ENT_QUOTES, 'UTF-8') . ");";
+                $deleteRoute = route('translations.destroy', $translation->id);
+                $editLink = 'EditFunction(' . htmlspecialchars(json_encode($translation), ENT_QUOTES, 'UTF-8') . ');';
+                $editLabel = __('messages.admin_edit');
+                $deleteLabel = __('messages.admin_delete');
+
                 return <<<HTML
                 <div class="d-inline-flex">
                         <div class="dropdown">
@@ -49,8 +52,8 @@ class TranslateDataTable extends DataTable
                                 <i class="ph-list"></i>
                             </a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a href="#" class="dropdown-item" onclick="{$EditLink}"> <i class="ph-pencil me-2"></i> Edit </a>
-                            <a href="#" class="dropdown-item text-danger" onclick="DeleteFunction('$deleteRoute');" > <i class="ph-trash me-2"></i> Delete</a>
+                            <a href="#" class="dropdown-item" onclick="{$editLink}"> <i class="ph-pencil me-2"></i> $editLabel </a>
+                            <a href="#" class="dropdown-item text-danger" onclick="DeleteFunction('$deleteRoute');"> <i class="ph-trash me-2"></i> $deleteLabel</a>
                         </div>
                     </div>
                 </div>
@@ -103,12 +106,12 @@ class TranslateDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('key')->title('Key'),
-            Column::make('model')->title('Model'),
-            Column::make('en')->title('En'),
-            Column::make('ar')->title('Ar'),
-            Column::make('fr')->title('FR'),
-            Column::make('tr')->title('TR'),
+            Column::make('key')->title('المفتاح'),
+            Column::make('model')->title('النموذج'),
+            Column::make('en')->title('إنجليزي'),
+            Column::make('ar')->title('عربي'),
+            Column::make('fr')->title('فرنسي'),
+            Column::make('tr')->title('تركي'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)

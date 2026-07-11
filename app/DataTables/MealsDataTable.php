@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Meal;
+use App\Support\AdminLabels;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -40,13 +41,11 @@ class MealsDataTable extends DataTable
             ->editColumn('updated_at', function ($meal) {
                 return  $meal->updated_at->toDateString();
             })
-            ->editColumn('type' , function ($meal){
-                return " <span class='badge bg-info text-white'> $meal->type</span>";
-            })
-            ->editColumn('is_active' , function ($meal){
-
-                return $meal->is_active == 1 ? "<span class='badge bg-success text-white'> 'Active' </span>" : " <span class='badge bg-danger  text-white'> 'In Active' </span>";
-            })
+            ->editColumn('type', fn ($meal) => " <span class='badge bg-info text-white'>" . AdminLabels::mealType($meal->type) . '</span>')
+            ->editColumn('is_active', fn ($meal) => $meal->is_active == 1
+                ? "<span class='badge bg-success text-white'>" . __('messages.meal_active') . '</span>'
+                : "<span class='badge bg-danger text-white'>" . __('messages.meal_inactive') . '</span>')
+            ->editColumn('admin_status', fn ($meal) => AdminLabels::mealAdminStatus($meal->admin_status))
             ->editColumn('admin_note' , function ($meal){
                 return $meal->admin_note ?? '-';
             })
@@ -57,8 +56,11 @@ class MealsDataTable extends DataTable
                 return $meal->days ?? '-';
             })
             ->editColumn('action', function ($meal) {
-                $EditLink = "EditMealFunction(" . htmlspecialchars(json_encode($meal), ENT_QUOTES, 'UTF-8') . ");";
-                $ShowLink = (route('admin.meals.show' , $meal));
+                $editLink = 'EditMealFunction(' . htmlspecialchars(json_encode($meal), ENT_QUOTES, 'UTF-8') . ');';
+                $showLink = route('admin.meals.show', $meal);
+                $editLabel = __('messages.admin_edit');
+                $showLabel = __('messages.admin_show');
+
                 return <<<HTML
                 <div class="d-inline-flex">
                         <div class="dropdown">
@@ -66,8 +68,8 @@ class MealsDataTable extends DataTable
                                 <i class="ph-list"></i>
                             </a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a href="#" class="dropdown-item" onclick="{$EditLink}"> <i class="ph-pencil me-2"></i> Edit </a>
-                            <a href="$ShowLink" class="dropdown-item"> <i class="ph-eye me-2"></i> Show Information </a>
+                            <a href="#" class="dropdown-item" onclick="{$editLink}"> <i class="ph-pencil me-2"></i> $editLabel </a>
+                            <a href="$showLink" class="dropdown-item"> <i class="ph-eye me-2"></i> $showLabel </a>
                         </div>
                     </div>
                 </div>
@@ -79,11 +81,12 @@ class MealsDataTable extends DataTable
                 'image',
                 'type',
                 'is_active',
+                'admin_status',
                 'admin_note',
                 'preparation_time',
                 'days',
                 'created_at',
-                'updated_at'
+                'updated_at',
             ])
             ;
     }
@@ -180,20 +183,20 @@ class MealsDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('image')->title('Image'),
-            Column::make('user.name')->title('Name Chef'),
-            Column::make('category.key')->title('Category'),
-            Column::make('name')->title('Name Meal'),
-            Column::make('code')->title('Code'),
-            Column::make('description')->title('Description'),
-            Column::make('price')->title('Price'),
-            Column::make('type')->title('Type'),
-            Column::make('is_active')->title('Is Active'),
-            Column::make('days')->title('Days'),
-            Column::make('admin_status')->title('Admin Status'),
-            Column::make('admin_note')->title('Admin Note'),
-            Column::make('preparation_time')->title('Preparation Time'),
-            Column::make('created_at'),
+            Column::make('image')->title('الصورة'),
+            Column::make('user.name')->title('الطاهي'),
+            Column::make('category.key')->title('التصنيف'),
+            Column::make('name')->title('اسم الوجبة'),
+            Column::make('code')->title('الكود'),
+            Column::make('description')->title('الوصف'),
+            Column::make('price')->title('السعر'),
+            Column::make('type')->title('النوع'),
+            Column::make('is_active')->title('الحالة'),
+            Column::make('days')->title('الأيام'),
+            Column::make('admin_status')->title('حالة الأدمن'),
+            Column::make('admin_note')->title('ملاحظة الأدمن'),
+            Column::make('preparation_time')->title('وقت التحضير'),
+            Column::make('created_at')->title('تاريخ الإنشاء'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)

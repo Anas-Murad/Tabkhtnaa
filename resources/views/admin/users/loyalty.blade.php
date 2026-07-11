@@ -8,7 +8,7 @@
         <div class="card-body">
             <div class="row mb-3 text-center">
                 <div class="col-md-3"><strong>{{ $user->total_points ?? 0 }}</strong><br><small>رصيد النقاط</small></div>
-                <div class="col-md-3"><strong>{{ $user->current_tier ?? 'Regular' }}</strong><br><small>المستوى</small></div>
+                <div class="col-md-3"><strong>{{ \App\Support\LoyaltyLabels::tierName($user->current_tier ?? 'Regular') }}</strong><br><small>المستوى</small></div>
                 <div class="col-md-3"><strong>{{ number_format($user->lifetime_spending ?? 0, 2) }}</strong><br><small>الإنفاق التراكمي</small></div>
                 <div class="col-md-3"><strong>{{ $user->referral_code ?? '-' }}</strong><br><small>كود الإحالة</small></div>
             </div>
@@ -19,6 +19,11 @@
                         <h6>إضافة نقاط</h6>
                         <input type="number" name="points" class="form-control mb-2" min="1" placeholder="عدد النقاط" required>
                         <input type="text" name="description" class="form-control mb-2" placeholder="السبب" required>
+                        <select name="type" class="form-select mb-2">
+                            <option value="bonus">مكافأة</option>
+                            <option value="earn">كسب من طلب</option>
+                            <option value="referral">إحالة</option>
+                        </select>
                         <button class="btn btn-success btn-sm">إضافة</button>
                     </form>
                 </div>

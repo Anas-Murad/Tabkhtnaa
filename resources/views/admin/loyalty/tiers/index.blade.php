@@ -1,4 +1,6 @@
 @extends('admin.layouts.app')
+@section('title') مستويات الولاء @endsection
+@section('page') نظام الولاء @endsection
 @section('content')
 <div class="content">
     @include('admin.layouts.alert-area')

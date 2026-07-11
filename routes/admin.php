@@ -35,7 +35,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('logout' , [LoginController::class , 'logout'])->name('admin.logout');
 
     Route::get('/' , function (){
-        return view('admin.layouts.app');
+        return redirect()->route('admin.loyalty.dashboard');
     })->name('admin.dashboard');
 
     Route::get('users/{status}/{type}' , [UserController::class , 'index'])->name('usersByStatusType')

@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\DoublePointsCampaign;
+use App\Support\LoyaltyLabels;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -19,12 +20,21 @@ class DoublePointsCampaignsDataTable extends DataTable
                 ? "<span class='badge bg-success'>نشطة</span>"
                 : "<span class='badge bg-secondary'>معطلة</span>")
             ->addColumn('period', fn ($c) => $c->start_date->format('Y-m-d') . ' → ' . $c->end_date->format('Y-m-d'))
+            ->editColumn('applies_to', fn ($c) => LoyaltyLabels::appliesTo($c->applies_to))
             ->editColumn('action', function ($c) {
-                $editRoute = route('admin.loyalty.campaigns.update', $c->id);
                 $deleteRoute = route('admin.loyalty.campaigns.destroy', $c->id);
+                $edit = 'editCampaign(' . htmlspecialchars(json_encode([
+                    'id' => $c->id,
+                    'name' => $c->name,
+                    'start_date' => $c->start_date->format('Y-m-d'),
+                    'end_date' => $c->end_date->format('Y-m-d'),
+                    'multiplier' => $c->multiplier,
+                    'applies_to' => $c->applies_to,
+                    'is_active' => (bool) $c->is_active,
+                ]), ENT_QUOTES, 'UTF-8') . ');';
 
                 return <<<HTML
-                <a href="#" class="text-primary me-2" onclick="editCampaign({$c->id}, '{$c->name}', '{$c->start_date->format('Y-m-d')}', '{$c->end_date->format('Y-m-d')}', '{$c->multiplier}', '{$c->applies_to}', {$c->is_active}); return false;"><i class="ph-pencil"></i></a>
+                <a href="#" class="text-primary me-2" onclick="{$edit} return false;"><i class="ph-pencil"></i></a>
                 <a href="#" class="text-danger" onclick="DeleteFunction('{$deleteRoute}');"><i class="ph-trash"></i></a>
                 HTML;
             })
@@ -52,7 +62,7 @@ class DoublePointsCampaignsDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id'),
+            Column::make('id')->title('#'),
             Column::make('name')->title('الاسم'),
             Column::computed('period')->title('الفترة'),
             Column::make('multiplier')->title('المضاعف'),

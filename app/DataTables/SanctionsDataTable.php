@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Sanction;
+use App\Support\AdminLabels;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -29,19 +30,11 @@ class SanctionsDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->editColumn('photo', '<img style=" width: 50px; height: 50px; " ssrc="{{asset($photo ?? "assets/images/demo/users/face11.jpg" )}}" />')
-            ->editColumn('type', function ($sanction) {
-                return " <span class='badge bg-success bg-opacity-10 text-success'>" . $sanction->type . "</span>";
-            })
-            ->editColumn('seen', function ($sanction) {
-                switch ($sanction->seen) {
-                    case 'not_seen' :
-                        return " <span class='badge bg-warning bg-opacity-10 text-warning'>" . $sanction->seen . "</span>";
-
-                    case 'seen' :
-                        return " <span class='badge bg-success bg-opacity-10 text-success'>" .  $sanction->seen . "</span>";
-                }
-            })
+            ->editColumn('photo', '<img style=" width: 50px; height: 50px; " src="{{asset($photo ?? "assets/images/demo/users/face11.jpg" )}}" />')
+            ->editColumn('type', fn ($sanction) => " <span class='badge bg-success bg-opacity-10 text-success'>"
+                . AdminLabels::sanctionType($sanction->type) . '</span>')
+            ->editColumn('seen', fn ($sanction) => " <span class='badge bg-" . ($sanction->seen === 'seen' ? 'success' : 'warning') . " bg-opacity-10'>"
+                . AdminLabels::sanctionSeen($sanction->seen) . '</span>')
             ->editColumn('created_at', function ($user) {
                 return $user->created_at->toDateString();
             })
@@ -49,8 +42,11 @@ class SanctionsDataTable extends DataTable
                 return $user->updated_at->toDateString();
             })
             ->editColumn('action', function ($sanction) {
-                $EditLink = (route('sanctions.edit' , $sanction));
-                $ShowLink = (route('sanctions.show' , $sanction));
+                $editLink = route('sanctions.edit', $sanction);
+                $showLink = route('sanctions.show', $sanction);
+                $editLabel = __('messages.admin_edit');
+                $showLabel = __('messages.admin_show');
+
                 return <<<HTML
                 <div class="d-inline-flex">
                         <div class="dropdown">
@@ -58,8 +54,8 @@ class SanctionsDataTable extends DataTable
                                 <i class="ph-list"></i>
                             </a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a href="$EditLink" class="dropdown-item"> <i class="ph-pencil me-2"></i> Edit </a>
-                            <a href="$ShowLink" class="dropdown-item"> <i class="ph-eye me-2"></i> Show Information </a>
+                            <a href="$editLink" class="dropdown-item"> <i class="ph-pencil me-2"></i> $editLabel </a>
+                            <a href="$showLink" class="dropdown-item"> <i class="ph-eye me-2"></i> $showLabel </a>
                         </div>
                     </div>
                 </div>
@@ -109,7 +105,7 @@ class SanctionsDataTable extends DataTable
                 $q->when($this->request->filled('country_id') || $this->request->filled('city_id'), function ($q) {
                     $r = [];
                     if ($this->request->filled('country_id')) $r['country_id'] = $this->request->country_id;
-                    if ($this->request->filled('city_id')) $r['city_id'] = $this->request->country_id;
+                    if ($this->request->filled('city_id')) $r['city_id'] = $this->request->city_id;
                     $q->whereRelation('userAddress', $r);
                 })->when($this->request->filled('search_key'), function ($q) {
                     $q->where(function ($q) {

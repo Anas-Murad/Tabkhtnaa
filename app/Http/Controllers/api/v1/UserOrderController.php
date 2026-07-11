@@ -81,8 +81,10 @@ class UserOrderController extends Controller
     public function list(UserMyOrdersRequest $request)
     {
 
-        $query=Order::query();
-        $query->Filter( $request);
+        $query = Order::query()
+            ->with(['chef:id,name'])
+            ->withExists('rating');
+        $query->Filter($request);
         $orders = $query->simplePaginate(10);
         return   $this->returnPaginateData($orders) ;
     }
@@ -153,36 +155,35 @@ class UserOrderController extends Controller
             'user_id' => $address->user_id,
         ]);
         foreach ($cart->meals as $mealItem) {
-            $accessory_ids = $mealItem->mealAccessories->pluck('accessory_id')->toArray();
+            $accessory_ids = $this->resolveAccessoryIds($mealItem, $request->input('accessories', []));
             $addition_ids = $mealItem->additions->pluck('id')->toArray();
             $sum_addition = $mealItem->additions->sum('price');
             $quantity = $mealItem->quantity;
             $price = $mealItem->meal->calcPrice();
             $discount = $mealItem->meal->calcDiscount();
-            $total = ($price -$discount  ) ;
-            $total = $total * $quantity ;
-            $total = $total  + ($sum_addition * $quantity );
-          $OrderMeal =   OrderMeal::create([
-                'order_id' =>$Order->id,
-                'user_id' =>$Order->user_id,
-                'meal_id' =>$mealItem->meal_id,
-                'meal_name'=>$mealItem->meal->name,
-                'quantity' =>$quantity,
-                'price'=>$price,
-                'discount' =>$discount,
-                'additions_price'=>$sum_addition,
-                'total' =>$total,
+            $total = ($price - $discount);
+            $total = $total * $quantity;
+            $total = $total + ($sum_addition * $quantity);
+            $OrderMeal = OrderMeal::create([
+                'order_id' => $Order->id,
+                'user_id' => $Order->user_id,
+                'meal_id' => $mealItem->meal_id,
+                'meal_name' => $mealItem->meal->name,
+                'quantity' => $quantity,
+                'price' => $price,
+                'discount' => $discount,
+                'additions_price' => $sum_addition,
+                'total' => $total,
             ]);
-          foreach ($accessory_ids as $accessory_id)
-            OrderMealAccessory::create([
-                'order_meal_id' =>$OrderMeal->id,
-                'accessory_id' =>$accessory_id,
-            ]) ;
-            foreach ($addition_ids as $addition_id)
+            if (!empty($accessory_ids)) {
+                $OrderMeal->accessories()->sync($accessory_ids);
+            }
+            foreach ($addition_ids as $addition_id) {
                 OrderMealAddition::create([
-                    'order_meal_id' =>$OrderMeal->id,
-                    'addition_id' =>$addition_id,
-                ]) ;
+                    'order_meal_id' => $OrderMeal->id,
+                    'addition_id' => $addition_id,
+                ]);
+            }
         }
         $Order->load([
             'address',
@@ -291,7 +292,9 @@ class UserOrderController extends Controller
     public function get(Request $request)
     {
         $orderId = $request->order_id ?? $request->id;
-        $order = Order::where('user_id', auth()->id())->findOrFail($orderId);
+        $order = Order::where('user_id', auth()->id())
+            ->withExists('rating')
+            ->findOrFail($orderId);
         $order->load([
             'orderMeal' => function ($q) {
                 $q->with('accessories', 'additions', 'meal:id,image');
@@ -392,5 +395,20 @@ class UserOrderController extends Controller
             'order_status' =>'pending',
         ]);
         return $this->returnDataArray($Order);
+    }
+
+    private function resolveAccessoryIds($mealItem, array $fallback = []): array
+    {
+        $mealItem->loadMissing(['accessories', 'mealAccessories']);
+
+        $accessoryIds = $mealItem->accessories->pluck('id')->toArray();
+        if (empty($accessoryIds)) {
+            $accessoryIds = $mealItem->mealAccessories->pluck('accessory_id')->toArray();
+        }
+        if (empty($accessoryIds) && !empty($fallback)) {
+            $accessoryIds = $fallback;
+        }
+
+        return array_values(array_unique(array_filter($accessoryIds)));
     }
 }

@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\AuditTrail;
+use App\Support\AdminLabels;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -29,7 +30,7 @@ class AuditTrailsDataTable extends DataTable
                 ];
                 $class = $badges[$audit->event] ?? 'bg-dark';
 
-                return "<span class='badge {$class} text-white'>{$audit->event}</span>";
+                return "<span class='badge {$class} text-white'>" . AdminLabels::auditEvent($audit->event) . '</span>';
             })
             ->editColumn('auditable_label', function (AuditTrail $audit) {
                 return e($audit->auditable_label);

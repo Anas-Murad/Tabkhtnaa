@@ -1,4 +1,6 @@
 @extends('admin.layouts.app')
+@section('title') لوحة الولاء @endsection
+@section('page') نظام الولاء @endsection
 @section('content')
 <div class="content">
     @include('admin.layouts.alert-area')
@@ -31,7 +33,7 @@
                             <tr>
                                 <td><a href="{{ route('users.show', $u->id) }}">{{ $u->name }}</a></td>
                                 <td>{{ $u->total_points }}</td>
-                                <td>{{ $u->current_tier }}</td>
+                                <td>{{ \App\Support\LoyaltyLabels::tierName($u->current_tier) }}</td>
                             </tr>
                         @empty
                             <tr><td colspan="3" class="text-center">لا توجد بيانات</td></tr>
@@ -72,16 +74,18 @@
             <table class="table table-sm">
                 <thead><tr><th>#</th><th>العميل</th><th>النقاط</th><th>النوع</th><th>الوصف</th><th>التاريخ</th></tr></thead>
                 <tbody>
-                @foreach($recentTransactions as $t)
+                @forelse($recentTransactions as $t)
                     <tr>
                         <td>{{ $t->id }}</td>
-                        <td>{{ $t->user?->name }}</td>
+                        <td>{{ $t->user?->name ?? '-' }}</td>
                         <td class="{{ $t->points >= 0 ? 'text-success' : 'text-danger' }}">{{ $t->points }}</td>
-                        <td>{{ $t->type }}</td>
+                        <td>{{ \App\Support\LoyaltyLabels::transactionType($t->type) }}</td>
                         <td>{{ $t->description }}</td>
                         <td>{{ $t->created_at?->format('Y-m-d H:i') }}</td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr><td colspan="6" class="text-center">لا توجد حركات</td></tr>
+                @endforelse
                 </tbody>
             </table>
         </div>

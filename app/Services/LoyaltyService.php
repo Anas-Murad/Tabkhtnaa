@@ -537,7 +537,7 @@ class LoyaltyService
             LoyaltyTransaction::create([
                 'user_id' => $user->id,
                 'points' => -$points,
-                'type' => 'bonus',
+                'type' => 'redeem',
                 'description' => $description,
                 'metadata' => ['deducted_by_admin' => true],
             ]);

@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\LoyaltyTier;
+use App\Support\LoyaltyLabels;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -15,6 +16,7 @@ class LoyaltyTiersDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->editColumn('name', fn ($tier) => LoyaltyLabels::tierName($tier->name))
             ->editColumn('is_active', fn ($tier) => $tier->is_active
                 ? "<span class='badge bg-success'>نشط</span>"
                 : "<span class='badge bg-secondary'>معطل</span>")

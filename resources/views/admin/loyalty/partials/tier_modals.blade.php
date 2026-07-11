@@ -2,7 +2,7 @@
 <div class="modal-header"><h5 class="modal-title">إضافة مستوى</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
 <form id="createTierForm" method="POST" action="{{ route('admin.loyalty.tiers.store') }}">@csrf
 <div class="modal-body">
-    <div class="mb-2"><label>الاسم</label><input class="form-control" name="name" required placeholder="Gold"></div>
+    <div class="mb-2"><label>الاسم</label><input class="form-control" name="name" required placeholder="ذهبي"></div>
     <div class="mb-2"><label>المستوى (رقم)</label><input class="form-control" type="number" name="level" required></div>
     <div class="mb-2"><label>الإنفاق التراكمي المطلوب</label><input class="form-control" type="number" step="0.01" name="min_lifetime_spending" required></div>
     <div class="mb-2"><label>مضاعف النقاط</label><input class="form-control" type="number" step="0.01" name="points_multiplier" value="1" required></div>

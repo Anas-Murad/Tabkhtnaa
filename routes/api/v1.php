@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('pusher', [PusherController::class, 'test']);
+Route::get('pusher/config', [PusherController::class, 'config']);
 Route::get('countries', [CountriesController::class, 'index'])->middleware('set_lang');
 Route::get('settings', [SettingsController::class, 'index'])->middleware('set_lang');
 Route::get('languages', [LanguagesController::class, 'index'])->middleware('set_lang');

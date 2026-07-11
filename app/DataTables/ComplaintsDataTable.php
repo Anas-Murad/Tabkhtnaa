@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Complaint;
+use App\Support\AdminLabels;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -37,14 +38,16 @@ class ComplaintsDataTable extends DataTable
                 return  "<a href='$orderLink' target='_blank'> $complaint->order_id </a>";
             })
 
-            ->editColumn('type', function ($complaint) {
-                return " <span class='badge bg-info  text-white'> $complaint->type</span>";
-            })
-
+            ->editColumn('type', fn ($complaint) => " <span class='badge bg-info text-white'>"
+                . AdminLabels::complaintType($complaint->type) . '</span>')
             ->editColumn('status', function ($complaint) {
-              $status =   $complaint->status == null ? '-' :
-                  ($complaint->status == 'solved' ? "<span class='badge bg-success text-white'> $complaint->status</span>" : " <span class='badge bg-danger  text-white'> $complaint->status</span>");
-                return $status;
+                if ($complaint->status === null) {
+                    return '-';
+                }
+
+                return $complaint->status === 'solved'
+                    ? "<span class='badge bg-success text-white'>" . AdminLabels::complaintStatus('solved') . '</span>'
+                    : "<span class='badge bg-danger text-white'>" . AdminLabels::complaintStatus($complaint->status) . '</span>';
             })
 
             ->editColumn('note', function ($complaint) {
@@ -60,7 +63,9 @@ class ComplaintsDataTable extends DataTable
             })
 
             ->editColumn('action', function ($complaint) {
-                $EditLink = "EditComplaintFunction(" . htmlspecialchars(json_encode($complaint), ENT_QUOTES, 'UTF-8') . ");";
+                $editLink = 'EditComplaintFunction(' . htmlspecialchars(json_encode($complaint), ENT_QUOTES, 'UTF-8') . ');';
+                $editLabel = __('messages.admin_edit');
+
                 return <<<HTML
                 <div class="d-inline-flex">
                         <div class="dropdown">
@@ -68,7 +73,7 @@ class ComplaintsDataTable extends DataTable
                                 <i class="ph-list"></i>
                             </a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a href="#" class="dropdown-item" onclick="{$EditLink}"> <i class="ph-pencil me-2"></i> Edit </a>
+                            <a href="#" class="dropdown-item" onclick="{$editLink}"> <i class="ph-pencil me-2"></i> $editLabel </a>
                         </div>
                     </div>
                 </div>

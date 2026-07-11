@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Events\LiveLocationEvent;
 use App\Http\Controllers\Controller;
+use App\Traits\HelperTrait;
 
 class PusherController extends Controller
 {
-    public function test()
-    {
-        $latitude = 123.456; // Example latitude value
-        $longitude = 789.012; // Example longitude value
-        $userId =1;
+    use HelperTrait;
 
-        return   event(new LiveLocationEvent($latitude, $longitude ,$userId));
-        return 1 ;
+    public function config()
+    {
+        $key = config('broadcasting.connections.pusher.key');
+        $cluster = config('broadcasting.connections.pusher.options.cluster');
+
+        return $this->returnDataArray([
+            'enabled' => config('broadcasting.default') === 'pusher' && filled($key) && filled($cluster),
+            'key' => $key,
+            'cluster' => $cluster,
+        ]);
     }
 }

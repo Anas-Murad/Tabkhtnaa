@@ -104,8 +104,27 @@ class Order extends Model
     }
 
 
-    public  function chef(){
+    public function chef(){
         return $this->belongsTo(User::class , 'chef_id' ) ;
+    }
+
+    public function rating()
+    {
+        return $this->hasOne(Rating::class, 'order_id');
+    }
+
+    protected $appends = ['is_rated'];
+
+    public function getIsRatedAttribute(): bool
+    {
+        if (array_key_exists('rating_exists', $this->attributes)) {
+            return (bool) $this->attributes['rating_exists'];
+        }
+        if ($this->relationLoaded('rating')) {
+            return $this->rating !== null;
+        }
+
+        return $this->rating()->exists();
     }
 
 

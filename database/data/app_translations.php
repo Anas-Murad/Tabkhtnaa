@@ -166,6 +166,7 @@ return [
     ['key' => 'use_points', 'model' => 'app', 'ar' => 'استخدم نقاط الولاء', 'en' => 'Use loyalty points', 'fr' => 'Utiliser les points'],
     ['key' => 'points_discount', 'model' => 'app', 'ar' => 'خصم النقاط', 'en' => 'Points discount', 'fr' => 'Réduction points'],
     ['key' => 'apply', 'model' => 'app', 'ar' => 'تطبيق', 'en' => 'Apply', 'fr' => 'Appliquer'],
+    ['key' => 'already_rated', 'model' => 'app', 'ar' => 'تم تقييم هذا الطلب', 'en' => 'This order was already rated', 'fr' => 'Commande déjà notée'],
     ['key' => 'currency_jod', 'model' => 'app', 'ar' => 'د.أ', 'en' => 'JOD', 'fr' => 'JOD'],
     ['key' => 'copied', 'model' => 'app', 'ar' => 'تم النسخ', 'en' => 'Copied', 'fr' => 'Copié'],
     ['key' => 'name', 'model' => 'app', 'ar' => 'الاسم', 'en' => 'Name', 'fr' => 'Nom'],

@@ -2,58 +2,42 @@
 
 namespace App\Events;
 
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ChatEvent implements ShouldBroadcast
+class ChatEvent implements ShouldBroadcastNow
 {
-    //use Dispatchable, InteractsWithSockets, SerializesModels;
-    use SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
-    public
-$conversation_id,
-$user1_id,
-$user2_id,
-$order_id,
-$messages,
-$conversation ;
-
-    /**
-     * @param $conversation_id
-     * @param $user1_id
-     * @param $user2_id
-     * @param $order_id
-     * @param $messages
-     * @param $conversation
-     */
-    public function __construct($conversation_id, $user1_id, $user2_id, $order_id, $messages, $conversation)
-    {
-        $this->conversation_id = $conversation_id;
-        $this->user1_id = $user1_id;
-        $this->user2_id = $user2_id;
-        $this->order_id = $order_id;
-        $this->messages = $messages;
-        $this->conversation = $conversation;
+    public function __construct(
+        public int $conversation_id,
+        public int $user1_id,
+        public int $user2_id,
+        public ?int $order_id,
+        public $messages,
+        public $conversation,
+    ) {
     }
-
-
-
 
     public function broadcastOn(): array
     {
-        return  ['chat-channel.' . $this->conversation_id] ;
-        return [
-            new PrivateChannel('channel-name')
-        ];
+        return [new Channel('chat-channel.' . $this->conversation_id)];
     }
 
-    public function broadcastAs()
+    public function broadcastAs(): string
     {
         return 'chat';
     }
 
+    public function broadcastWith(): array
+    {
+        return [
+            'conversation_id' => $this->conversation_id,
+            'order_id' => $this->order_id,
+            'message' => $this->messages,
+        ];
+    }
 }

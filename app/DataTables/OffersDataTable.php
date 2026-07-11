@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Offer;
+use App\Support\AdminLabels;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -33,12 +34,9 @@ class OffersDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->editColumn('image' , '<img style=" width: 50px; height: 50px; " src="{{asset($image ?? "assets/images/demo/users/face1.jpg" )}}" />')
-            ->editColumn('number' , function ($offer){
-                return $offer->number ?? '-';
-            })
-            ->editColumn('percent' , function ($offer){
-                return '%'.$offer->percent;
-            })
+            ->editColumn('number', fn ($offer) => $offer->number ?? '-')
+            ->editColumn('percent', fn ($offer) => '%' . $offer->percent)
+            ->editColumn('type', fn ($offer) => AdminLabels::offerType($offer->type))
             ->editColumn('meal_id', function ($offer) {
                 if (!$offer->meal) {
                     return '-';
@@ -135,15 +133,15 @@ class OffersDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('image')->title('Image'),
-            Column::make('meal_id')->title('Meal'),
-            Column::make('number')->title('Number'),
-            Column::make('percent')->title('Percent'),
-            Column::make('get_free')->title('Get Free'),
-            Column::make('type')->title('Type'),
-            Column::make('start_date')->title('Start Date'),
-            Column::make('end_date')->title('End Date'),
-            Column::make('created_at'),
+            Column::make('image')->title('الصورة'),
+            Column::make('meal_id')->title('الوجبة'),
+            Column::make('number')->title('العدد'),
+            Column::make('percent')->title('النسبة'),
+            Column::make('get_free')->title('مجاني'),
+            Column::make('type')->title('النوع'),
+            Column::make('start_date')->title('من تاريخ'),
+            Column::make('end_date')->title('إلى تاريخ'),
+            Column::make('created_at')->title('تاريخ الإنشاء'),
 //            Column::computed('action')
 //                  ->exportable(false)
 //                  ->printable(false)
